@@ -10,6 +10,7 @@ router.post('/create',create)
 // check otp 
 router.post('/checkOtp',checkOtp)
 
+
 // create details
 router.post('/createDetails',createDetails)
 
