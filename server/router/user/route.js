@@ -4,6 +4,7 @@ const {create,checkOtp,createDetails,chooseGoal,login} = require('../../controll
 // login
 router.post('/login',login)
 // create account
+
 router.post('/create',create)
 
 // check otp 
