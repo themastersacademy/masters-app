@@ -2,6 +2,7 @@ import "./App.css";
 import Login from "./app/loging/Page";
 import Layout from "./app/admin/Layout";
 import UserLayout from "./app/user/Layout";
+import ExamLayout from "./app/exam/Layout";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -11,6 +12,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<UserLayout />} />
+          <Route path="/exam" element={<ExamLayout />} />
+          <Route path="/exam/info" element={<ExamLayout />} />
+          <Route path="/exam/state" element={<ExamLayout />} />
+          <Route path="/exam/result" element={<ExamLayout />} />
           <Route path="/signup" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login/verify" element={<Login />} />
