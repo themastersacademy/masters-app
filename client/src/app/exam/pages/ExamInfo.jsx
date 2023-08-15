@@ -15,7 +15,7 @@ export default function ExamInfo() {
       <ExamInfoBody
         isScheduled={true}
         examName="Practice Test - 1"
-        scheduledTime="19:45:00"
+        scheduledTime="21:30:00"
         scheduledDate="15/08/2023"
       />
     </Stack>
