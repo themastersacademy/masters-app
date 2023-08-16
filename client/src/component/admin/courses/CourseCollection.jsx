@@ -3,18 +3,29 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Image from "../../../util/Avater";
 
-export default function CourseCollection({ courseList,setNotify,isNotify}) {
-  return <div style={{
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "20px",
-    marginTop: "20px",
-  }}>
-  {courseList.map((course, index) => {
-      return <CollectionCart course={course} key={index} index={index} isNotify={isNotify} setNotify={setNotify} />;
-    })
-  }
-  </div>;
+export default function CourseCollection({ courseList, setNotify, isNotify }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "20px",
+        marginTop: "20px",
+      }}
+    >
+      {courseList.map((course, index) => {
+        return (
+          <CollectionCart
+            course={course}
+            key={index}
+            index={index}
+            isNotify={isNotify}
+            setNotify={setNotify}
+          />
+        );
+      })}
+    </div>
+  );
 }
 
 function CollectionCart({ course, index }) {
@@ -29,7 +40,7 @@ function CollectionCart({ course, index }) {
       paddingLeft: "10px",
       paddingRight: "10px",
       boxShadow: "0px 15px 62px 0px rgba(0, 0, 0, 0.08)",
-      position:'relative',
+      position: "relative",
     },
     image: {
       width: "46px",
@@ -47,16 +58,15 @@ function CollectionCart({ course, index }) {
       fontSize: "14px",
       color: "#FEA800",
     },
-    status:{
-      position:'absolute',
-      top:'0',
-      right:'0',
-      backgroundColor:'#FFF1E8',
-      borderRadius: '0px 5px'
-    }
+    status: {
+      position: "absolute",
+      top: "0",
+      right: "0",
+      backgroundColor: "#FFF1E8",
+      borderRadius: "0px 5px",
+    },
   };
   function RouteDirect(course) {
-  
     navigate(`/admin/dashboard/course?${course._id}`);
   }
   return (
@@ -76,8 +86,8 @@ function CollectionCart({ course, index }) {
             style={{
               fontSize: "14px",
               backgroundColor: "#187163",
-              width: '74px',
-              height: '28px',
+              width: "74px",
+              height: "28px",
               textTransform: "none",
             }}
             onClick={() => {

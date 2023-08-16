@@ -8,6 +8,7 @@ export default function ExamInfo() {
       sx={{
         width: "100%",
         padding: "0px 20px",
+        marginTop: "20px",
         maxWidth: "1240px",
       }}
     >

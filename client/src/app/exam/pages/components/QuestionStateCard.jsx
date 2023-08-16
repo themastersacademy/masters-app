@@ -1,0 +1,150 @@
+import { Paper, Stack, Chip, IconButton, Radio } from "@mui/material";
+import { useState } from "react";
+import { Refresh, BookmarkAddOutlined, Bookmark } from "@mui/icons-material";
+
+export default function QuestionStateCard({
+  index,
+  mark,
+  negativeMark,
+  question,
+  answer,
+  imageUrl,
+  setAnswer,
+  isCorrect,
+  isResult,
+  isAnswered,
+  isAnsweredCorrectly,
+  isBookmarked,
+}) {
+  return (
+    <Paper
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: "20px",
+      }}
+    >
+      <Stack
+        direction="row"
+        alignContent="center"
+        justifyContent="space-between"
+        spacing={2}
+      >
+        <h1
+          style={{
+            fontSize: "1.5rem",
+          }}
+        >
+          Question {index + 1}
+        </h1>
+        <Stack direction="row" alignContent="center" spacing={2}>
+          <Chip
+            label={`${mark} marks`}
+            sx={{
+              backgroundColor: "#D1E3E0",
+              color: "#187163",
+              borderRadius: "2px",
+              padding: "0",
+              margin: "0",
+            }}
+            variant="contained"
+          />
+          <Chip
+            label={`${negativeMark} marks`}
+            sx={{
+              backgroundColor: "#FFEECC",
+              color: "#FEA800",
+              padding: "0",
+              borderRadius: "2px",
+              margin: "0",
+            }}
+            variant="contained"
+          />
+          <IconButton
+            title="bookmark"
+            sx={{
+              color: "#187163",
+              width: "30px",
+              height: "30px",
+            }}
+          >
+            {isBookmarked ? <Bookmark /> : <BookmarkAddOutlined />}
+          </IconButton>
+          <IconButton
+            title="clear"
+            sx={{
+              color: "#187163",
+              width: "30px",
+              height: "30px",
+            }}
+          >
+            <Refresh />
+          </IconButton>
+        </Stack>
+      </Stack>
+      <h2
+        style={{
+          fontSize: "1.2rem",
+          fontWeight: "bold",
+          marginTop: "1rem",
+        }}
+      >
+        {question}
+      </h2>
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="question"
+          style={{ width: "100%", height: "auto" }}
+        />
+      )}
+      <Options
+        options={["option 1", "option 2", "option 3", "option 4"]}
+        answer={answer}
+        setAnswer={setAnswer}
+        isCorrect={isCorrect}
+        isResult={isResult}
+        isAnswered={isAnswered}
+        isAnsweredCorrectly={isAnsweredCorrectly}
+      />
+    </Paper>
+  );
+}
+
+const Options = ({
+  options,
+  answer,
+  setAnswer,
+  isCorrect,
+  isResult,
+  isAnswered,
+  isAnsweredCorrectly,
+}) => {
+  const [selected, setSelected] = useState(answer);
+  const handleChange = (value) => {
+    // setSelected(value);
+    // setAnswer(value);
+  };
+  return (
+    <Stack direction="column" spacing={1}>
+      {options.map((option, index) => (
+        <Stack key={index} direction="row" alignItems="center" spacing={1}>
+          <Radio
+            checked={selected === option}
+            onChange={() => handleChange(option)}
+            disabled={isResult}
+          />
+          <h3
+            style={{
+              fontSize: "1rem",
+              fontWeight: "normal",
+            }}
+          >
+            {option}
+          </h3>
+        </Stack>
+      ))}
+    </Stack>
+  );
+};

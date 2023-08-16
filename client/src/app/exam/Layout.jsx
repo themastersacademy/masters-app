@@ -7,46 +7,46 @@ import { Stack } from "@mui/material";
 export default function Exam() {
   const path = window.location.pathname;
 
-  window.addEventListener("beforeunload", (ev) => {
-    console.log(ev);
-    ev.preventDefault();
-    return (ev.returnValue = "Are you sure you want to close?");
-  });
+  // window.addEventListener("beforeunload", (ev) => {
+  //   console.log(ev);
+  //   ev.preventDefault();
+  //   return (ev.returnValue = "Are you sure you want to close?");
+  // });
 
-  window.oncontextmenu = () => {
-    return false;
-  };
+  // window.oncontextmenu = () => {
+  //   return false;
+  // };
 
-  window.onkeydown =
-    window.onkeyup =
-    window.onkeypress =
-      () => {
-        window.event.returnValue = false;
-        return false;
-      };
+  // window.onkeydown =
+  //   window.onkeyup =
+  //   window.onkeypress =
+  //     () => {
+  //       window.event.returnValue = false;
+  //       return false;
+  //     };
 
-  let h = window.innerHeight;
-  let w = window.innerWidth;
+  // let h = window.innerHeight;
+  // let w = window.innerWidth;
 
-  window.onresize = () => {
-    if (h !== window.innerHeight || w !== window.innerWidth) {
-      console.log("You are not allowed to resize the window!");
-    }
-  };
+  // window.onresize = () => {
+  //   if (h !== window.innerHeight || w !== window.innerWidth) {
+  //     console.log("You are not allowed to resize the window!");
+  //   }
+  // };
 
-  window.onblur = function () {
-    console.log("blur");
-  };
+  // window.onblur = function () {
+  //   console.log("blur");
+  // };
 
-  window.onfocus = function () {
-    console.log("focus");
-  };
+  // window.onfocus = function () {
+  //   console.log("focus");
+  // };
 
   const disableTextSelection = {
-    MozUserSelect: "none",
-    WebkitUserSelect: "none",
-    msUserSelect: "none",
-    userSelect: "none",
+    // MozUserSelect: "none",
+    // WebkitUserSelect: "none",
+    // msUserSelect: "none",
+    // userSelect: "none",
     width: "100%",
   };
 

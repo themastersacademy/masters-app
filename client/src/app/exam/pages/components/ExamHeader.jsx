@@ -1,24 +1,12 @@
 import { Paper, Stack, Avatar, Button } from "@mui/material";
 import Avater from "../../../../util/Avater";
 
-export default function ExamHeader({ isExamState }) {
+export default function ExamHeader() {
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      sx={{
-        width: "100%",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        marginTop: "20px",
-      }}
-      gap={2}
-    >
       <Paper
         elevation={2}
         sx={{
-          width: "140%",
+          width: "100%",
           height: "70px",
           borderRadius: "20px",
         }}
@@ -52,49 +40,5 @@ export default function ExamHeader({ isExamState }) {
           </Avatar>
         </Stack>
       </Paper>
-      {isExamState && (
-        <Paper
-          elevation={2}
-          sx={{
-            width: "70%",
-            height: "70px",
-            borderRadius: "20px",
-          }}
-        >
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{
-              padding: "10px 30px",
-              height: "70px",
-            }}
-          >
-            <h2
-              style={{
-                fontWeight: "500",
-                fontSize: "20px",
-              }}
-            >
-              {"Mock Test - 1"}
-            </h2>
-            <Button
-              variant="contained"
-              sx={{
-                textTransform: "none",
-                backgroundColor: "#187163",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#187163",
-                  color: "#fff",
-                },
-              }}
-            >
-              End Test
-            </Button>
-          </Stack>
-        </Paper>
-      )}
-    </Stack>
   );
 }
