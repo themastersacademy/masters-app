@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import ExamHeader from "./components/ExamHeader";
 import ExamEndCard from "./components/ExamEndCard";
 import QuestionStateCard from "./components/QuestionStateCard";
+import QuestionActionCard from "./components/QuestionActionCard";
 
 export default function ExamState() {
   return (
@@ -22,8 +23,10 @@ export default function ExamState() {
           mark="+4"
           negativeMark="-1"
           isBookmarked={true}
-          imageUrl="https://blog.prepscholar.com/hs-fs/hubfs/body-red-question-mark-2.jpg?width=1044&name=body-red-question-mark-2.jpg"
+          imageUrl="https://www.rd.com/wp-content/uploads/2021/06/mathpuzzle1.jpg?resize=3000"
+          question={"What is the value of 2+2?"}
         />
+        <QuestionActionCard />
       </Stack>
       <Stack direction="column" width="70%" gap={2}>
         <ExamEndCard />

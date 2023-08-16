@@ -48,6 +48,8 @@ export default function Exam() {
     // msUserSelect: "none",
     // userSelect: "none",
     width: "100%",
+    height: "100vh",
+    overFlow: "hidden",
   };
 
   return (

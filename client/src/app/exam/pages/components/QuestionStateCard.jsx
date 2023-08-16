@@ -23,6 +23,7 @@ export default function QuestionStateCard({
         display: "flex",
         flexDirection: "column",
         borderRadius: "20px",
+        gap: "15px",
       }}
     >
       <Stack
@@ -85,9 +86,8 @@ export default function QuestionStateCard({
       </Stack>
       <h2
         style={{
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-          marginTop: "1rem",
+          fontSize: "20px",
+          fontWeight: "500",
         }}
       >
         {question}
@@ -96,7 +96,13 @@ export default function QuestionStateCard({
         <img
           src={imageUrl}
           alt="question"
-          style={{ width: "100%", height: "auto" }}
+          style={{
+            width: "auto",
+            height: "auto",
+            maxWidth: "100%",
+            maxHeight: "300px",
+            objectFit: "contain",
+          }}
         />
       )}
       <Options
