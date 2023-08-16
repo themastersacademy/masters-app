@@ -4,6 +4,8 @@ import ExamHeader from "./components/ExamHeader";
 import ExamEndCard from "./components/ExamEndCard";
 import QuestionStateCard from "./components/QuestionStateCard";
 import QuestionActionCard from "./components/QuestionActionCard";
+import ExamTimerCard from "./components/ExamTimerCard";
+import QuestionCollections from "./components/QuestionCollections";
 
 export default function ExamState() {
   return (
@@ -16,7 +18,7 @@ export default function ExamState() {
       direction="row"
       gap={2}
     >
-      <Stack direction="column" width="140%" gap={2}>
+      <Stack direction="column" width="130%" gap={2}>
         <ExamHeader />
         <QuestionStateCard
           index={0}
@@ -30,6 +32,8 @@ export default function ExamState() {
       </Stack>
       <Stack direction="column" width="70%" gap={2}>
         <ExamEndCard />
+        <ExamTimerCard totalTime={10} timeLeft={9}/>
+        <QuestionCollections />
       </Stack>
     </Stack>
   );
