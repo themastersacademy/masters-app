@@ -93,6 +93,9 @@ useEffect(()=>{
         padding: "0 20px",
         margin: "20px 0",
         overflowY:"scroll",
+        "::-webkit-scrollbar": {
+          display: "none",
+        },
       }}
     >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

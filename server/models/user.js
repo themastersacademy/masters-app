@@ -33,12 +33,6 @@ const Schema = mongoose.Schema({
   institutionID:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "institution",
-    
-
-
-
-
-    
   },
   type: {
     type: String,

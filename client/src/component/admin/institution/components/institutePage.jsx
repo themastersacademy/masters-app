@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "./Searchbar";
 import { Button, Paper, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -120,6 +120,11 @@ const Home = ({ institute, id, ControlNotification }) => {
 };
 
 const Batch = ({ task }) => {
+  const navigator = useNavigate()
+const RieDirect = () =>{
+ navigator(`/admin/institution/page/batch?=${task.batchID}`)
+}
+
   const style = {
     image: {
       width: " 46px",
@@ -146,6 +151,7 @@ const Batch = ({ task }) => {
         boxShadow: " 0px 15px 62px 0px rgba(0, 0, 0, 0.08)",
         cursor:'pointer'
       }}
+      onClick={RieDirect}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" spacing='10px'>

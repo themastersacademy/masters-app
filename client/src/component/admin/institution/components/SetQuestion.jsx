@@ -1,27 +1,15 @@
 import { Paper } from "@mui/material";
-import { TextField } from "@mui/material";
+import { TextField,Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export default function MockTest({
+export default function SetQuestion({
   task,
   index,
-  setCourse,
-  course,
-  setMock,
-  courseTopicIndex,
-  courseAvalile,
-  setPageController
+  setQuestion,
+  setSelectQuestion,
+  question,
+
 }) {
-
-  useEffect(()=>{
-
-  setPageController({
-    mockPage:true,
-    courseSettingPage:false
-  })
-  handleChange()
-},[])
- 
 
 
   const [limit, setLimit] = useState({
@@ -30,7 +18,7 @@ export default function MockTest({
     hard: false,
   });
   const handleChange = (e) => {
-    setMock(course)
+    setSelectQuestion(question)
    
   };
  
@@ -62,36 +50,42 @@ export default function MockTest({
           width: "100%",
           height: "100px",
           boxShadow: "0 4px 6px rbga(0,0,0,0.25) ",
-          padding: "10px",
+         padding:'15px',
           display: "flex",
-          alignItems:'center',
+      alignItems:'center',
           gap: "50px",
-      
+        
+         
         }}
         key={index}
       >
+       
+
         <TextField
           sx={styleMock}
-          value={courseAvalile.title}
+          value={task.title}
           label="Topic"
           variant="outlined"
           disabled
+       
         />
+        
 
-        <div style={{ display: "flex", gap: "15px" }}>
+        <Stack direction='row' alignItems='center'  spacing='10px'>
           <TextField
             sx={styleMock}
-            value={task.level.easy}
+            value={task.easy}
+            helperText={`Avalible ${task.level.easy}`}
             error={limit.easy == false ? false : true}
             onChange={(e) => {
-             
+            
         
             if(0 <= e.target.value) {
               
-              if (courseAvalile.level.easy >= e.target.value) {
-                setCourse((preValue) => {
+              if (task.level.easy >= e.target.value) {
+                setQuestion((preValue) => {
                   const getValue = [...preValue];
-                  getValue[index].topic[courseTopicIndex].level.easy =e.target.value
+                  getValue[index].easy =e.target.value
                  return getValue;
                 });
 
@@ -116,23 +110,20 @@ export default function MockTest({
             label="Easy"
             variant="outlined"
             type="number"
-            helperText={`Avalible ${courseAvalile.level.easy}`}
+          
           />
 
           <TextField
             error={limit.medium == false ? false : true}
             sx={styleMock}
-            value={
-              task.level.changeMedium == undefined
-                ? task.level.medium
-                : task.level.changeMedium
-            }
+            value={task.medium}
+            helperText={`Avalible ${task.level.medium}`}
             onChange={(e) => {
               if(0 <= e.target.value) {
-              if (courseAvalile.level.medium >= e.target.value) {
-                setCourse((preValue) => {
+              if (task.level.medium >= e.target.value) {
+                setQuestion((preValue) => {
                   const getValue = [...preValue];
-                  getValue[index].topic[courseTopicIndex].level.medium = e.target.value;
+                  getValue[index].medium = e.target.value;
                  return getValue;
                 });
 
@@ -155,23 +146,20 @@ export default function MockTest({
             label="Medium"
             variant="outlined"
             type="number"
-            helperText={`Avalible ${courseAvalile.level.medium}`}
+         
           />
 
           <TextField
             error={limit.hard == false ? false : true}
             sx={styleMock}
-            value={
-              task.level.changeHard == undefined
-                ? task.level.hard
-                : task.level.changeHard
-            }
+            value={task.hard}
+            helperText={`Avalible ${task.level.hard}`}
             onChange={(e) => {
               if(0 <= e.target.value) {
-              if (courseAvalile.level.hard >= e.target.value) {
-                setCourse((preValue) => {
+              if (task.level.hard >= e.target.value) {
+                setQuestion((preValue) => {
                   const getValue = [...preValue];
-                  getValue[index].topic[courseTopicIndex].level.hard = e.target.value;
+                  getValue[index].hard = e.target.value;
                  return getValue;
                 });
                 handleChange();
@@ -192,9 +180,10 @@ export default function MockTest({
             label="Hard"
             variant="outlined"
             type="number"
-            helperText={`Avalible ${courseAvalile.level.hard}`}
+      
           />
-        </div>
+        </Stack>
+       
       </Paper>
     </div>
   );

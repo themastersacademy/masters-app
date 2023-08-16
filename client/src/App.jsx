@@ -17,6 +17,8 @@ function App() {
           <Route path="/exam/state" element={<ExamLayout />} />
           <Route path="/exam/result" element={<ExamLayout />} />
           <Route path="/signup" element={<Login />} />
+   
+       
           <Route path="/login" element={<Login />} />
           <Route path="/login/verify" element={<Login />} />
           <Route path="/login/create" element={<Login />} />
@@ -29,6 +31,7 @@ function App() {
           <Route path="/admin/manage" element={<Layout />} />
           <Route path="/admin/bank/collection" element={<Layout />} />
           <Route path="/admin/dashboard/course" element={<Layout />} />
+          <Route path="/admin/institution/page/batch" element={<Layout />} />
         </Routes>
       </Router>
     </div>

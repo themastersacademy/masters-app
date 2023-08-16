@@ -123,8 +123,6 @@ useEffect(()=>{console.log(select);},[select])
 }
 
 
-
-
 const top100Films = [
     { label: 'The Shawshank Redemption', year: 1994 },
     { label: 'The Godfather', year: 1972 },

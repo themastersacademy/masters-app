@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import useWindowDimensions from "../../util/useWindowDimensions";
 import Display from "../../util/display";
 import Notification from "../../util/Alert";
+import BatchFolder from "../../component/admin/institution/components/BatchFolder";
 import InstitutePage from "../../component/admin/institution/components/institutePage";
 function Dashboard() {
 
@@ -164,20 +165,21 @@ function Dashboard() {
             {pathName === "/admin/institution" ? <Institution ControlNotification={ControlNotification} /> : null}
             {pathName === "/admin/manage" ? <Manage /> : null}
             {pathName === "/admin/dashboard/course" ? <Course ControlNotification={ControlNotification} isNotify={isNotify} setNotify={setNotify} /> : null}
-            {width > 1024 ? (
-              pathName === "/admin/bank/collection" ? (
+            {
+              pathName === "/admin/bank/collection" ?   width > 1024 ?  (
                 <Collection />
-              ) : null
-            ) : (
-              <Display />
-            )}
-              {width > 1024 ? (
-              pathName === "/admin/institution/page" ? (
+              ) : <Display /> : null
+            }
+
+
+             {
+              pathName === "/admin/institution/page" ?  (
                 <InstitutePage ControlNotification={ControlNotification} />
               ) : null
-            ) : (
-              <Display />
-            )}
+            }
+
+       
+            {pathName ==='/admin/institution/page/batch' ? <BatchFolder /> : null}
           </div>
         </div>
       </div>
