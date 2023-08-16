@@ -84,36 +84,55 @@ export default function QuestionStateCard({
           </IconButton>
         </Stack>
       </Stack>
-      <h2
-        style={{
-          fontSize: "20px",
-          fontWeight: "500",
+      <Stack
+        gap={2}
+        height={"100%"}
+        maxHeight={"calc(100vh - 300px)"}
+        sx={{
+          overflowY: "auto",
+          "&::-webkit-scrollbar": {
+            width: "5px",
+          },
+          "&::-webkit-scrollbar-track": {
+            width: "5px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#187163",
+            borderRadius: "5px",
+          },
         }}
       >
-        {question}
-      </h2>
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt="question"
+        <h2
           style={{
-            width: "auto",
-            height: "auto",
-            maxWidth: "100%",
-            maxHeight: "300px",
-            objectFit: "contain",
+            fontSize: "20px",
+            fontWeight: "500",
           }}
+        >
+          {question}
+        </h2>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="question"
+            style={{
+              width: "auto",
+              height: "auto",
+              maxWidth: "100%",
+              maxHeight: "300px",
+              objectFit: "contain",
+            }}
+          />
+        )}
+        <Options
+          options={["option 1", "option 2", "option 3", "option 4"]}
+          answer={answer}
+          setAnswer={setAnswer}
+          isCorrect={isCorrect}
+          isResult={isResult}
+          isAnswered={isAnswered}
+          isAnsweredCorrectly={isAnsweredCorrectly}
         />
-      )}
-      <Options
-        options={["option 1", "option 2", "option 3", "option 4"]}
-        answer={answer}
-        setAnswer={setAnswer}
-        isCorrect={isCorrect}
-        isResult={isResult}
-        isAnswered={isAnswered}
-        isAnsweredCorrectly={isAnsweredCorrectly}
-      />
+      </Stack>
     </Paper>
   );
 }

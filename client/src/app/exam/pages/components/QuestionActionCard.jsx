@@ -2,7 +2,7 @@ import { Paper, Stack, Button } from "@mui/material";
 
 export default function QuestionActionCard() {
   return (
-    <Paper elevation={3} sx={{ padding: "20px 20px", borderRadius: "20px" }}>
+    <Paper elevation={3} sx={{ padding: "20px 20px", borderRadius: "20px", height:"80px" }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Button
           variant="contained"

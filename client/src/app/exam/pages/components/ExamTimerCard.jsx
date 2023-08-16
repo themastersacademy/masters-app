@@ -6,7 +6,7 @@ export default function ExamTimerCard({totalTime, timeLeft}) {
     <Paper
       sx={{
         p: 2,
-        height: 240,
+        height: "240px",
         width: "100%",
         borderRadius: "20px",
         boxShadow: 1,
