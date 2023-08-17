@@ -1,24 +1,6 @@
-import { Paper, Stack } from "@mui/material";
+import { Paper, Stack, Button } from "@mui/material";
 
-export default function QuestionCollections() {
-  const questionCategoryList = [
-    {
-      title: "Mathematics",
-      questionListLength: 20,
-    },
-    {
-      title: "Physics",
-      questionListLength: 30,
-    },
-    {
-      title: "Chemistry",
-      questionListLength: 20,
-    },
-    {
-      title: "Biology",
-      questionListLength: 10,
-    },
-  ];
+export default function QuestionCollections({questionCategoryList}) {
 
   return (
     <Paper
@@ -128,23 +110,24 @@ const QuestionCategory = ({
       </p>
       <Stack direction="row" flexWrap="wrap" gap={1}>
         {[...Array(questionListLength)].map((question, index) => (
-          <div
+          <Button
             key={index}
+            variant="outlined"
             style={{
               width: "35px",
+              maxWidth: "35px",
+              minWidth: "35px",
               height: "35px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               borderRadius: "5px",
-              backgroundColor: "white",
               border: "2px solid #9B9B9B",
               fontSize: "14px",
               color: "#4F4F4F",
+              padding: "0",
+              margin: "0",
             }}
           >
             {previousTotalQuestionListLength + index + 1}
-          </div>
+          </Button>
         ))}
       </Stack>
     </Stack>

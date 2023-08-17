@@ -1,8 +1,8 @@
 const examInfoData = {
     examTitle: "JEE Mains 2021",
     examDate: "17/08/2023",
-    examStartTime: "12:00:00",
-    examEndTime: "13:30:00",
+    examStartTime: "20:00:00",
+    examEndTime: "23:30:00",
     examDuration: "03:00:00",
     mark: 4,
     negativeMark: 1,

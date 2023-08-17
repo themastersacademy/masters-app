@@ -61,6 +61,7 @@ export default function ExamState() {
       setTimePercentage(remainingTimePercentage);
     }
   };
+  
   useEffect(() => {
     setInterval(() => {
       getRemainingTime();
@@ -87,8 +88,8 @@ export default function ExamState() {
         >
           <QuestionStateCard
             index={0}
-            mark="+4"
-            negativeMark="-1"
+            mark={examInfo.mark}
+            negativeMark={examInfo.negativeMark}
             isBookmarked={true}
             imageUrl="https://www.rd.com/wp-content/uploads/2021/06/mathpuzzle1.jpg?resize=3000"
             question={"What is the value of 2+2?"}
@@ -102,7 +103,7 @@ export default function ExamState() {
           remainingTime={remainingTime}
           timePercentage={timePercentage}
         />
-        <QuestionCollections />
+        <QuestionCollections questionCategoryList={examInfo.questionCategoryList}/>
       </Stack>
     </Stack>
   );

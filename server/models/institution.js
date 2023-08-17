@@ -1,41 +1,41 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema({
- name:{
-    type:String,
+  name: {
+    type: String,
     required: true,
- },
- id: {
+  },
+  id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  avatar:{
-    type:String
+  avatar: {
+    type: String,
   },
-  teacherList:[
+  teacherList: [
     {
-        name:{
-            type:String,
-            
-        },
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-          }
-    }
-  ],
-  batch:[{
-    name:{
-      type:String,
+      name: {
+        type: String,
+      },
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
     },
-    batchID:{
+  ],
+  batch: [
+    {
+      name: {
+        type: String,
+      },
+      batchID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "batch",
         required: true,
-    }
-}
+      },
+    },
   ],
   createdAt: {
     type: Date,

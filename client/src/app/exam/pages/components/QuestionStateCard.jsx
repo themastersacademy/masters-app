@@ -41,7 +41,7 @@ export default function QuestionStateCard({
         </h1>
         <Stack direction="row" alignContent="center" spacing={2}>
           <Chip
-            label={`${mark} marks`}
+            label={`+${mark} marks`}
             sx={{
               backgroundColor: "#D1E3E0",
               color: "#187163",
@@ -52,7 +52,7 @@ export default function QuestionStateCard({
             variant="contained"
           />
           <Chip
-            label={`${negativeMark} marks`}
+            label={`-${negativeMark} marks`}
             sx={{
               backgroundColor: "#FFEECC",
               color: "#FEA800",
