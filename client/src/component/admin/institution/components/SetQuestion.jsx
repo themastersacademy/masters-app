@@ -1,16 +1,15 @@
 import { Paper } from "@mui/material";
-import { TextField,Stack } from "@mui/material";
+import { TextField,Stack,Button } from "@mui/material";
 import { useEffect, useState } from "react";
-
+import ClearIcon from '@mui/icons-material/Clear';
 export default function SetQuestion({
   task,
   index,
   setQuestion,
-  setSelectQuestion,
-  question,
+  avalible,
 
+  deleteBatchTopic
 }) {
-
 
   const [limit, setLimit] = useState({
     easy: false,
@@ -18,10 +17,15 @@ export default function SetQuestion({
     hard: false,
   });
   const handleChange = (e) => {
-    setSelectQuestion(question)
+    
    
   };
  
+  const delateQuestion =() => 
+  {
+    deleteBatchTopic(task)
+  
+  }
   const styleMock = {
     height:'56px',
     "& label.Mui-focused": {
@@ -57,7 +61,7 @@ export default function SetQuestion({
         
          
         }}
-        key={index}
+     
       >
        
 
@@ -74,21 +78,24 @@ export default function SetQuestion({
         <Stack direction='row' alignItems='center'  spacing='10px'>
           <TextField
             sx={styleMock}
-            value={task.easy}
-            helperText={`Avalible ${task.level.easy}`}
+            value={task.level.easy}
+            helperText={`Avalible ${avalible.level.easy}`}
             error={limit.easy == false ? false : true}
             onChange={(e) => {
             
-        
+           
             if(0 <= e.target.value) {
-              
-              if (task.level.easy >= e.target.value) {
+            
+              if (avalible.level.easy >= e.target.value) {
+                console.log(e.target.value)
                 setQuestion((preValue) => {
-                  const getValue = [...preValue];
-                  getValue[index].easy =e.target.value
-                 return getValue;
+                 
+                  const getValue = {...preValue}
+                  getValue.batchQues[index].level.easy = e.target.value
+                  console.log(getValue);
+                  return getValue;
                 });
-
+            
                 handleChange();
 
                 setLimit((preValue) => {
@@ -116,14 +123,14 @@ export default function SetQuestion({
           <TextField
             error={limit.medium == false ? false : true}
             sx={styleMock}
-            value={task.medium}
-            helperText={`Avalible ${task.level.medium}`}
+            value={task.level.medium}
+            helperText={`Avalible ${avalible.level.medium}`}
             onChange={(e) => {
               if(0 <= e.target.value) {
-              if (task.level.medium >= e.target.value) {
+              if (avalible.level.medium >= e.target.value) {
                 setQuestion((preValue) => {
-                  const getValue = [...preValue];
-                  getValue[index].medium = e.target.value;
+                  const getValue = {...preValue};
+                  getValue.batchQues[index].level.medium = e.target.value;
                  return getValue;
                 });
 
@@ -152,14 +159,14 @@ export default function SetQuestion({
           <TextField
             error={limit.hard == false ? false : true}
             sx={styleMock}
-            value={task.hard}
-            helperText={`Avalible ${task.level.hard}`}
+            value={task.level.hard}
+            helperText={`Avalible ${avalible.level.hard}`}
             onChange={(e) => {
               if(0 <= e.target.value) {
-              if (task.level.hard >= e.target.value) {
+              if (avalible.level.hard >= e.target.value) {
                 setQuestion((preValue) => {
-                  const getValue = [...preValue];
-                  getValue[index].hard = e.target.value;
+                    const getValue = {...preValue};
+                  getValue.batchQues[index].level.hard = e.target.value;
                  return getValue;
                 });
                 handleChange();
@@ -184,6 +191,10 @@ export default function SetQuestion({
           />
         </Stack>
        
+       <Button onClick={delateQuestion}  style={{width: '50px',
+      background: '#FFF',
+height: '50px'}} startIcon={<ClearIcon sx={{color:'#F33B12',width:'30px',height:'30px'}} />} ></Button>
+
       </Paper>
     </div>
   );

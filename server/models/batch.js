@@ -15,98 +15,98 @@ const Schema = mongoose.Schema({
     ref: "institution",
     required: true,
   },
-  teacherList: [
-    {
-      name: {
-        type: String,
-      },
-      userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-    },
-  ],
-  studentList: [
-    {
-      name: {
-        type: String,
-      },
-      userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-      rollNumber: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        index: true,
-        unique: true,
-        sparse: true,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-          if (!isEmail(value)) {
-            throw new Error("Email is invalid");
-          }
-        },
-      },
-
-      dept: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  studentRequest: [
-    {
-      name: {
-        type: String,
-      },
-      userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-      rollNumber: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        index: true,
-        unique: true,
-        sparse: true,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-          if (!isEmail(value)) {
-            throw new Error("Email is invalid");
-          }
-        },
-      },
-      dept: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
   scheduleTest: [
     {
+      quesID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "question-bank",
+        required: true,
+      },
+      level: {
+        easy: {
+          type: String,
+          default: "0",
+        },
+        medium: {
+          type: String,
+          default: "0",
+        },
+        hard: {
+          type: String,
+          default: "0",
+        },
+      },
+    },
+  ],
+
+  studendList: [
+    {
       name: {
         type: String,
       },
-      examID: {
+      userID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "exam",
+        ref: "User",
         required: true,
       },
-    }
+      rollNumber: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        index: true,
+        unique: true,
+        sparse: true,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+          if (!isEmail(value)) {
+            throw new Error("Email is invalid");
+          }
+        },
+      },
+      dept: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+
+  studendRequest: [
+    {
+      name: {
+        type: String,
+      },
+      userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      rollNumber: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        index: true,
+        unique: true,
+        sparse: true,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+          if (!isEmail(value)) {
+            throw new Error("Email is invalid");
+          }
+        },
+      },
+      dept: {
+        type: String,
+        required: true,
+      },
+    },
   ],
   createdAt: {
     type: Date,

@@ -6,8 +6,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import AddOption from "./AddOption";
-export default function FormDialog({ createBank,task}) {
-
+export default function FormDialog({ createBank, task, question }) {
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
 
@@ -18,7 +17,7 @@ export default function FormDialog({ createBank,task}) {
     setOpen(false);
   };
   const getGroupName = (task) => {
-    setGroupName(task)
+    setGroupName(task);
   };
   const submit = () => {
     createBank(groupName);
@@ -26,6 +25,7 @@ export default function FormDialog({ createBank,task}) {
     setOpen(false);
   };
 
+  
   return (
     <div>
       <Button
@@ -44,14 +44,17 @@ export default function FormDialog({ createBank,task}) {
       >
         Add Topic
       </Button>
-      <Dialog fullWidth maxWidth="sm"  open={open} >
+      <Dialog fullWidth maxWidth="sm" open={open}>
         <DialogTitle sx={{ background: " #187163;", color: "white" }}>
           Add Topic
         </DialogTitle>
-        <DialogContent  >
-
-        <AddOption task={task} getGroupName={getGroupName} /> 
-
+        <DialogContent>
+          
+          <AddOption
+            quesTask={task}
+            getGroupName={getGroupName}
+            question={question}
+          />
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: "#187163" }} onClick={handleClose}>
