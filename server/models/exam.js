@@ -102,3 +102,5 @@ const examSchema = new Schema({
         default: Date.now
     }
 });
+
+module.exports = model('exam', examSchema);
