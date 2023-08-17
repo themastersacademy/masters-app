@@ -35,19 +35,11 @@ const {
 const { getUser, changeRoll } = require("../../controller/admin/user/user.js");
 const { getInstitutions } = require("../../controller/admin/controller.js");
 
+const {getInstitution} = require('../../controller/admin/institute/institute.js')
+const {createBatch,createBatechTopic,selectBatchTopic,saveChangeBatch, getBatchTopic } = require('../../controller/admin/institute/batch.js')
 const {
-  getInstitution,
-} = require("../../controller/admin/institute/institute.js");
-const {
-  createBatch,
-  createBatechTopic,
-  selectBatchTopic,
-  getBatchTopic,
-  saveChangeBatch
-} = require("../../controller/admin/institute/batch.js");
-// const {
-//   deleteBatchTopic,
-// } = require("../../controller/admin/institute/delete.js");
+  deleteBatchTopic,
+} = require("../../controller/admin/institute/delete.js");
 //GET
 
 router.get("/getBank", getBank);
@@ -82,11 +74,8 @@ router.post("/searchQues", searchQues);
 router.post("/deleteQuestion", deleteQues);
 router.post("/deleteCourseCollection", deleteCourseCollection);
 router.post("/deleteGroupCourseCollection", deleteGroupCourseCollection);
-// router.post("/deleteBatchTopic", deleteBatchTopic);
+router.post("/deleteBatchTopic", deleteBatchTopic);
 //getCollectionName
-
-
-
 
 router.post("/getCollectionName", getCollectionName);
 
@@ -117,5 +106,8 @@ router.post("/getBatchTopic", getBatchTopic);
 
 //saveChangeBatch
 router.post('/saveChangeBatch',saveChangeBatch)
+
+
+
 
 module.exports = router;

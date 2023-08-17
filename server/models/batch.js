@@ -22,6 +22,9 @@ const Schema = mongoose.Schema({
         ref: "question-bank",
         required: true,
       },
+      title: {
+        type: String,
+      },
       level: {
         easy: {
           type: String,
@@ -108,6 +111,27 @@ const Schema = mongoose.Schema({
       },
     },
   ],
+  setDate: {
+    type: String,
+    default:'0'
+  },
+  setTimeFrom: {
+    type: String,
+    default:'0'
+  },
+  setTimeTo: {
+    type: String,
+    default:'0'
+  },
+  setMark: {
+    type: String,
+    default:'0'
+  },
+
+  setNegativeMark: {
+    type: String,
+    default:'0'
+  },
   createdAt: {
     type: Date,
     default: Date.now,
