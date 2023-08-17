@@ -1,7 +1,7 @@
 import { Paper, CircularProgress, Box, Stack } from "@mui/material";
 import { circularProgressClasses } from "@mui/material/CircularProgress";
 
-export default function ExamTimerCard({totalTime, timeLeft}) {
+export default function ExamTimerCard({ remainingTime, timePercentage }) {
   return (
     <Paper
       sx={{
@@ -44,7 +44,7 @@ export default function ExamTimerCard({totalTime, timeLeft}) {
           }}
           size={150}
           thickness={4}
-          value={40}
+          value={timePercentage}
         />
         <p
             style={{
@@ -57,7 +57,7 @@ export default function ExamTimerCard({totalTime, timeLeft}) {
                 color: "#187163",
             }}
         >
-            00:40:20
+            {remainingTime}
         </p>
       </Stack>
     </Paper>
