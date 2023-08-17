@@ -1,6 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
 
-export default function ExamEndCard() {
+export default function ExamEndCard({title}) {
   return (
     <Paper
           elevation={2}
@@ -25,7 +25,7 @@ export default function ExamEndCard() {
                 fontSize: "20px",
               }}
             >
-              {"Mock Test - 1"}
+              {title}
             </h2>
             <Button
               variant="contained"
