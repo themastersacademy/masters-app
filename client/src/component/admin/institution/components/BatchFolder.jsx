@@ -6,8 +6,12 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import ScheduleTest from "./ScheduleTest";
 import { useLocation } from "react-router-dom";
-import History from './History'
+import History from "./History";
 import Notification from "../../../../util/Alert";
+import { Stack } from "@mui/material";
+import SvgIcon from '@mui/material/SvgIcon'
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -38,36 +42,35 @@ function a11yProps(index) {
 export default function BatchFolder({}) {
   const { search } = useLocation();
   const id = search.split("=")[1];
+  const [head, setHead] = useState([]);
   const [question, setQuestion] = useState({
     avalibleQues: [],
-    batchQues:[]
-   
-    
+    batchQues: [],
   });
-  const [details,setDetails] = useState({
-    setDate:new Date(),
-   setTimeFrom:'0:0',
-    setTimeTo:'0:0',
-    setMark:'',
-   setNegativeMark:'0',
-   setExamTitle:'',
-   examDuration:'0'
-  })
+  const [details, setDetails] = useState({
+    setDate: new Date(),
+    setTimeFrom: "0:0",
+    setTimeTo: "0:0",
+    setMark: "",
+    setNegativeMark: "0",
+    setExamTitle: "",
+    examDuration: "0",
+  });
   const [value, setValue] = useState(0);
   const [isChange, setChange] = useState(false);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
-  const [history,setHistory] = useState([])
+  const [history, setHistory] = useState([]);
   const [notificate, setNotification] = useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const deleteBatchTopic = () => {
-  setChange(!isChange)
+    setChange(!isChange);
   };
 
-  const getHistory = () =>{
+  const getHistory = () => {
     fetch("/api/admin/getHistory", {
       method: "POST",
       headers: {
@@ -75,21 +78,26 @@ export default function BatchFolder({}) {
       },
       body: JSON.stringify({ id: id }),
     })
-    .then(res => res.json())
-    .then((data) => { 
-      console.log(data)
-      if(data.status == 'ok')  setHistory(data.message)
-     
-    } ) 
-  }
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status == "ok") {
+          console.log(data);
+          setHistory(data.message);
+          setHead(data.head);
+        }
+      });
+  };
 
-  useEffect(()=>{getHistory()},[])
+  useEffect(() => {
+    getHistory();
+  }, []);
 
-  const Notificate =(status,message) =>{
-    setSeverity(status)
-    setMessage(message)
-    setNotification(true)
-  }
+  const Notificate = (status, message) => {
+    setSeverity(status);
+    setMessage(message);
+    setNotification(true);
+  };
 
   return (
     <Paper
@@ -104,6 +112,8 @@ export default function BatchFolder({}) {
         },
       }}
     >
+      {head.avatar == undefined ? null : <BatchHead task={head} />}
+
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -130,23 +140,82 @@ export default function BatchFolder({}) {
           isChange={isChange}
           deleteBatchTopic={deleteBatchTopic}
           setQuestion={setQuestion}
-         details={details}
-        setDetails={setDetails}
-        Notificate={Notificate}
+          details={details}
+          setDetails={setDetails}
+          Notificate={Notificate}
         />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-
-       </CustomTabPanel>
-       <CustomTabPanel value={value} index={3}>
-      <History history={history} />
-        </CustomTabPanel>
-     <Notification 
-       setNotification={setNotification}
-       notificate={notificate}
-       message={message}
-       severity={severity}
-     />
+      <CustomTabPanel value={value} index={2}></CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <History history={history} />
+      </CustomTabPanel>
+      <Notification
+        setNotification={setNotification}
+        notificate={notificate}
+        message={message}
+        severity={severity}
+      />
     </Paper>
   );
 }
+
+const BatchHead = ({ task }) => {
+  const  text = task.batchCode
+const clickCopy = () =>{
+ 
+    navigator.clipboard.writeText(text);
+ 
+}
+
+  const style = {
+    image: {
+      width: "40px",
+      height: " 40px",
+    },
+    title: {
+      color: "#000",
+      fontSize: "16px",
+      fontStyle: "normal",
+      fontWeight: "700",
+      lineHeight: "normal",
+    },
+    batchName:{
+       marginLeft:'auto',
+        color: " #FEA800",
+        fontSize: "16px",
+        fontStyle: "normal",
+        fontWeight: "700",
+        lineHeight: "normal",
+      },
+    batchCode:{
+      color: "#187163",
+      fontSize: "14px",
+      fontStyle: "normal",
+      fontWeight: "700",
+      lineHeight: "normal",
+    },
+    copyIcon:{
+      width: '15px',
+height: '15px',
+color:'#187163'
+    }
+  };
+
+  return (
+    <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{padding:'10px'}}>
+      <Stack direction='row' alignItems='center' spacing='15px'>
+        <img src={task.avatar} style={style.image} alt="" />
+        <p style={style.title} > {task.name} </p>
+      </Stack>
+
+      <Stack direction='column' justifyContent='center' spacing='10px'>
+        <p style={style.batchName}>{task.batchName}</p>
+        <Stack direction='row' alignItems='center'  spacing='5px'>
+        <div  ><span>Batch code :</span> <span style={style.batchCode} >{task.batchCode}</span> </div> 
+
+        <SvgIcon onClick={clickCopy}  sx={style.copyIcon} component={ FileCopyIcon  } />
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+};

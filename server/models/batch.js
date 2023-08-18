@@ -47,6 +47,9 @@ const Schema = mongoose.Schema({
       name: {
         type: String,
       },
+      avatar:{
+        type:String
+      },
       userID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

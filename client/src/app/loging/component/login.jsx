@@ -20,8 +20,11 @@ function Login({controlNotification}) {
       })
       .then(res => res.json())
       .then((data) => {
-        controlNotification(data.status,data.message)
-        if(data.status == 'success') navigator('/')
+        
+        if(data.status == 'success'){ 
+          navigator(`/?=${data.id}`)
+      }
+        if(data.status == 'error') controlNotification(data.status,data.message)
       })
     
     }

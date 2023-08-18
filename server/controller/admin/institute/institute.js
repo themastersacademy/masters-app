@@ -5,3 +5,17 @@ exports.getInstitution = async (req, res, next) => {
   else res.json({ status: "error", message: "something wrong" });
 };
 
+exports.getInstituteName = async (req,res,next) =>{
+  try {
+    const data =[]
+    const institute = await Institution.find()
+    if(institute){
+      institute.map(task => data.push({label:task.name,id:task._id}))
+      
+     res.json({status:'ok',message:data})
+    }
+  } catch (error) {
+    
+  }
+ 
+}

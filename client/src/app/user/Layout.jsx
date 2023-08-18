@@ -10,14 +10,30 @@ import MDNavBar from "./components/MDNavBar";
 import { Stack, Grid, Tab, Tabs, Box, Paper } from "@mui/material";
 import PropTypes from "prop-types";
 import useWindowDimensions from "../../util/useWindowDimensions";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 export default function Layout() {
+  const { search } = useLocation();
+  const id = search.split("=")[1];
   const { width } = useWindowDimensions();
-  return width > 1024 ? <DTView /> : <MoView />;
+  const [institute,setInstitue] = useState([])
+  const [details,setDetails] = useState({userID:id,instituteName:'',instituteID:'',rollNumber:'',Dept:'',batchCode:''})
+  const getInstitute = () =>{
+    fetch('/api/admin/getInstitute')
+    .then(res => res.json())
+    .then((data) => {
+      if(data.status == 'ok') setInstitue(data.message)
+      console.log(data)
+    })
+      }
+      useEffect(()=>{console.log(details)},[details])
+      useEffect(()=>{getInstitute()},[])
+
+  return width > 1024 ? <DTView institute={institute} details={details} setDetails={setDetails} /> : <MoView institute={institute} details={details} setDetails={setDetails} />;
 }
 
-function DTView() {
+function DTView({institute,setDetails,details}) {
+
   return (
     <Stack
       direction="column"
@@ -52,7 +68,7 @@ function DTView() {
             <TestCard />
           </Grid>
           <Grid item xs={6} paddingLeft="10px">
-            <InstitutionCard />
+            <InstitutionCard institute={institute} setDetails={setDetails} details={details} />
             <ScoreCard />
             <AnalysisCard />
           </Grid>
@@ -89,7 +105,7 @@ function a11yProps(index) {
   };
 }
 
-function MoView() {
+function MoView({institute,setDetails,details}) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -151,7 +167,7 @@ function MoView() {
         <AnalysisCard MD={true}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <InstitutionCard MD={true}/>
+        <InstitutionCard MD={true} institute={institute} setDetails={setDetails} details={details} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
         o

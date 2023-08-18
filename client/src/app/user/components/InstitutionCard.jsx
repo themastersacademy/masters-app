@@ -8,13 +8,75 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function InstitutionCard({ MD }) {
+export default function InstitutionCard({
+  MD,
+  institute,
+  setDetails,
+  details,
+}) {
   const [expanded, setExpanded] = useState(false);
+  const [isSubmit, setSubmit] = useState(false);
   const handleClick = () => {
     setExpanded(!expanded);
   };
+  const handleSelect = (event, value) => {
+    if(value !== null)
+    setDetails((preValue) => {
+      const getValue = { ...preValue };
+      getValue.instituteName = value.label;
+      getValue.instituteID = value.id;
+      return getValue;
+    });
+  };
+  const handleRoll = (e) => {
+    setDetails((preValue) => {
+      const getValue = { ...preValue };
+      getValue.rollNumber = e.target.value;
+
+      return getValue;
+    });
+  };
+  const handleDept = (e) => {
+    setDetails((preValue) => {
+      const getValue = { ...preValue };
+      getValue.Dept = e.target.value;
+
+      return getValue;
+    });
+  };
+  const handleBatchCode = (e) => {
+    setDetails((preValue) => {
+      const getValue = { ...preValue };
+      getValue.batchCode = e.target.value;
+
+      return getValue;
+    });
+  };
+
+  const handleSubmit = () =>{
+    console.log(details)
+    fetch('/api/user/requirest',{
+      method:"POST",
+      headers:{
+        "Content-type":"application/json"
+      },
+      body:JSON.stringify({data:details})
+    })
+    .then(res => res.json())
+    .then((data) => console.log(data))
+  }
+  useEffect(() => {
+    if (
+      details.Dept !== "" &&
+      details.batchCode !== "" &&
+      details.instituteID !== "" &&
+      details.instituteName !== "" &&
+      details.rollNumber !== ""
+    ) setSubmit(true)
+    else setSubmit(false)
+  },[details]);
   return (
     <Paper
       elevation={MD ? 0 : 3}
@@ -78,13 +140,8 @@ export default function InstitutionCard({ MD }) {
         <Stack padding={3}>
           <Autocomplete
             disablePortal
-            options={[
-              "Institution 1",
-              "Institution 2",
-              "Institution 3",
-              "Institution 4",
-              "Institution 5",
-            ]}
+            options={institute}
+            onChange={handleSelect}
             renderInput={(params) => (
               <TextField
                 fullWidth
@@ -135,6 +192,7 @@ export default function InstitutionCard({ MD }) {
                   },
                 },
               }}
+              onChange={handleRoll}
               label="Roll Number"
               placeholder="Enter Roll Number"
             />
@@ -159,6 +217,7 @@ export default function InstitutionCard({ MD }) {
                   },
                 },
               }}
+              onChange={handleDept}
               label="Department"
               placeholder="Enter Department"
             />
@@ -183,6 +242,7 @@ export default function InstitutionCard({ MD }) {
                   },
                 },
               }}
+              onChange={handleBatchCode}
               label="Batch Code"
               placeholder="Enter Batch Code"
             />
@@ -190,6 +250,7 @@ export default function InstitutionCard({ MD }) {
           <Stack direction="column" alignItems={"center"} marginTop={2}>
             <Button
               variant="contained"
+              disabled={isSubmit == true ? false : true}
               fullWidth={MD ? true : false}
               sx={{
                 textTransform: "none",
@@ -200,6 +261,7 @@ export default function InstitutionCard({ MD }) {
                   color: "#fff",
                 },
               }}
+              onClick={handleSubmit}
             >
               Submit
             </Button>

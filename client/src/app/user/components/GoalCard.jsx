@@ -63,9 +63,9 @@ export default function GoalCard() {
             { goal: "Placement Training", plan: "Free" },
             { goal: "GATE Exam", plan: "Free" },
           ].map((item, index) => (
-            <div>
+            <div   key={index}>
               <GoalListCard
-                key={index}
+              
                 goal={item.goal}
                 plan={item.plan}
                 onClick={() => {

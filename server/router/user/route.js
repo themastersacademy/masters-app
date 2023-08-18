@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {create,checkOtp,createDetails,chooseGoal,login} = require('../../controller/user/controller.js')
+const {create,checkOtp,createDetails,chooseGoal,login,requirest} = require('../../controller/user/controller.js')
 
 // login
 router.post('/login',login)
@@ -17,5 +17,7 @@ router.post('/createDetails',createDetails)
 // choose goal
 router.post('/chooseGoal',chooseGoal)
 
+//requirest
+router.post('/requirest',requirest)
 
 module.exports=router

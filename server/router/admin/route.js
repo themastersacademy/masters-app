@@ -35,7 +35,7 @@ const {
 const { getUser, changeRoll } = require("../../controller/admin/user/user.js");
 const { getInstitutions } = require("../../controller/admin/controller.js");
 
-const {getInstitution} = require('../../controller/admin/institute/institute.js')
+const {getInstitution,getInstituteName} = require('../../controller/admin/institute/institute.js')
 const {createBatch,getBatechTopic,getHistory} = require('../../controller/admin/institute/batch.js')
 const {
   deleteBatchTopic,
@@ -49,6 +49,7 @@ router.get("/getBank", getBank);
 router.get("/getCourse", getCourse);
 router.get("/getuser", getUser);
 router.get("/getInstitution", getInstitutions);
+router.get("/getInstitute",getInstituteName)
 // POST
 
 router.post("/question", Get);

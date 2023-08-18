@@ -74,8 +74,16 @@ exports.getHistory =async (req,res,next) =>{
   try {
     const batch = await Batch.findOne({_id:req.body.id})
     if(batch){
+      const institute = await institution.findOne({_id:batch.institutionID})
       
-      res.json({status:'ok',message:batch.scheduleTest})
+      const details = {
+        avatar:institute.avatar,
+        name:institute.name,
+        batchName:batch.name,
+        batchCode:batch.batchCode
+      }
+
+      res.json({status:'ok',message:batch.scheduleTest,head:details})
     }
   } catch (error) {
     

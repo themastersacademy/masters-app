@@ -2,7 +2,8 @@ const User = require("../../models/user.js");
 const crypto = require("crypto");
 const { SendEmail } = require("../email/email.js");
 const { generateOtp } = require("../../util/OTB.js");
-
+const Batch = require("../../models/batch.js");
+const Institution = require("../../models/institution.js");
 exports.login = async (req, res, next) => {
   const password = req.body.password;
   const secret = "This is a company secret ";
@@ -13,7 +14,7 @@ exports.login = async (req, res, next) => {
   const check = await User.findOne({ email: req.body.email, password: hash });
   if (check) {
     req.session.isAuth = true;
-    res.json({ status: "success", message: "Account login" });
+    res.json({ status: "success", id: check._id });
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
   }
@@ -22,7 +23,7 @@ exports.login = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   console.log(req.body);
   const check = await User.findOne({ email: req.body.email });
-  console.log(check)
+  console.log(check);
   if (!check) {
     req.session.isCreate = true;
     const password = req.body.password;
@@ -80,4 +81,46 @@ exports.chooseGoal = async (req, res, next) => {
     user.save();
     res.json({ status: "success", message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });
+};
+
+exports.requirest = async (req, res, next) => {
+  const { instituteName, userID, instituteID, rollNumber, Dept, batchCode } =
+    req.body.data;
+  try {
+    const user = await User.findOne({ _id: userID });
+    if (user) {
+      const institute = await Institution.findOne({ _id: instituteID });
+      if (institute) {
+        const batch = await Batch.findOne({
+          batchCode: batchCode,
+          institutionID: instituteID,
+        });
+        if (batch) {
+          const check = [];
+          batch.studendList.map((task) => {
+            if (user.email == task.email) check.push(task);
+          });
+
+          if (check.length < 0) {
+            batch.studendList.push({
+              name: user.name,
+              avatar: user.avatar,
+              email: user.email,
+              userID: user._id,
+              rollNumber: rollNumber,
+              dept: Dept,
+            });
+            batch.save();
+            res.json({
+              status: "success",
+              message: "institute join successfully",
+            });
+          } else
+            res.json({ status: "error", message: "your already registered" });
+        } else res.json({ status: "error", message: "something wrong" });
+      } else res.json({ status: "error", message: "something wrong" });
+    } else res.json({ status: "error", message: "something wrong" });
+  } catch (error) {
+    console.log(error);
+  }
 };
