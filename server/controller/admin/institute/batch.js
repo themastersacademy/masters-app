@@ -50,15 +50,7 @@ exports.getBatechTopic = async (req,res,next) =>{
   const bank = await questionBank.find()
     if(batch){
       res.json({status:'success',message:bank})
-    //   const check =[]
-    //   const send =[]
-    //   if(batch.scheduleTest.length > 0) batch.scheduleTest.map(task => check.push(task.quesID.valueOf()))
-      
-    //   bank.map(task => {
-    //  if(check.indexOf(task._id.valueOf()) == -1){ console.log(task)
-    //    send.push(task)}
-    //   })
-    //   res.json({status:'success',message:send})
+
     }
     else  res.json({status:'error',message:'Something wrong'})
 
@@ -82,8 +74,8 @@ exports.getHistory =async (req,res,next) =>{
         batchName:batch.name,
         batchCode:batch.batchCode
       }
-
-      res.json({status:'ok',message:batch.scheduleTest,head:details})
+      
+      res.json({status:'ok',message:batch,head:details})
     }
   } catch (error) {
     

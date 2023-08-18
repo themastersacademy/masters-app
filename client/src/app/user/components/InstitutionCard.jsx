@@ -7,14 +7,18 @@ import {
   Stack,
   Autocomplete,
   TextField,
+  
 } from "@mui/material";
-import { useEffect, useState } from "react";
+
+
+import { useEffect, useState, } from "react";
 
 export default function InstitutionCard({
   MD,
   institute,
   setDetails,
   details,
+  Notificate
 }) {
   const [expanded, setExpanded] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -65,7 +69,10 @@ export default function InstitutionCard({
       body:JSON.stringify({data:details})
     })
     .then(res => res.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+    Notificate(data.status,data.message)
+    }
+    )
   }
   useEffect(() => {
     if (

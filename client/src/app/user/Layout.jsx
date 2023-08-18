@@ -12,28 +12,63 @@ import PropTypes from "prop-types";
 import useWindowDimensions from "../../util/useWindowDimensions";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Notification from "../../util/Alert";
 export default function Layout() {
   const { search } = useLocation();
   const id = search.split("=")[1];
   const { width } = useWindowDimensions();
-  const [institute,setInstitue] = useState([])
-  const [details,setDetails] = useState({userID:id,instituteName:'',instituteID:'',rollNumber:'',Dept:'',batchCode:''})
-  const getInstitute = () =>{
-    fetch('/api/admin/getInstitute')
-    .then(res => res.json())
-    .then((data) => {
-      if(data.status == 'ok') setInstitue(data.message)
-      console.log(data)
-    })
-      }
-      useEffect(()=>{console.log(details)},[details])
-      useEffect(()=>{getInstitute()},[])
+  const [institute, setInstitue] = useState([]);
+  const [details, setDetails] = useState({
+    userID: id,
+    instituteName: "",
+    instituteID: "",
+    rollNumber: "",
+    Dept: "",
+    batchCode: "",
+  });
+  const [severity, setSeverity] = useState("");
+  const [message, setMessage] = useState("");
+  const [notificate, setNotification] = useState(false);
+  const Notifications =(status,message) =>{
+    setSeverity(status)
+    setMessage(message)
+    setNotification(true)
+  }
 
-  return width > 1024 ? <DTView institute={institute} details={details} setDetails={setDetails} /> : <MoView institute={institute} details={details} setDetails={setDetails} />;
+  const getInstitute = () => {
+    fetch("/api/admin/getInstitute")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "ok") setInstitue(data.message);
+        console.log(data);
+      });
+  };
+  useEffect(() => {
+    console.log(details);
+  }, [details]);
+  useEffect(() => {
+    getInstitute();
+  }, []);
+
+  return (
+    <div>
+{    width > 1024 ? (
+    <DTView institute={institute} details={details} setDetails={setDetails} Notificate={Notifications} />
+  ) : (
+    <MoView institute={institute} details={details} setDetails={setDetails} Notificate={Notifications} />
+  )}
+ 
+<Notification 
+   setNotification={setNotification}
+   notificate={notificate}
+   message={message}
+   severity={severity}
+/>
+  </div>
+  )
 }
 
-function DTView({institute,setDetails,details}) {
-
+function DTView({ institute, setDetails, details,Notificate }) {
   return (
     <Stack
       direction="column"
@@ -68,7 +103,12 @@ function DTView({institute,setDetails,details}) {
             <TestCard />
           </Grid>
           <Grid item xs={6} paddingLeft="10px">
-            <InstitutionCard institute={institute} setDetails={setDetails} details={details} />
+            <InstitutionCard
+              institute={institute}
+              setDetails={setDetails}
+              details={details}
+              Notificate={Notificate}
+            />
             <ScoreCard />
             <AnalysisCard />
           </Grid>
@@ -105,7 +145,7 @@ function a11yProps(index) {
   };
 }
 
-function MoView({institute,setDetails,details}) {
+function MoView({ institute, setDetails, details,Notificate }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -157,17 +197,23 @@ function MoView({institute,setDetails,details}) {
         </Tabs>
       </Stack>
       <CustomTabPanel value={value} index={0}>
-        <PracticeTest MD={true}/>
-        <MockTest MD={true}/>
+        <PracticeTest MD={true} />
+        <MockTest MD={true} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ScoreCard MD={true}/>
+        <ScoreCard MD={true} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <AnalysisCard MD={true}/>
+        <AnalysisCard MD={true} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <InstitutionCard MD={true} institute={institute} setDetails={setDetails} details={details} />
+        <InstitutionCard
+          MD={true}
+          institute={institute}
+          setDetails={setDetails}
+          details={details}
+          Notificate={Notificate}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
         o

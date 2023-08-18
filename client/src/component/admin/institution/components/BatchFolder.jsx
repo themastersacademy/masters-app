@@ -11,7 +11,7 @@ import Notification from "../../../../util/Alert";
 import { Stack } from "@mui/material";
 import SvgIcon from '@mui/material/SvgIcon'
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-
+import Requests from './Requests'
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -56,6 +56,7 @@ export default function BatchFolder({}) {
     setExamTitle: "",
     examDuration: "0",
   });
+  const [batch,setBatch] = useState([])
   const [value, setValue] = useState(0);
   const [isChange, setChange] = useState(false);
   const [severity, setSeverity] = useState("");
@@ -83,8 +84,9 @@ export default function BatchFolder({}) {
         console.log(data);
         if (data.status == "ok") {
           console.log(data);
-          setHistory(data.message);
+          // setHistory(data.message);
           setHead(data.head);
+   setBatch(data.message)
         }
       });
   };
@@ -145,9 +147,11 @@ export default function BatchFolder({}) {
           Notificate={Notificate}
         />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}></CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <Requests batch={batch} />
+      </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <History history={history} />
+        <History batch={batch} />
       </CustomTabPanel>
       <Notification
         setNotification={setNotification}

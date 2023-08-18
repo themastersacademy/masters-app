@@ -1,9 +1,9 @@
 import React from 'react'
 import { Paper } from '@mui/material'
-export default function History ({history})  {
+export default function History ({batch})  {
   return (
     <div style={{marginTop:'20px'}}>
-        {history.length > 0 ? history.map((task,index) => <Card key={index} task={task} /> )   : null}
+        {batch.scheduleTest.length > 0 ? batch.scheduleTest.map((task,index) => <Card key={index} task={task} /> )   : null}
     
     </div>
   )
