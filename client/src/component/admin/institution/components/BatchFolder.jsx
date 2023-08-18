@@ -37,8 +37,21 @@ function a11yProps(index) {
 export default function BatchFolder({}) {
   const { search } = useLocation();
   const id = search.split("=")[1];
-  const [question, setQuestion] = useState([]);
-  const [details,setDetails] = useState({})
+  const [question, setQuestion] = useState({
+    avalibleQues: [],
+    batchQues:[]
+   
+    
+  });
+  const [details,setDetails] = useState({
+    setDate:new Date(),
+   setTimeFrom:'0:0',
+    setTimeTo:'0:0',
+    setMark:'',
+   setNegativeMark:'0',
+   setExamTitle:'',
+   examDuration:'0'
+  })
   const [value, setValue] = useState(0);
   const [isChange, setChange] = useState(false);
   const [severity, setSeverity] = useState("");
@@ -59,36 +72,25 @@ export default function BatchFolder({}) {
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "ok") {
-          console.log(data);
-          setQuestion({
-            avalibleQues: data.avalibleQues,
-            batchQues: data.batchQues,
-          });
-          setDetails(data.details)
+      
+        //   setQuestion({
+        //     avalibleQues: data.avalibleQues,
+        //     batchQues: data.batchQues,
+        //   });
+        //   setDetails(data.details)
         }
       });
   };
-  const deleteBatchTopic = (data) => {
-    fetch("/api/admin/deleteBatchTopic", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ id: id, deleteID: data.quesID }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status == "success") {
-          console.log(data);
-          setChange(!isChange);
-        }
-      });
+  const deleteBatchTopic = () => {
+  setChange(!isChange)
   };
 
   useEffect(() => {
     getBatchTopic();
-  }, [isChange]);
-
+  },[isChange]);
+  useEffect(() => {
+    console.log(question)
+  }, [question]);
   const Notificate =(status,message) =>{
     setSeverity(status)
     setMessage(message)

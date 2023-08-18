@@ -48,18 +48,17 @@ exports.createBatechTopic = async (req,res,next) =>{
   try {
     const batch = await Batch.findOne({_id:req.body.id})
   const bank = await questionBank.find()
-  
-    console.log(batch)
     if(batch){
-      const check =[]
-      const send =[]
-      if(batch.scheduleTest.length > 0) batch.scheduleTest.map(task => check.push(task.quesID.valueOf()))
+      res.json({status:'success',message:bank})
+    //   const check =[]
+    //   const send =[]
+    //   if(batch.scheduleTest.length > 0) batch.scheduleTest.map(task => check.push(task.quesID.valueOf()))
       
-      bank.map(task => {
-     if(check.indexOf(task._id.valueOf()) == -1){ console.log(task)
-       send.push(task)}
-      })
-      res.json({status:'success',message:send})
+    //   bank.map(task => {
+    //  if(check.indexOf(task._id.valueOf()) == -1){ console.log(task)
+    //    send.push(task)}
+    //   })
+    //   res.json({status:'success',message:send})
     }
     else  res.json({status:'error',message:'Something wrong'})
 

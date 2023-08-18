@@ -40,6 +40,9 @@ const {createBatch,createBatechTopic,selectBatchTopic,saveChangeBatch, getBatchT
 const {
   deleteBatchTopic,
 } = require("../../controller/admin/institute/delete.js");
+
+const {createScheduleExam} =require('../../controller/admin/exam/createExam.js')
+
 //GET
 
 router.get("/getBank", getBank);
@@ -104,8 +107,8 @@ router.post("/selectBatchTopic", selectBatchTopic);
 
 router.post("/getBatchTopic", getBatchTopic);
 
-//saveChangeBatch
-router.post('/saveChangeBatch',saveChangeBatch)
+//createScheduleExam
+router.post('/createScheduleExam',createScheduleExam)
 
 
 

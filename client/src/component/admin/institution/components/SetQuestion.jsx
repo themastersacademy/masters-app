@@ -7,10 +7,10 @@ export default function SetQuestion({
   index,
   setQuestion,
   avalible,
-
+  avalibleIndex,
   deleteBatchTopic
 }) {
-
+console.log(task)
   const [limit, setLimit] = useState({
     easy: false,
     medium: false,
@@ -18,12 +18,22 @@ export default function SetQuestion({
   });
   const handleChange = (e) => {
     
-   
+
   };
  
   const delateQuestion =() => 
   {
-    deleteBatchTopic(task)
+    setQuestion((preValue)=>{
+        const getValue = {...preValue}
+        
+        const avalibleQues =  getValue.avalibleQues.filter((task,index1) => index1 !== avalibleIndex )
+        getValue.avalibleQues = avalibleQues
+        const batchQues =  getValue.batchQues.filter((task,index2) => index2 !== index )
+        getValue.batchQues = batchQues
+
+        return getValue
+    })
+    deleteBatchTopic()
   
   }
   const styleMock = {
