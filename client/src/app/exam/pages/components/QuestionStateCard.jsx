@@ -15,6 +15,10 @@ export default function QuestionStateCard({
   isAnswered,
   isAnsweredCorrectly,
   isBookmarked,
+  handleOptionClick,
+  handleBookmarkClick,
+  optionList,
+  studentAnswers
 }) {
   return (
     <Paper
@@ -64,6 +68,7 @@ export default function QuestionStateCard({
           />
           <IconButton
             title="bookmark"
+            onClick={handleBookmarkClick}
             sx={{
               color: "#187163",
               width: "30px",
@@ -124,13 +129,15 @@ export default function QuestionStateCard({
           />
         )}
         <Options
-          options={["option 1", "option 2", "option 3", "option 4"]}
+          options={optionList}
           answer={answer}
           setAnswer={setAnswer}
           isCorrect={isCorrect}
           isResult={isResult}
           isAnswered={isAnswered}
           isAnsweredCorrectly={isAnsweredCorrectly}
+          handleOptionClick={handleOptionClick}
+          studentAnswers={studentAnswers}
         />
       </Stack>
     </Paper>
@@ -145,19 +152,21 @@ const Options = ({
   isResult,
   isAnswered,
   isAnsweredCorrectly,
+  handleOptionClick,
+  studentAnswers
 }) => {
-  const [selected, setSelected] = useState(answer);
-  const handleChange = (value) => {
-    // setSelected(value);
-    // setAnswer(value);
-  };
+  // const [selected, setSelected] = useState(answer);
+  // const handleChange = (value) => {
+  //   // setSelected(value);
+  //   // setAnswer(value);
+  // };
   return (
     <Stack direction="column" spacing={1}>
       {options.map((option, index) => (
         <Stack key={index} direction="row" alignItems="center" spacing={1}>
           <Radio
-            checked={selected === option}
-            onChange={() => handleChange(option)}
+            checked={studentAnswers === index}
+            onChange={() => handleOptionClick(index)}
             disabled={isResult}
           />
           <h3

@@ -13,6 +13,24 @@ export default function ExamState() {
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [remainingTime, setRemainingTime] = useState("00:00:00");
   const [timePercentage, setTimePercentage] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [studentAnswers, setStudentAnswers] = useState(() => {
+    let studentAnswers = [];
+    for (let i = 0; i < examInfo.questionCollections.length; i++) {
+      studentAnswers.push(null);
+    }
+    return studentAnswers;
+  });
+  const [isBookmarked, setIsBookmarked] = useState(() => {
+    let isBookmarked = [];
+    for (let i = 0; i < examInfo.questionCollections.length; i++) {
+      isBookmarked.push(false);
+    }
+    return isBookmarked;
+  });
+
+  console.log(studentAnswers);
+  console.log(isBookmarked);
 
   const calculateRemainingTime = () => {
     let examTime = examInfo.examEndTime.split(":");
@@ -61,12 +79,42 @@ export default function ExamState() {
       setTimePercentage(remainingTimePercentage);
     }
   };
-  
+
   useEffect(() => {
     setInterval(() => {
       getRemainingTime();
     }, 1000);
   }, []);
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < examInfo.questionCollections.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  const handleQuestionClick = (index) => {
+    setCurrentQuestionIndex(index);
+  };
+
+  const handleOptionClick = (index) => {
+    let newStudentAnswers = [...studentAnswers];
+    newStudentAnswers[currentQuestionIndex] = index;
+    setStudentAnswers(newStudentAnswers);
+  };
+
+  const handleBookmarkClick = () => {
+    let newIsBookmarked = [...isBookmarked];
+    newIsBookmarked[currentQuestionIndex] = !newIsBookmarked[
+      currentQuestionIndex
+    ];
+    setIsBookmarked(newIsBookmarked);
+  };
 
   return (
     <Stack
@@ -87,23 +135,40 @@ export default function ExamState() {
           justifyContent={"space-between"}
         >
           <QuestionStateCard
-            index={0}
+            index={currentQuestionIndex}
             mark={examInfo.mark}
             negativeMark={examInfo.negativeMark}
-            isBookmarked={true}
-            imageUrl="https://www.rd.com/wp-content/uploads/2021/06/mathpuzzle1.jpg?resize=3000"
-            question={"What is the value of 2+2?"}
+            handleOptionClick={handleOptionClick}
+            handleBookmarkClick={handleBookmarkClick}
+            isBookmarked={isBookmarked[currentQuestionIndex]}
+            imageUrl={
+              examInfo.questionCollections[currentQuestionIndex].imageUrl
+            }
+            question={
+              examInfo.questionCollections[currentQuestionIndex].question
+            }
+            optionList={
+              examInfo.questionCollections[currentQuestionIndex].options
+            }
+            studentAnswers={studentAnswers[currentQuestionIndex]}
           />
-          <QuestionActionCard />
+          <QuestionActionCard
+            handleNextQuestion={handleNextQuestion}
+            handlePreviousQuestion={handlePreviousQuestion}
+          />
         </Stack>
       </Stack>
       <Stack direction="column" width="70%" gap={2}>
-        <ExamEndCard title={examInfo.examTitle}/>
+        <ExamEndCard title={examInfo.examTitle} />
         <ExamTimerCard
           remainingTime={remainingTime}
           timePercentage={timePercentage}
         />
-        <QuestionCollections questionCategoryList={examInfo.questionCategoryList}/>
+        <QuestionCollections
+          currentQuestionIndex={currentQuestionIndex}
+          handleQuestionClick={handleQuestionClick}
+          questionCategoryList={examInfo.questionCategoryList}
+        />
       </Stack>
     </Stack>
   );

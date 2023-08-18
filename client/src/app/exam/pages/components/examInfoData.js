@@ -30,8 +30,8 @@ const examInfoData = {
     {
       question: "What is the value of 2+2?",
       imageUrl:
-        "https://www.rd.com/wp-content/uploads/2021/06/mathpuzzle1.jpg?resize=3000",
-      options: ["1", "2", "3", "4"],
+        "http://publish.illinois.edu/atlas-tlt/files/2015/02/quiz-00.jpg",
+      options: ["15", "22", "34", "46"],
     },
     {
       question: "What is the value of 2+2?",

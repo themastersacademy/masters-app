@@ -1,6 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
 
-export default function QuestionCollections({questionCategoryList}) {
+export default function QuestionCollections({ questionCategoryList, handleQuestionClick, currentQuestionIndex }) {
 
   return (
     <Paper
@@ -79,6 +79,8 @@ export default function QuestionCollections({questionCategoryList}) {
             key={index}
             title={questionCategory.title}
             questionListLength={questionCategory.questionListLength}
+            handleQuestionClick={handleQuestionClick}
+            currentQuestionIndex={currentQuestionIndex}
             previousTotalQuestionListLength={
               index === 0
                 ? 0
@@ -97,6 +99,8 @@ const QuestionCategory = ({
   title,
   questionListLength,
   previousTotalQuestionListLength,
+  handleQuestionClick,
+  currentQuestionIndex
 }) => {
   return (
     <Stack
@@ -119,12 +123,14 @@ const QuestionCategory = ({
               minWidth: "35px",
               height: "35px",
               borderRadius: "5px",
-              border: "2px solid #9B9B9B",
+              border: "3px solid #9F9F9F",
+              borderColor: currentQuestionIndex === previousTotalQuestionListLength + index ? "#187163" : "#9B9B9B",
               fontSize: "14px",
-              color: "#4F4F4F",
+              color: currentQuestionIndex === previousTotalQuestionListLength + index ? "#187163" : "#9B9B9B",
               padding: "0",
               margin: "0",
             }}
+            onClick={() => handleQuestionClick(previousTotalQuestionListLength + index)}
           >
             {previousTotalQuestionListLength + index + 1}
           </Button>
