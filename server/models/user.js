@@ -30,10 +30,17 @@ const Schema = mongoose.Schema({
       }
     },
   },
+  batchID:[
+  {  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "batch",
+  }
+  ],
   institutionID:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "institution",
   },
+
   type: {
     type: String,
     required: true,

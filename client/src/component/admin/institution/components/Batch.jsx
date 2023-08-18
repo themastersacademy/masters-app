@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,19 +7,22 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Stack } from "@mui/material";
+import { Stack,Button,SvgIcon } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
-import { SvgIcon } from '@mui/material';
-export default function Requests({ batch,getRequestAccess }) {
+
+
+export default function Batch({ batch,getRequestAccess }) {
+    console.log(batch)
+    const [list,setList] = useState(batch)
   const check = [];
   return (
     <div>
-      {batch.studendList.length > 0
+       {batch.studendList.length > 0
         ? batch.studendList.map((task, index) => {
-            if (task.requirest == false) {
+            if (task.requirest == true) {
               check.push(task);
-              console.log(task);
+            
             }
           })
         : null}
@@ -38,11 +41,9 @@ export default function Requests({ batch,getRequestAccess }) {
 
 function RequestList({ task,getRequestAccess }) {
   
-const handleOk = (data) =>{
-  getRequestAccess('ok',data)
-}
+
 const handleCancel =(data) =>{
-  getRequestAccess('not ok',data)
+  getRequestAccess('remove',data)
 }
 
   const style = {
@@ -71,20 +72,15 @@ const handleCancel =(data) =>{
       fontWeight: "700",
       lineHeight: "normal",
     },
-    selectBtn:{
+    remove:{
         width: "30px",
         height: "30px",
-        color:'green',
-        background: "#18716330",
+        color:'white',
+        background: "#187163",
         cursor: 'pointer',
+        textTransform:'none'
     },
-    deleteBtn: {
-      width: "30px",
-      height: "30px",
-      color:'#F33B12',
-      background: "#F33B1233",
-      cursor: 'pointer',
-    },
+    
   };
 
   return (
@@ -106,7 +102,7 @@ const handleCancel =(data) =>{
           {task.map((row, index) => 
           { 
             
-  if(row.requirest == false)
+  if(row.requirest == true)
   return (
             <TableRow
               key={index}
@@ -135,12 +131,15 @@ const handleCancel =(data) =>{
                 <p style={style.email}>{row.email}</p>
               </TableCell>
               <TableCell align="center">
-                <Stack direction="row" spacing='10px' justifyContent='center' >
+
+
+                <Button style={style.remove} onClick={()=>handleCancel(row)} >Remove</Button>
+                {/* <Stack direction="row" spacing='10px' justifyContent='center' >
                 
                   <SvgIcon onClick={()=>handleCancel(row)} style={style.deleteBtn} component={CloseIcon  } />
                   <SvgIcon onClick={()=>handleOk(row)} style={style.selectBtn} component={DoneIcon } />
                 
-                </Stack>
+                </Stack> */}
               </TableCell>
             </TableRow>
   )

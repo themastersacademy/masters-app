@@ -36,7 +36,7 @@ const { getUser, changeRoll } = require("../../controller/admin/user/user.js");
 const { getInstitutions } = require("../../controller/admin/controller.js");
 
 const {getInstitution,getInstituteName} = require('../../controller/admin/institute/institute.js')
-const {createBatch,getBatechTopic,getHistory} = require('../../controller/admin/institute/batch.js')
+const {createBatch,getBatechTopic,getHistory,getRequestAccess} = require('../../controller/admin/institute/batch.js')
 const {
   deleteBatchTopic,
 } = require("../../controller/admin/institute/delete.js");
@@ -109,4 +109,6 @@ router.post('/createScheduleExam',createScheduleExam)
 
 router.post('/getHistory',getHistory)
 
+//getRequestAccess
+router.post('/getRequestAccess',getRequestAccess)
 module.exports = router;

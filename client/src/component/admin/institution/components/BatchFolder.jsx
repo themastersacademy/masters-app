@@ -12,6 +12,7 @@ import { Stack } from "@mui/material";
 import SvgIcon from '@mui/material/SvgIcon'
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Requests from './Requests'
+import Batch from "./Batch";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -61,7 +62,7 @@ export default function BatchFolder({}) {
   const [isChange, setChange] = useState(false);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
-  const [history, setHistory] = useState([]);
+
   const [notificate, setNotification] = useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -84,16 +85,31 @@ export default function BatchFolder({}) {
         console.log(data);
         if (data.status == "ok") {
           console.log(data);
-          // setHistory(data.message);
+        
           setHead(data.head);
    setBatch(data.message)
         }
       });
   };
 
+  const getRequestAccess = (status,data) =>{
+fetch('/api/admin/getRequestAccess',{
+  method:"POST",
+  headers:{
+    "Content-type":"application/json"
+  },
+  body:JSON.stringify({ id,status,data})
+}).then(res => res.json())
+  .then(data => {
+    getHistory()
+    Notificate(data.status,data.message)
+
+  })
+  }
+
   useEffect(() => {
     getHistory();
-  }, []);
+  },[]);
 
   const Notificate = (status, message) => {
     setSeverity(status);
@@ -133,7 +149,8 @@ export default function BatchFolder({}) {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <div>ss</div>
+        {batch.length !== 0 ? <Batch batch={batch} getRequestAccess={getRequestAccess} /> : null }
+       
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <ScheduleTest
@@ -148,7 +165,7 @@ export default function BatchFolder({}) {
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Requests batch={batch} />
+        <Requests batch={batch} getRequestAccess={getRequestAccess} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
         <History batch={batch} />
