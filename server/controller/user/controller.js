@@ -101,7 +101,8 @@ exports.requirest = async (req, res, next) => {
             if (user.email == task.email) check.push(task);
           });
 
-          if (check.length < 0) {
+          if (check.length == 0) {
+          
             batch.studendList.push({
               name: user.name,
               avatar: user.avatar,
