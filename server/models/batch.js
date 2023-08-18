@@ -74,64 +74,33 @@ const Schema = mongoose.Schema({
         type: String,
         required: true,
       },
+      requirest:{
+        type:Boolean,
+        default: false
+      }
     },
   ],
 
-  studendRequest: [
+
+  scheduleTest: [
     {
       name: {
         type: String,
       },
-      userID: {
+      examID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "exam",
         required: true,
       },
-      rollNumber: {
-        type: String,
+      status:{
+        type:String,
         required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        index: true,
-        unique: true,
-        sparse: true,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-          if (!isEmail(value)) {
-            throw new Error("Email is invalid");
-          }
-        },
-      },
-      dept: {
-        type: String,
-        required: true,
-      },
-    },
+        enum: ['pending','complete'],
+        default:'pending'
+      }
+    }
   ],
-  setDate: {
-    type: String,
-    default:'0'
-  },
-  setTimeFrom: {
-    type: String,
-    default:'0'
-  },
-  setTimeTo: {
-    type: String,
-    default:'0'
-  },
-  setMark: {
-    type: String,
-    default:'0'
-  },
 
-  setNegativeMark: {
-    type: String,
-    default:'0'
-  },
   createdAt: {
     type: Date,
     default: Date.now,

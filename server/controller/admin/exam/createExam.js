@@ -7,10 +7,11 @@ exports.createScheduleExam = async (req, res, next) => {
   const questionID = [];
   const finalQues = [];
   const indexValue = [];
+  const id = req.body.id
   const details = req.body.details
   const type =req.body.type
   try {
-    const batch = await Batch.findOne({ _id: req.body.id });
+    const batch = await Batch.findOne({ _id: id });
     const Collection = await questionCollection.find();
     if (batch) {
       req.body.data.map((task) => {
@@ -108,10 +109,7 @@ exports.createScheduleExam = async (req, res, next) => {
         }
       });
 
-      console.log(finalQues);
-      console.log(req.body);
-
-     
+ 
   const questionCategory =[] 
      finalQues.map((task,index) => {
         const list = []
@@ -124,6 +122,7 @@ exports.createScheduleExam = async (req, res, next) => {
 console.log(questionCategory)
       const exam = await Exam({
         type:type,
+        batchID:id,
         title: details.setExamTitle,
         examDate: details.setDate,
         examStartTime: details.setTimeFrom,
@@ -134,15 +133,13 @@ console.log(questionCategory)
         questionCategory:questionCategory
       });
       exam.save()
+
+      batch.scheduleTest.push({name:details.setExamTitle,examID:exam._id})
+      batch.save()
+      res.json({status:'success',message:'Create schedule text successfully'})
     }
 
-    // setDate: '2023-08-18T02:03:05.088Z',
-    // setTimeFrom: '1:0',
-    // setTimeTo: '0:0',
-    // setMark: '22',
-    // setNegativeMark: '',
-    // : 'asdfgh',
-    // examDuration: '20'
+
   } catch (error) {
     console.log(error);
   }

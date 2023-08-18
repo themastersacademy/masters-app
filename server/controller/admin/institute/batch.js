@@ -42,7 +42,7 @@ exports.createBatch = async (req, res, next) => {
 };
 
 
-exports.createBatechTopic = async (req,res,next) =>{
+exports.getBatechTopic = async (req,res,next) =>{
   console.log(req.body)
 
   try {
@@ -67,57 +67,21 @@ exports.createBatechTopic = async (req,res,next) =>{
     res.json({status:'error',message:'Something wrong'})
   }
  
- 
- 
 }
 
-exports.selectBatchTopic = async(req,res,next) =>{
-try {
-  const batch = await Batch.findOne({_id:req.body.id})
-  if(batch){
-    batch.scheduleTest.push({quesID:req.body.topic._id,title:req.body.topic.title})
-    batch.save()
-    res.json({status:'success',message:'Create topic successfully'})
-  }
-} catch (error) {
-  console.log(error)
-}
-}
 
-exports.getBatchTopic =async (req,res,next) =>{
+exports.getHistory =async (req,res,next) =>{
   try {
     const batch = await Batch.findOne({_id:req.body.id})
-    const bank = await questionBank.find()
-
     if(batch){
-      const check =[]
-      const details ={
-        setDate:batch.setDate,
-        setTimeFrom:batch.setTimeFrom,
-        setTimeTo:batch.setTimeTo,
-        setMark:batch.setMark,
-        setNegativeMark:batch.setNegativeMark
-      }
-      if(batch.scheduleTest.length > 0) batch.scheduleTest.map(task => check.push(task.quesID.valueOf()))
-      const avalibleQues = bank.filter(task => check.indexOf(task._id.valueOf()) !== -1 )
-      const batchQues = batch.scheduleTest
       
-      res.json({status:'ok',avalibleQues:avalibleQues,batchQues:batchQues,details:details})
+      res.json({status:'ok',message:batch.scheduleTest})
     }
   } catch (error) {
-    console.log(error)
-  }
-}
-
-exports.saveChangeBatch =async(req,res,next)=>{
-  try {
-    const batch = await Batch.findOne({_id:req.body.id})
-    batch.scheduleTest = req.body.data
-    batch.save()
-    res.json({status:'success',message:'save change successfully'})
-  } catch (error) {
-    console.log(error)
+    
   }
 
-
 }
+
+
+

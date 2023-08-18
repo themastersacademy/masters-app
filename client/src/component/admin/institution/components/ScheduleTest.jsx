@@ -26,7 +26,7 @@ export default function ScheduleTest({
   const { search } = useLocation();
   const id = search.split("=")[1];
   const getBank = () => {
-    fetch("/api/admin/createBatechTopic", {
+    fetch("/api/admin/getBatechTopic", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -84,7 +84,7 @@ export default function ScheduleTest({
               })
                 .then((res) => res.json())
                 .then((data) => {
-                  if (data.status == "success") console.log(data);
+                  if (data.status == "success") Notificate(data.status, data.message);
                 });
             }
           } else Notificate("info", "Please check from time and to time");
@@ -116,19 +116,6 @@ export default function ScheduleTest({
     });
     getBank();
 
-    // fetch('/api/admin/selectBatchTopic',{
-    //     method:"POST",
-    //     headers:{
-    //         "Content-type":"application/json"
-    //     },
-    //     body:JSON.stringify({id:id,topic:data})
-    // })
-    // .then((res) => res.json())
-    // .then((data) => {
-    //   console.log(data)
-    //   setChange(!isChange)
-
-    // });
   };
 
   useEffect(() => {
@@ -419,7 +406,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
             }}
             onChange={handleExamDuration}
             label="Exam Duration"
-            placeholder="Enter duration"
+            placeholder="Enter minutes"
           />
         </DemoContainer>
       </LocalizationProvider>

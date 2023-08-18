@@ -6,10 +6,16 @@ const examSchema = new Schema({
         required: true,
         enum: ['schedule', 'mock', 'practice']
     },
+    batchID:{
+        type: Schema.Types.ObjectId,
+                ref: 'batch',
+                required: true
+    },
     title:{
         type: String,
         required: true
     },
+ 
     examDate:{
         type: String,
         required: true

@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import ScheduleTest from "./ScheduleTest";
 import { useLocation } from "react-router-dom";
+import History from './History'
 import Notification from "../../../../util/Alert";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,41 +57,34 @@ export default function BatchFolder({}) {
   const [isChange, setChange] = useState(false);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
+  const [history,setHistory] = useState([])
   const [notificate, setNotification] = useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const getBatchTopic = () => {
-    fetch("/api/admin/getBatchTopic", {
+  const deleteBatchTopic = () => {
+  setChange(!isChange)
+  };
+
+  const getHistory = () =>{
+    fetch("/api/admin/getHistory", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify({ id: id }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status == "ok") {
-      
-        //   setQuestion({
-        //     avalibleQues: data.avalibleQues,
-        //     batchQues: data.batchQues,
-        //   });
-        //   setDetails(data.details)
-        }
-      });
-  };
-  const deleteBatchTopic = () => {
-  setChange(!isChange)
-  };
+    .then(res => res.json())
+    .then((data) => { 
+      console.log(data)
+      if(data.status == 'ok')  setHistory(data.message)
+     
+    } ) 
+  }
 
-  useEffect(() => {
-    getBatchTopic();
-  },[isChange]);
-  useEffect(() => {
-    console.log(question)
-  }, [question]);
+  useEffect(()=>{getHistory()},[])
+
   const Notificate =(status,message) =>{
     setSeverity(status)
     setMessage(message)
@@ -123,6 +117,7 @@ export default function BatchFolder({}) {
           <Tab label="Batch" {...a11yProps(0)} />
           <Tab label="Schedule Test" {...a11yProps(1)} />
           <Tab label="Requests" {...a11yProps(2)} />
+          <Tab label="History" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -140,7 +135,12 @@ export default function BatchFolder({}) {
         Notificate={Notificate}
         />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}></CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+
+       </CustomTabPanel>
+       <CustomTabPanel value={value} index={3}>
+      <History history={history} />
+        </CustomTabPanel>
      <Notification 
        setNotification={setNotification}
        notificate={notificate}
