@@ -168,6 +168,8 @@ export default function ExamState() {
           currentQuestionIndex={currentQuestionIndex}
           handleQuestionClick={handleQuestionClick}
           questionCategoryList={examInfo.questionCategoryList}
+          isBookmarked={isBookmarked}
+          studentAnswers={studentAnswers}
         />
       </Stack>
     </Stack>

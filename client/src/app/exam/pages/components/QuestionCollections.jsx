@@ -1,7 +1,12 @@
 import { Paper, Stack, Button } from "@mui/material";
 
-export default function QuestionCollections({ questionCategoryList, handleQuestionClick, currentQuestionIndex }) {
-
+export default function QuestionCollections({
+  questionCategoryList,
+  handleQuestionClick,
+  currentQuestionIndex,
+  isBookmarked,
+  studentAnswers
+}) {
   return (
     <Paper
       sx={{
@@ -81,6 +86,8 @@ export default function QuestionCollections({ questionCategoryList, handleQuesti
             questionListLength={questionCategory.questionListLength}
             handleQuestionClick={handleQuestionClick}
             currentQuestionIndex={currentQuestionIndex}
+            isBookmarked={isBookmarked}
+            studentAnswers={studentAnswers}
             previousTotalQuestionListLength={
               index === 0
                 ? 0
@@ -100,7 +107,9 @@ const QuestionCategory = ({
   questionListLength,
   previousTotalQuestionListLength,
   handleQuestionClick,
-  currentQuestionIndex
+  currentQuestionIndex,
+  isBookmarked,
+  studentAnswers
 }) => {
   return (
     <Stack
@@ -123,14 +132,35 @@ const QuestionCategory = ({
               minWidth: "35px",
               height: "35px",
               borderRadius: "5px",
-              border: "3px solid #9F9F9F",
-              borderColor: currentQuestionIndex === previousTotalQuestionListLength + index ? "#187163" : "#9B9B9B",
+              border: "3px solid #9B9B9B",
+              borderColor:
+                isBookmarked[previousTotalQuestionListLength + index] &&
+                currentQuestionIndex === previousTotalQuestionListLength + index
+                  ? "#187163"
+                  : isBookmarked[previousTotalQuestionListLength + index]
+                  ? "#FEA800"
+                  : currentQuestionIndex ===
+                    previousTotalQuestionListLength + index
+                  ? "#187163"
+                  : "#9B9B9B",
               fontSize: "14px",
-              color: currentQuestionIndex === previousTotalQuestionListLength + index ? "#187163" : "#9B9B9B",
+              color: isBookmarked[previousTotalQuestionListLength + index]
+                ? "white"
+                : currentQuestionIndex ===
+                  previousTotalQuestionListLength + index
+                ? "#187163"
+                : "#9B9B9B",
+              backgroundColor: studentAnswers[previousTotalQuestionListLength + index] ? "#187163" : isBookmarked[
+                previousTotalQuestionListLength + index
+              ]
+                ? "#FEA800"
+                : "white",
               padding: "0",
               margin: "0",
             }}
-            onClick={() => handleQuestionClick(previousTotalQuestionListLength + index)}
+            onClick={() =>
+              handleQuestionClick(previousTotalQuestionListLength + index)
+            }
           >
             {previousTotalQuestionListLength + index + 1}
           </Button>
