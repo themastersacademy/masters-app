@@ -5,7 +5,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
+import useWindowDimensions from '../../../util/useWindowDimensions';
 function FirstPage({controlNotification}) {
+  const { width } = useWindowDimensions();
   const [getDetails,setDetails] = useState({email:'',password:''})
     const navigator = useNavigate()
     const signup = () =>{
@@ -43,6 +45,11 @@ else {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                   ...(width < 1000 && {
+          width: "80%",
+          height: "443px",
+       
+        })
                 }}
               >
                 <Stack

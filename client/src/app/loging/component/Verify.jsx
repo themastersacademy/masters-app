@@ -4,7 +4,9 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import useWindowDimensions from '../../../util/useWindowDimensions';
 function Verify({controlNotification}) {
+  const { width } = useWindowDimensions();
     const [otp,setOtp] = useState('')
   const navigator = useNavigate();
  
@@ -49,6 +51,11 @@ function Verify({controlNotification}) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        ...(width < 1000 && {
+          width: "80%",
+          height: "500px",
+       
+        })
       }}
     >
       <Stack direction="column" spacing='35px' width="80%"  height="50%">

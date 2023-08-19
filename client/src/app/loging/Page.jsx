@@ -35,11 +35,13 @@ function Page() {
         severity={severity}
       />
       <Stack
+        
         justifyContent="center"
         alignItems="center"
         width="100%"
         height="100vh"
       >
+        {width > 1000 ?  
         <Paper sx={{ background: "#FFF", width: "80%", height: "90%" }}>
           <Stack
             sx={{ background: "#FFF" }}
@@ -101,6 +103,7 @@ function Page() {
                 />
               ) : null}
                   {pathName == "/login" ? (
+                 
                 <Login
                   controlNotification={controlNotification}
                   
@@ -109,6 +112,30 @@ function Page() {
             </Stack>
           </Stack>
         </Paper>
+
+        :  
+        pathName == "/login" ? (
+                 
+          <Login
+            controlNotification={controlNotification}
+            
+          />
+        ) : 
+        pathName == "/login/goal" ? (
+          <ChooseGoal
+            controlNotification={controlNotification}
+            
+          />
+        ) : 
+        pathName == "/signup" ? (
+          <FirstPage controlNotification={controlNotification} />
+        ) : 
+        pathName == "/login/verify" ? (
+          <Verify controlNotification={controlNotification} />
+        ) :
+        pathName == "/login/create" ? (
+          <CreatePage controlNotification={controlNotification} />
+        ) : null}
       </Stack>
     </div>
   );

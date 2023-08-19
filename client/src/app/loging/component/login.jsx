@@ -4,11 +4,12 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from 'react-router-dom';
+import useWindowDimensions from '../../../util/useWindowDimensions';
 function Login({controlNotification}) {
+  const { width } = useWindowDimensions();
   const [getDetails,setDetails] = useState({email:'',password:''})
     const navigator = useNavigate()
     const signup = () =>{
-
  
       if(getDetails.email !== '' , getDetails.password !== ''){  
       fetch('/api/user/login',{
@@ -42,6 +43,11 @@ function Login({controlNotification}) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  ...(width < 1000 && {
+                    width: "80%",
+                    height: "443px",
+                 
+                  })
                 }}
               >
                 <Stack

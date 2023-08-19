@@ -6,9 +6,10 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Radio from "@mui/material/Radio";
 import Image from "../../../util/Avater";
+import useWindowDimensions from '../../../util/useWindowDimensions';
 export default function CreatePage({ controlNotification }) {
   const navigator = useNavigate();
-
+  const { width } = useWindowDimensions();
   const [gender, setGender] = useState([
     { title: "Male", isSelect: true },
     { title: "Female", isSelect: false },
@@ -107,6 +108,11 @@ export default function CreatePage({ controlNotification }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        ...(width < 1000 && {
+          width: "80%",
+          height: "500px",
+       
+        })
       }}
     >
       <Stack direction="column" spacing="20px" width="80%" height="95%">
@@ -171,6 +177,7 @@ export default function CreatePage({ controlNotification }) {
                       task={task}
                       setAvatar={setMaleAvatar}
                       index={index}
+                      width={width}
                     />
                   ))
                 : ""
@@ -184,6 +191,7 @@ export default function CreatePage({ controlNotification }) {
                       task={task}
                       setAvatar={setFealeAvatar}
                       index={index}
+                      width={width}
                     />
                   ))
                 : ""
@@ -196,7 +204,9 @@ export default function CreatePage({ controlNotification }) {
             borderRadius: "4px",
             width: "100%",
             color: "white",
-            background: "#187163",
+            // background: "#187163",
+             color: width < 1000 ?"#187163" : 'white',
+             background: width < 1000 ?"white" : '#187163',
           }}
           onClick={()=>{
             if(details.name == '' && details.phone == '' ) controlNotification('info','Please fill the details')
@@ -251,6 +261,7 @@ const ChooseGender = ({ task, index, setGender }) => {
           "&.Mui-checked": {
             color: "#FEA800",
           },
+          marginRight:'5px'
         }}
       />
       <p>{task.title}</p>
@@ -258,7 +269,7 @@ const ChooseGender = ({ task, index, setGender }) => {
   );
 };
 
-const ChooseAvatar = ({ task, index, setAvatar }) => {
+const ChooseAvatar = ({ task, index, setAvatar,width }) => {
   const change = () => {
     setAvatar((preValue) => {
       const getValue = [...preValue];
@@ -276,17 +287,18 @@ const ChooseAvatar = ({ task, index, setAvatar }) => {
   };
 
   const style = {
+
     image: {
-      width: "56px",
-      height: "56px",
+      width: width > 1000 ?"56px" : '40px',
+      height: width > 1000 ?"56px" : '40px',
       border: "solid #187163",
       borderRadius: "350px",
     },
   };
   const style2 = {
     image: {
-      width: "56px",
-      height: "56px",
+      width: width > 1000 ?"56px" : '40px',
+      height: width > 1000 ?"56px" : '40px',
       borderRadius: "350px",
     },
   };

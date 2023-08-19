@@ -6,8 +6,9 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Image from "../../../util/Avater";
 import "../../../App.css";
+import useWindowDimensions from '../../../util/useWindowDimensions';
 export default function ChooseGoal({ controlNotification }) {
-
+  const { width } = useWindowDimensions();
   const navigator = useNavigate();
   const name = [
     "Placement Training",
@@ -71,6 +72,12 @@ export default function ChooseGoal({ controlNotification }) {
       fontWeight: "700",
       lineHeight: " normal",
     },
+    scroll:{ 
+
+      overflowY:"scroll",
+    minHeight:width > 1000 ? "350px" : '310px'
+   
+  }
   };
   return (
     <Paper
@@ -83,14 +90,19 @@ export default function ChooseGoal({ controlNotification }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        ...(width < 1000 && {
+          width: "80%",
+          height: "443px",
+       
+        })
       }}
     >
-      <Stack direction="column" spacing="15px" width="80%" height="90%">
+      <Stack direction="column" spacing="15px" width={width > 1000 ? "80%" : '90%'} height={width > 1000 ? "90%" : '90%'}>
         <h1 style={style.heading}>Select Goal</h1>
 
         <div
           className="scrollHide"
-          style={{ overflowY: "scroll", minHeight: "350px" }}
+         style={style.scroll}
         >
           <Stack direction="column" spacing="10px">
             {goal.map((task, index) =>
@@ -131,6 +143,8 @@ export default function ChooseGoal({ controlNotification }) {
             width: "100%",
             color: "white",
             background: "#187163",
+            color: width < 1000 ?"#187163" : 'white',
+            background: width > 1000 ?"#187163" : 'white',
           }}
           onClick={finish}
         >
