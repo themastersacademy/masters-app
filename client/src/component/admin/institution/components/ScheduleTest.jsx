@@ -21,7 +21,7 @@ export default function ScheduleTest({
   isChange,
   Notificate,
 }) {
-  console.log(details);
+
   const [task, setTask] = useState([]);
   const { search } = useLocation();
   const id = search.split("=")[1];
@@ -35,13 +35,13 @@ export default function ScheduleTest({
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        
         if (data.status == "success") {
           const check = [];
           const send = [];
           if (question.batchQues == 0) setTask(data.message);
           else {
-            console.log("call");
+           
             question.batchQues.map((task) => check.push(task._id.valueOf()));
             data.message.map((task) => {
               if (check.indexOf(task._id.valueOf()) == -1) send.push(task);
@@ -56,7 +56,7 @@ export default function ScheduleTest({
     const check = [];
     if (question.batchQues !== undefined) {
       if( details.setNegativeMark !== "" ){
-      // if (details.examDuration !== "0" && details.examDuration !== "") {
+    
         if (details.setExamTitle !== "") {
           question.batchQues.map((task) => {
             if (
@@ -89,19 +89,19 @@ export default function ScheduleTest({
             }
           } else Notificate("info", "Please check from time and to time");
         } else Notificate("info", "Please type exam title");
-      // } else Notificate("info", "Please enter exam duration");
+    
     }
     else Notificate("info", "Please enter negative mark duration");
     }
   };
 
   const createBank = (data) => {
-    console.log(data);
+   
 
     setQuestion((preValue) => {
       const getValue = { ...preValue };
       const avalibleQues = getValue.avalibleQues;
-      avalibleQues.push(data);
+      
       getValue.avalibleQues = avalibleQues;
       getValue.batchQues.push({
         title: data.title,
@@ -175,7 +175,7 @@ export default function ScheduleTest({
           <div
             style={{
               width: "100%",
-              height: "60vh",
+              height: "30vh",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -216,7 +216,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
     const date = new Date(e.$d);
  
     var setTimeFrom = date.getHours() + ":" + date.getMinutes();
-    var endTime ='04:03'
+   
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setTimeFrom = setTimeFrom;
@@ -232,7 +232,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
     getValue.examDuration = getTime
     return getValue;
   });
-  console.log(getTime)
+ 
   };
 
 
@@ -270,7 +270,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
       getValue.examDuration = getTime
       return getValue;
     });
-    console.log(getTime)
+    
   };
 
   const handleMark = (e) => {
@@ -282,7 +282,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
       });
   };
   const handleNegative = (e) => {
-    console.log(date);
+   
     if (e.target.value >= 0)
       setDetails((preValue) => {
         const getValue = { ...preValue };

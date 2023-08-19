@@ -83,9 +83,9 @@ export default function BatchFolder({}) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+      
         if (data.status == "ok") {
-          console.log(data);
+      
         
           setHead(data.head);
    setBatch(data.message)

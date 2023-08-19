@@ -7,10 +7,12 @@ import AddBatch from "./AddBatch";
 import Image from "../../../../util/Avater";
 import { SvgIcon } from "@mui/material";
 import '../../../../App.css'
+import AddTeacher from './AddTeacher'
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 export default function InstitutePage({ ControlNotification }) {
   const { search } = useLocation();
   const id = search.split("=")[1];
+  const [teacher,setTeacher] = useState([])
   const [institute, setInstitute] = useState([]);
   const getInstitution = () => {
     fetch("/api/admin/getInstitution", {
@@ -22,13 +24,23 @@ export default function InstitutePage({ ControlNotification }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+       
         if (data.status == "success") setInstitute(data.message);
       });
   };
 
+  const getTeacher = () =>{
+    fetch('/api/admin/getTeacher')
+    .then(res => res.json())
+    .then((data)=> {
+      setTeacher(data.message)
+     
+    })
+  }
+
   useEffect(() => {
     getInstitution();
+    getTeacher();
   }, []);
   return (
     <div>
@@ -38,6 +50,7 @@ export default function InstitutePage({ ControlNotification }) {
           ""
         ) : (
           <Home
+            teacher={teacher}
             institute={institute}
             id={id}
             ControlNotification={ControlNotification}
@@ -48,8 +61,8 @@ export default function InstitutePage({ ControlNotification }) {
   );
 }
 
-const Home = ({ institute, id, ControlNotification }) => {
-  console.log(institute);
+const Home = ({ institute, id, ControlNotification,teacher }) => {
+
   const style = {
     image: {
       width: " 40px",
@@ -99,9 +112,8 @@ const Home = ({ institute, id, ControlNotification }) => {
           <p style={style.name}>{institute.name}</p>
         </Stack>
         <Stack direction="row" alignItems="center" spacing="15px">
-          <Button startIcon={<AddIcon />} style={style.addBtn}>
-            Add Teacher
-          </Button>
+       
+          <AddTeacher id={id} teacher={teacher} ControlNotification={ControlNotification}   />
           <AddBatch id={id} ControlNotification={ControlNotification} />
         </Stack>
       </Stack>

@@ -13,8 +13,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 
 export default function Batch({ batch,getRequestAccess }) {
-    console.log(batch)
-    const [list,setList] = useState(batch)
+  
+  
   const check = [];
   return (
     <div>
