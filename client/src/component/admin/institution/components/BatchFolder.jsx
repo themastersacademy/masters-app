@@ -56,6 +56,7 @@ export default function BatchFolder({}) {
     setNegativeMark: "0",
     setExamTitle: "",
     examDuration: "0",
+  
   });
   const [batch,setBatch] = useState([])
   const [value, setValue] = useState(0);

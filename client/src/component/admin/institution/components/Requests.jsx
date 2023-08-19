@@ -26,7 +26,16 @@ export default function Requests({ batch,getRequestAccess }) {
       {check.length > 0 ? (
         <RequestList task={batch.studendList} getRequestAccess={getRequestAccess} />
       ) : (
-        <div>No Requirest</div>
+        <div  style={{
+          width: "100%",
+          height: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "20px",
+          fontWeight: "bold",
+          color: "#CACACA",
+        }} >No Requirest</div>
       )}
     </div>
   );

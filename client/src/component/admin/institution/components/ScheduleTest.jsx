@@ -56,7 +56,7 @@ export default function ScheduleTest({
     const check = [];
     if (question.batchQues !== undefined) {
       if( details.setNegativeMark !== "" ){
-      if (details.examDuration !== "0" && details.examDuration !== "") {
+      // if (details.examDuration !== "0" && details.examDuration !== "") {
         if (details.setExamTitle !== "") {
           question.batchQues.map((task) => {
             if (
@@ -89,7 +89,7 @@ export default function ScheduleTest({
             }
           } else Notificate("info", "Please check from time and to time");
         } else Notificate("info", "Please type exam title");
-      } else Notificate("info", "Please enter exam duration");
+      // } else Notificate("info", "Please enter exam duration");
     }
     else Notificate("info", "Please enter negative mark duration");
     }
@@ -200,40 +200,77 @@ const SetDetailsExam = ({ setDetails, details }) => {
   const [to, setToValue] = useState(dayjs(`2022-04-17T${details.setTimeTo}`));
   const [date, setDate] = useState(new Date());
   const handleChange = (e) => {
-    console.log(e.$d);
+   
     const date = new Date(e.$d);
-    var finaldate =
-      date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+  
+    var finaldate = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setDate = e.$d;
       return getValue;
     });
   };
+
+
   const handleFromTimeChange = (e) => {
     const date = new Date(e.$d);
+ 
     var setTimeFrom = date.getHours() + ":" + date.getMinutes();
-
-    console.log(`2022-04-17T${setTimeFrom}`);
-
+    var endTime ='04:03'
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setTimeFrom = setTimeFrom;
+     
       return getValue;
     });
+    
+  
+  
+  const getTime = diff(setTimeFrom,details.setTimeTo)
+  setDetails((preValue) => {
+    const getValue = { ...preValue };
+    getValue.examDuration = getTime
+    return getValue;
+  });
+  console.log(getTime)
   };
+
+
+  function diff(start, end) {
+    start = start.split(":");
+    end = end.split(":");
+    var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+    var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+    var diff = endDate.getTime() - startDate.getTime();
+    var hours = Math.floor(diff / 1000 / 60 / 60);
+    diff -= hours * 1000 * 60 * 60;
+    var minutes = Math.floor(diff / 1000 / 60);
+
+    // If using time pickers with 24 hours format, add the below line get exact hours
+    if (hours < 0)
+       hours = hours + 24;
+
+    return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+}
 
   const handleToTimeChange = (e) => {
     const date = new Date(e.$d);
+    
     var setTimeTo = date.getHours() + ":" + date.getMinutes();
-
-    console.log(`2022-04-17T${setTimeTo}`);
 
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setTimeTo = setTimeTo;
+     
       return getValue;
     });
+    const getTime = diff(details.setTimeFrom,setTimeTo)
+    setDetails((preValue) => {
+      const getValue = { ...preValue };
+      getValue.examDuration = getTime
+      return getValue;
+    });
+    console.log(getTime)
   };
 
   const handleMark = (e) => {
@@ -393,9 +430,11 @@ const SetDetailsExam = ({ setDetails, details }) => {
           />
 
           <TextField
-            type="number"
+            type='text'
+            disabled
             value={details.examDuration}
             sx={{
+            
               background: "#FFF",
               "&:hover fieldset": {
                 border: "1px solid #187163!important",
