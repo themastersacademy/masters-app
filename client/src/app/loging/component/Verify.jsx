@@ -63,6 +63,7 @@ function Verify({controlNotification}) {
         <Stack direction="column" spacing="20px">
           <label htmlFor="">OTP</label>
           <TextField
+          type="number"
             id="outlined-basic"
             label="Enter your OTP"
             variant="outlined"

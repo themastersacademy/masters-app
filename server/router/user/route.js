@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {create,checkOtp,createDetails,chooseGoal,login,requirest} = require('../../controller/user/controller.js')
+const {create,checkOtp,createDetails,chooseGoal,login,requirest,getUserData} = require('../../controller/user/controller.js')
 
 // login
 router.post('/login',login)
@@ -19,5 +19,7 @@ router.post('/chooseGoal',chooseGoal)
 
 //requirest
 router.post('/requirest',requirest)
+// getUserData
+router.post('/getUserData',getUserData)
 
 module.exports=router

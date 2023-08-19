@@ -4,7 +4,7 @@ import PlanChip from "./PlanChip";
 import { useState } from "react";
 import { ExpandMore } from "@mui/icons-material";
 
-export default function MDNavBar() {
+export default function MDNavBar({user}) {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => (event) => {
     setOpen(open);
@@ -50,7 +50,7 @@ export default function MDNavBar() {
       </Button>
       <Avatar
         alt="Remy Sharp"
-        src={Avater.student}
+        src={user.avatar}
         sx={{ width: 40, height: 40 }}
       />
       <SwipeableDrawer

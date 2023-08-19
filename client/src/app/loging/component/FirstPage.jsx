@@ -29,7 +29,7 @@ function FirstPage({controlNotification}) {
 
     }     
 else {
-    controlNotification('Enter valid Email!')
+    controlNotification('info','Enter valid Email!')
   }
   }
   else controlNotification('info','Please fill the details')
@@ -79,7 +79,7 @@ else {
                     <label htmlFor="">Create password</label>
                     <TextField
                       id="outlined-basic"
-                      label="create your password"
+                      label="Enter your password"
                       variant="outlined"
                       onChange={(e)=> setDetails((preValue)=> {
                         const getValue = {...preValue}

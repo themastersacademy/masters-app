@@ -4,8 +4,9 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
+import useWindowDimensions from "./useWindowDimensions";
 function Notification({ setNotification, notificate, message, severity }) {
+  const {width} = useWindowDimensions()
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -17,8 +18,9 @@ function Notification({ setNotification, notificate, message, severity }) {
           top: 80,
           right: 40,
           zIndex: 9999,
-          width: 400,
-          height: 100,
+          width: width >1000 ? 400 : 300,
+          height: width >1000 ? 100 : 100,
+          
         }}
         severity={!severity ? "success" : severity}
         action={

@@ -9,16 +9,26 @@ import {
 import Avater from "../../../util/Avater";
 import PlanChip from "./PlanChip";
 import { useState } from "react";
-
-export default function TopNavBar() {
+import { useNavigate } from "react-router-dom";
+export default function TopNavBar({user}) {
+   const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
+   
     setAnchorEl(null);
   };
+  const handleLogout = () =>{
+    fetch('/logout')
+    .then( res => res.json())
+    .then(data =>{
+      if(data.status == 'logout') navigete('/login')
+    })
+    
+  }
   return (
     <Paper
       sx={{
@@ -83,16 +93,16 @@ export default function TopNavBar() {
                 width: "40px",
                 height: "40px",
               }}
-              src={Avater.student}
+              src={user.avatar}
             />
           </Button>
           <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem onClick={handleClose}>
-              <Avatar />
-              Avinash
+              <Avatar src={user.avatar} />
+                   {user.name}
             </MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleClose} >My account</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Stack>
       </Stack>

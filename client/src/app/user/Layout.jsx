@@ -18,6 +18,7 @@ export default function Layout() {
   const id = search.split("=")[1];
   const { width } = useWindowDimensions();
   const [institute, setInstitue] = useState([]);
+  const [user,setUser] = useState([])
   const [details, setDetails] = useState({
     userID: id,
     instituteName: "",
@@ -42,20 +43,36 @@ export default function Layout() {
         if (data.status == "ok") setInstitue(data.message);
         console.log(data);
       });
+   
   };
+  const getUserDetails = () =>{
+    fetch("/api/user/getUserData",{
+      method:"POST",
+      headers:{
+        "Content-type":"application/json"
+      },
+      body:JSON.stringify({id:id})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status == "ok") setUser(data.message);
+      console.log(data);
+    });
+  }
   useEffect(() => {
     console.log(details);
   }, [details]);
   useEffect(() => {
     getInstitute();
-  }, []);
+    getUserDetails()
+  },[]);
 
   return (
     <div>
 {    width > 1024 ? (
-    <DTView institute={institute} details={details} setDetails={setDetails} Notificate={Notifications} />
+    <DTView institute={institute} user={user} details={details} setDetails={setDetails} Notificate={Notifications} />
   ) : (
-    <MoView institute={institute} details={details} setDetails={setDetails} Notificate={Notifications} />
+    <MoView institute={institute} user={user} details={details} setDetails={setDetails} Notificate={Notifications} />
   )}
  
 <Notification 
@@ -68,7 +85,7 @@ export default function Layout() {
   )
 }
 
-function DTView({ institute, setDetails, details,Notificate }) {
+function DTView({ institute, setDetails, details,Notificate,user }) {
   return (
     <Stack
       direction="column"
@@ -89,7 +106,7 @@ function DTView({ institute, setDetails, details,Notificate }) {
           maxWidth: "1240px",
         }}
       >
-        <TopNavBar />
+        <TopNavBar user={user} />
         <Grid
           container
           width={"100%"}
@@ -145,7 +162,7 @@ function a11yProps(index) {
   };
 }
 
-function MoView({ institute, setDetails, details,Notificate }) {
+function MoView({ institute, setDetails, details,Notificate,user }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -157,7 +174,7 @@ function MoView({ institute, setDetails, details,Notificate }) {
         minHeight: "100vh",
       }}
     >
-      <MDNavBar />
+      <MDNavBar user={user} />
       <Stack
         overflow={"scroll"}
         sx={{

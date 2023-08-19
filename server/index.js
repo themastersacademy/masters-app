@@ -44,7 +44,7 @@ app.get("/", userVerify, (req, res) => {
 
 app.get('/logout',(req,res)=>{
     req.session.destroy()
-    res.send('logout')
+    res.json({status:'logout'})
 })
 app.get("/login",isLogin,(req, res) => {
     console.log(req.path)

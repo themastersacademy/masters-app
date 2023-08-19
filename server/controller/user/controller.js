@@ -4,6 +4,7 @@ const { SendEmail } = require("../email/email.js");
 const { generateOtp } = require("../../util/OTB.js");
 const Batch = require("../../models/batch.js");
 const Institution = require("../../models/institution.js");
+const Goal = require('../../models/goal.js')
 exports.login = async (req, res, next) => {
   const password = req.body.password;
   const secret = "This is a company secret ";
@@ -72,13 +73,38 @@ exports.createDetails = async (req, res, next) => {
 };
 
 exports.chooseGoal = async (req, res, next) => {
-  console.log(req.body);
-  const user = await User.findOne({ _id: req.session.userID });
-  if (user) {
-    req.body.goal.map((task) => {
-      if (user.goal.indexOf(task._id) == -1) user.goal.push(task._id);
-    });
-    user.save();
+ 
+  const goal = req.body.goal
+ 
+   const user = await User.findOne({ _id: req.session.userID });
+  // const user = await User.findOne({ _id:'64d91a8434866fe7d81ab1c0' });
+
+  if (user) {    
+
+    goal.map(task => {
+      const collectTopic =[]
+      task.collections.map(task =>{
+      task.topic.map(task => collectTopic.push({topicName:task.title,topicId:task.id}))    
+    })
+    const createGoal = Goal({
+      courseName:task.title,
+      courseId:task._id,
+      userId:user._id,
+      topics:collectTopic
+    })
+ createGoal.save()
+ user.goal.push(createGoal._id)
+
+   })  
+ 
+   user.save()
+    // req.body.goal.map((task) => {
+    //   if (user.goal.indexOf(task._id) == -1) {
+    //     user.goal.push(task._id)
+    //   };
+
+    // });
+    // user.save();
     res.json({ status: "success", message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });
 };
@@ -114,7 +140,7 @@ exports.requirest = async (req, res, next) => {
             batch.save();
             res.json({
               status: "success",
-              message: "institute join successfully",
+              message: "institute join request successfully",
             });
           } else
             res.json({ status: "error", message: "your already registered" });
@@ -125,3 +151,18 @@ exports.requirest = async (req, res, next) => {
     console.log(error);
   }
 };
+
+
+exports.getUserData = async(req,res,next) =>{
+  try {
+    console.log(req.body);
+    const user =await User.findOne({_id:req.body.id})   
+    if(user){
+      res.json({status:'ok',message:user})
+    }
+  } catch (error) {
+    res.json({staus:'error',message:"something wrong"})
+  }
+         
+  
+}
