@@ -11,6 +11,7 @@ export default function SetQuestion({
   deleteBatchTopic
 }) {
 console.log(task)
+console.log(avalible)
   const [limit, setLimit] = useState({
     easy: false,
     medium: false,

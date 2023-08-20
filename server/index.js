@@ -37,6 +37,7 @@ app.use("/api", route);
 
 console.log(app)
 app.get('/isLogin',(req,res) =>{
+
   if(req.session.isLogin) res.json({status:'isLogin',id:req.session.userID})
   else res.json({status:'isLogout'})
   })
@@ -50,6 +51,7 @@ app.get("/", userVerify, (req, res) => {
 /// user route
 
 app.get('/logout',(req,res)=>{
+
     req.session.destroy()
     res.json({status:'logout'})
 })

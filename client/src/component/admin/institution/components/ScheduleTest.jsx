@@ -96,12 +96,12 @@ export default function ScheduleTest({
   };
 
   const createBank = (data) => {
-   
+  
 
     setQuestion((preValue) => {
       const getValue = { ...preValue };
       const avalibleQues = getValue.avalibleQues;
-      
+      avalibleQues.push(data);
       getValue.avalibleQues = avalibleQues;
       getValue.batchQues.push({
         title: data.title,
@@ -117,6 +117,8 @@ export default function ScheduleTest({
     getBank();
 
   };
+
+
 
   useEffect(() => {
     getBank();
