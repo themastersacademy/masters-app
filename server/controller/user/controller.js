@@ -98,13 +98,7 @@ exports.chooseGoal = async (req, res, next) => {
    })  
  
    user.save()
-    // req.body.goal.map((task) => {
-    //   if (user.goal.indexOf(task._id) == -1) {
-    //     user.goal.push(task._id)
-    //   };
-
-    // });
-    // user.save();
+  
     res.json({ status: "success", message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });
 };

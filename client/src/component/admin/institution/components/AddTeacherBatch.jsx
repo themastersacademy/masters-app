@@ -7,10 +7,10 @@ import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import { TextField, Autocomplete } from "@mui/material";
 
-export default function AddBatch({ id, ControlNotification, teacher ,getTeacherAccess}) {
-
+export default function AddTeacherBatch({ institute,teacherID,ControlNotification,getTeacheAccess}) {
+  const [list,setList] = useState([])
   const [open, setOpen] = useState(false);
-  const [teacherName, setTeacherName] = useState("");
+  const [batchName, setBatchName] = useState("");
   const [Error, setError] = useState("");
 
   const handleClickOpen = () => {
@@ -22,28 +22,38 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
   };
   const handleSelect = (event,value) => {
     if(value !== null)
-    setTeacherName(value);
+    setBatchName(value);
   };
   const submit = (data) => {
     setError("");
-    setTeacherName("");
-    getTeacherAccess(data.status,data.message)
-    ControlNotification(data.status, data.message);
+    setBatchName("");
+    getTeacheAccess('callInstitute','message')
+     ControlNotification(data.status,data.message);
     setOpen(false);
   };
 
+  useEffect(()=>{
+   
+    setList('')
+   setList((preValue)=>{
+    const getValue = [...preValue]
+    institute.batch.map((task)=> getValue.push({label:task.name,batchID:task.batchID}))
+    return getValue
+   })
+  },[institute])
   const createBatch = () => {
-    fetch("/api/admin/createTeacher", {
+    fetch("/api/admin/addTeacherBatch",{
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ id: id, teacherName: teacherName }),
+      body: JSON.stringify({ id: institute._id, teacherName: batchName,teacherID }),
     })
       .then((res) => res.json())
       .then((data) => {
-       
-        if (data.status == "success") submit(data);
+      
+        if (data.status == "success") submit(data); 
+        
         else if (data.status == "already") setError(true)
         else if(data.status == "error") submit(data);
       });
@@ -55,6 +65,8 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
         variant="contained"
         startIcon={<AddIcon />}
         sx={{
+          width:'140px',
+          height:'40px',
           marginRight: "20px",
           color: "white",
           backgroundColor: "#187163",
@@ -65,18 +77,18 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
         }}
         onClick={handleClickOpen}
       >
-        Add Teacher
+        Add Batch
       </Button>
       <Dialog fullWidth maxWidth="sm" open={open}   >
         <DialogTitle sx={{ background: " #187163;", color: "white" }}>
-          Add Teacher
+          Add Batch
         </DialogTitle>
         <DialogContent sx={{height:'200px'}} >
             
           <Autocomplete
             disablePortal
         
-            options={teacher}
+            options={list}
             onChange={handleSelect}
             renderInput={(params) => (
               <TextField
@@ -105,7 +117,7 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
                 }}
                 label="Add teacher"
                 placeholder="Enter Email"
-                helperText={ Error == false ? '' : 'The teacher name is already exists'}
+                helperText={ Error == false ? '' : 'batch already exists'}
               />
             )}
           />
@@ -115,7 +127,7 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
             Cancel
           </Button>
           <Button
-            disabled={teacherName === "" ? true : false}
+            disabled={batchName === "" ? true : false}
             sx={{ color: "#187163" }}
             onClick={createBatch}
           >

@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 
-export default function AddBatch({id,ControlNotification}) {
+export default function AddBatch({id,ControlNotification,getTeacherAccess}) {
 
   const [open, setOpen] = useState(false);
   const [batchName, setBatchName] = useState("");
@@ -27,6 +27,8 @@ export default function AddBatch({id,ControlNotification}) {
   const submit = (data) => {
     setError("")
     setBatchName("");
+  
+    getTeacherAccess(data.status,data.message)
     ControlNotification(data.status,data.message)
     setOpen(false);
   };
@@ -42,7 +44,7 @@ export default function AddBatch({id,ControlNotification}) {
    })
    .then(res => res.json())
    .then(data => {
-    console.log(data)
+    
     if(data.status == 'success') submit(data)
     else if(data.status == 'error') setError(data.message)
    })

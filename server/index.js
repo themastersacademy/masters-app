@@ -92,8 +92,19 @@ app.get("/admin/dashboard/course", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
-app.use("/", express.static(path.join(__dirname, "../client/build")));
 
+/// institute
+app.get("/admin/institution/page", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+app.get("/admin/institution/page/batch", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
+
+
+/// static file
+app.use("/", express.static(path.join(__dirname, "../client/build")));
 //Server
 app.listen(3001, () => {
   console.log(`Server start at port : ${process.env.PORT}`);

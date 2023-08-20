@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const isEmail = require("validator/lib/isEmail");
 
 const Schema = mongoose.Schema({
   name: {
@@ -17,6 +18,33 @@ const Schema = mongoose.Schema({
     {
       name: {
         type: String,
+      },
+      avatar: {
+        type: String,
+      },
+      batchList: [
+        {
+          batchName:{
+            type: String,
+          },
+          batchID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "batch",
+            required: true,
+          },
+        },
+      ],
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+          if (!isEmail(value)) {
+            throw new Error("Email is invalid");
+          }
+        },
       },
       id: {
         type: mongoose.Schema.Types.ObjectId,

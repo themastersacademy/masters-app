@@ -35,13 +35,28 @@ const {
 const { getUser, changeRoll } = require("../../controller/admin/user/user.js");
 const { getInstitutions } = require("../../controller/admin/controller.js");
 
-const {getInstitution,getInstituteName,getTeacher,createTeacher} = require('../../controller/admin/institute/institute.js')
-const {createBatch,getBatechTopic,getHistory,getRequestAccess} = require('../../controller/admin/institute/batch.js')
+const {
+  getInstitution,
+  getInstituteName,
+  getTeacher,
+  createTeacher,
+  addTeacherBatch,
+  editTeacherAction,
+  removeTeacher
+} = require("../../controller/admin/institute/institute.js");
+const {
+  createBatch,
+  getBatechTopic,
+  getHistory,
+  getRequestAccess,
+} = require("../../controller/admin/institute/batch.js");
 const {
   deleteBatchTopic,
 } = require("../../controller/admin/institute/delete.js");
 
-const {createScheduleExam} =require('../../controller/admin/exam/createExam.js')
+const {
+  createScheduleExam,
+} = require("../../controller/admin/exam/createExam.js");
 
 //GET
 
@@ -49,8 +64,8 @@ router.get("/getBank", getBank);
 router.get("/getCourse", getCourse);
 router.get("/getuser", getUser);
 router.get("/getInstitution", getInstitutions);
-router.get("/getInstitute",getInstituteName)
-router.get('/getTeacher',getTeacher)
+router.get("/getInstitute", getInstituteName);
+router.get("/getTeacher", getTeacher);
 // POST
 
 router.post("/question", Get);
@@ -105,14 +120,19 @@ router.post("/createBatch", createBatch);
 router.post("/getBatechTopic", getBatechTopic);
 
 //createScheduleExam
-router.post('/createScheduleExam',createScheduleExam)
+router.post("/createScheduleExam", createScheduleExam);
 
-
-router.post('/getHistory',getHistory)
+router.post("/getHistory", getHistory);
 
 //getRequestAccess
-router.post('/getRequestAccess',getRequestAccess)
+router.post("/getRequestAccess", getRequestAccess);
 //createTeacher
-router.post('/createTeacher',createTeacher)
+router.post("/createTeacher", createTeacher);
+//addTeacherBatch
+router.post("/addTeacherBatch", addTeacherBatch);
+//editTeacherAction
+router.post("/editTeacherAction", editTeacherAction);
 
+//RemoveTeacher
+router.post('/removeTeacher',removeTeacher)
 module.exports = router;
