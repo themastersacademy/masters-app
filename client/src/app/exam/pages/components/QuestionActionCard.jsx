@@ -34,7 +34,7 @@ export default function QuestionActionCard({handleNextQuestion, handlePreviousQu
             border: "2px solid #187163",
           }}
         >
-          Save & Next
+          Next
         </Button>
       </Stack>
     </Paper>

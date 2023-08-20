@@ -5,7 +5,7 @@ export default function QuestionCollections({
   handleQuestionClick,
   currentQuestionIndex,
   isBookmarked,
-  studentAnswers
+  studentAnswers,
 }) {
   return (
     <Paper
@@ -109,7 +109,7 @@ const QuestionCategory = ({
   handleQuestionClick,
   currentQuestionIndex,
   isBookmarked,
-  studentAnswers
+  studentAnswers,
 }) => {
   return (
     <Stack
@@ -144,17 +144,20 @@ const QuestionCategory = ({
                   ? "#187163"
                   : "#9B9B9B",
               fontSize: "14px",
-              color: isBookmarked[previousTotalQuestionListLength + index]
-                ? "white"
-                : currentQuestionIndex ===
-                  previousTotalQuestionListLength + index
-                ? "#187163"
-                : "#9B9B9B",
-              backgroundColor: studentAnswers[previousTotalQuestionListLength + index] ? "#187163" : isBookmarked[
-                previousTotalQuestionListLength + index
-              ]
-                ? "#FEA800"
-                : "white",
+              color:
+                studentAnswers[previousTotalQuestionListLength + index] !=
+                  null || isBookmarked[previousTotalQuestionListLength + index]
+                  ? "white"
+                  : currentQuestionIndex ===
+                    previousTotalQuestionListLength + index
+                  ? "#187163"
+                  : "#9B9B9B",
+              backgroundColor:
+                studentAnswers[previousTotalQuestionListLength + index] != null
+                  ? "#187163"
+                  : isBookmarked[previousTotalQuestionListLength + index]
+                  ? "#FEA800"
+                  : "white",
               padding: "0",
               margin: "0",
             }}

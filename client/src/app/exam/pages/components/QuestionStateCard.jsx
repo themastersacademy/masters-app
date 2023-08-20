@@ -155,11 +155,6 @@ const Options = ({
   handleOptionClick,
   studentAnswers
 }) => {
-  // const [selected, setSelected] = useState(answer);
-  // const handleChange = (value) => {
-  //   // setSelected(value);
-  //   // setAnswer(value);
-  // };
   return (
     <Stack direction="column" spacing={1}>
       {options.map((option, index) => (
