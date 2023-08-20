@@ -71,6 +71,7 @@ export default function InstitutePage({ ControlNotification }) {
         .then((data) => {
           if(data.status == 'success'){
         getInstitution()
+        getTeacher()
         ControlNotification(data.status,data.message)
           }
           if(data.status == 'error')   ControlNotification(data.status,data.message)
@@ -80,8 +81,14 @@ const getTeacherAccess =(status,data) =>{
 
 if(status == 'callInstitute') getInstitution()
 if(status == 'removeBatch') editTeacherAction('removeBatch',data)
-if(status == 'removeTeacher') removeTeacher(data)
-if(status == 'success' ) getInstitution()
+if(status == 'removeTeacher')  removeTeacher(data)
+
+
+if(status == 'success' ) {
+  getInstitution()
+  getTeacher()
+} 
+
 }
   useEffect(() => {
     getInstitution();

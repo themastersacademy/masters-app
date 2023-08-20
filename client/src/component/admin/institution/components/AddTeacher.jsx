@@ -43,7 +43,10 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
       .then((res) => res.json())
       .then((data) => {
        
-        if (data.status == "success") submit(data);
+        if (data.status == "success") {
+          submit(data);
+          
+        }
         else if (data.status == "already") setError(true)
         else if(data.status == "error") submit(data);
       });

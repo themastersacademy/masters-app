@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export default function AddNew({changeRoll}) {
+export default function AddNew({changeRoll,isChange}) {
 
   const [open, setOpen] = useState(false);
   const [list,setList] = useState([])
@@ -21,7 +21,7 @@ export default function AddNew({changeRoll}) {
   };
 
   const submit = () => {
-   
+    callList()
     changeRoll(select)
     setOpen(false);
   };
@@ -53,7 +53,7 @@ else  selectOption((preValue)=>{
 }
   useEffect(()=>{
   callList()
-  },[])
+  },[isChange])
 
 useEffect(()=>{console.log(select);},[select])
 

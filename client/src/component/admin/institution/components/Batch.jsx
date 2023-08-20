@@ -8,8 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Stack,Button,SvgIcon } from "@mui/material";
-import DoneIcon from "@mui/icons-material/Done";
-import CloseIcon from "@mui/icons-material/Close";
+
 
 
 export default function Batch({ batch,getRequestAccess }) {

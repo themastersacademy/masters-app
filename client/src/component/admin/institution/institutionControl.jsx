@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import AddNew from './components/AddNew.jsx'
-function InstitutionControl({changeRoll}) {
+function InstitutionControl({changeRoll,isChange}) {
   const style = {
     AddBtn: {
       width: " 96px",
@@ -37,7 +37,7 @@ function InstitutionControl({changeRoll}) {
             placeholder="Search"
           />
 
-<AddNew changeRoll={changeRoll} />
+<AddNew changeRoll={changeRoll} isChange={isChange} />
           {/* <Button style={style.AddBtn}>Add new</Button> */}
         </div>
       </Paper>
