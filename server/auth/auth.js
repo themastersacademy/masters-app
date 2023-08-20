@@ -56,9 +56,10 @@ exports.isUser = (req, res, next) => {
 
 exports.userVerify = (req, res, next) => {
   if (req.session.isAuth) {
-    next();
+    if(req.session.userRoll == 'student') next();
+    if(req.session.userRoll == 'teacher') res.redirect(`/admin/dashboard?=${req.session.userID}`);
   } else {
-    res.redirect("/signup");
+    res.redirect("/login")
   }
 };
 exports.userCreate = (req, res, next) => {
@@ -70,9 +71,26 @@ exports.userCreate = (req, res, next) => {
 };
 
 exports.isLogin = (req, res, next) =>{
-  if (req.session.isAuth) {
-    res.redirect('/');
+ console.log('login');
+  if (req.session.isAuth){
+    console.log('isAtuth');
+    if(req.session.userRoll == 'teacher')  res.redirect(`/admin/dashboard?=${req.session.userID}`);
+    else
+    res.redirect(`/?=${req.session.userID}`);
   } else {
-    
+    next()
   }
+}
+
+exports.isRoll= async(req,res,next) =>{
+try {
+  if (req.session.isAuth) {
+    if(req.session.userRoll == 'teacher') next()
+    else res.redirect(`/?=${req.session.userID}`);
+  } else {
+    res.redirect("/login");
+  }
+} catch (error) {
+  console.log();
+}
 }

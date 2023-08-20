@@ -2,6 +2,7 @@
 const express = require("express");
 const route = require("./router/route.js");
 const path = require("path");
+const cors = require("cors")
 const User = require("./models/user.js");
 
 const {
@@ -10,6 +11,7 @@ const {
   userVerify,
   isLogin,
   userCreate,
+  isRoll
 } = require("./auth/auth.js");
 const connectDB = require("./util/connectDB.js");
 
@@ -18,6 +20,7 @@ require("dotenv").config();
 const app = express();
 app.disable('x-powered-by')
 //Middleware
+
 app.use(express.json());
 app.use(express.text());
 //MongoBD Connection
@@ -32,7 +35,11 @@ app.use("/api", route);
 
 //Application Route
 
-
+console.log(app)
+app.get('/isLogin',(req,res) =>{
+  if(req.session.isLogin) res.json({status:'isLogin',id:req.session.userID})
+  else res.json({status:'isLogout'})
+  })
 
 
 app.get("/", userVerify, (req, res) => {
@@ -47,7 +54,7 @@ app.get('/logout',(req,res)=>{
     res.json({status:'logout'})
 })
 app.get("/login",isLogin,(req, res) => {
-    console.log(req.path)
+ 
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 app.get("/signup", (req, res) => {
@@ -65,7 +72,7 @@ app.get("/login/goal", userCreate, (req, res) => {
 
 /// admin route
 
-app.get("/admin/dashboard", (req, res) => {
+app.get("/admin/dashboard", isRoll,(req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 app.get("/admin/bank/collection", (req, res) => {

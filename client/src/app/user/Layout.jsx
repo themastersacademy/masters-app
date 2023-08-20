@@ -12,8 +12,10 @@ import PropTypes from "prop-types";
 import useWindowDimensions from "../../util/useWindowDimensions";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Notification from "../../util/Alert";
 export default function Layout() {
+  const navigator = useNavigate()
   const { search } = useLocation();
   const id = search.split("=")[1];
   const { width } = useWindowDimensions();
@@ -59,9 +61,15 @@ export default function Layout() {
       console.log(data);
     });
   }
-  useEffect(() => {
-    console.log(details);
-  }, [details]);
+
+  useEffect(()=>{
+    fetch('/isLogin')
+    .then(res => res.json())
+    .then((data) =>{ 
+      if(data.status == 'isLogout') navigator('/login')
+  })
+  },[])
+
   useEffect(() => {
     getInstitute();
     getUserDetails()

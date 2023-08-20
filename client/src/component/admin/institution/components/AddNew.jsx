@@ -55,7 +55,7 @@ else  selectOption((preValue)=>{
   callList()
   },[isChange])
 
-useEffect(()=>{console.log(select);},[select])
+
 
   return (
     <div >

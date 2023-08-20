@@ -16,9 +16,10 @@ import useWindowDimensions from "../../util/useWindowDimensions";
 import Display from "../../util/display";
 import Notification from "../../util/Alert";
 import BatchFolder from "../../component/admin/institution/components/BatchFolder";
+import { useNavigate } from "react-router-dom";
 import InstitutePage from "../../component/admin/institution/components/institutePage";
 function Dashboard() {
-
+const navigator = useNavigate()
   const pathName = window.location.pathname;
   const { width } = useWindowDimensions();
   const [isNotify,setNotify] = useState(false)
@@ -36,6 +37,14 @@ function Dashboard() {
  
     getCourse()
   },[isNotify])
+
+  useEffect(()=>{
+    fetch('/isLogin')
+    .then(res => res.json())
+    .then((data) =>{ 
+      if(data.status == 'isLogout') navigator('/login')
+  })
+  },[])
 
   const getBank = () => {
     fetch("/api/admin/getBank")

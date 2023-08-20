@@ -15,7 +15,10 @@ exports.login = async (req, res, next) => {
   const check = await User.findOne({ email: req.body.email, password: hash });
   if (check) {
     req.session.isAuth = true;
-    res.json({ status: "success", id: check._id });
+    req.session.isLogin = true
+    req.session.userID = check._id
+    req.session.userRoll = check.type
+    res.json({ status: "success", id: check._id,roll:check.type});
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
   }

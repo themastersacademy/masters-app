@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Paper, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 const InstitutionDetails = ({ task }) => {
-  console.log(task);
+ 
   const navigator = useNavigate()
 const RouteDirect = () =>{
   navigator(`/admin/institution/page?=${task.institutionID}`)

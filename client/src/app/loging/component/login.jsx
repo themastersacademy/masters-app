@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from 'react-router-dom';
+
 import useWindowDimensions from '../../../util/useWindowDimensions';
 function Login({controlNotification}) {
   const { width } = useWindowDimensions();
@@ -22,9 +23,12 @@ function Login({controlNotification}) {
       .then(res => res.json())
       .then((data) => {
         
-        if(data.status == 'success'){ 
+        if(data.status == 'success' || data.roll == 'student'){ 
           navigator(`/?=${data.id}`)
       }
+      if(data.status == 'success' || data.roll == 'teacher'){ 
+        navigator(`/admin/dashboard?=${data.id}`)
+    }
         if(data.status == 'error') controlNotification(data.status,data.message)
       })
     
@@ -32,6 +36,13 @@ function Login({controlNotification}) {
     else controlNotification('info','Please enter email and password')
        
     }
+    useEffect(()=>{
+      fetch('/isLogin')
+      .then(res => res.json())
+      .then((data) =>{ 
+        if(data.status == 'isLogin') navigator(`/?=${data.id}`)
+    })
+    },[])
   return (
         <Paper
                 sx={{
