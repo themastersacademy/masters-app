@@ -32,7 +32,7 @@ const {
   deleteGroupCourseCollection,
 } = require("../../controller/admin/course/deleteCourse.js");
 
-const { getUser, changeRoll } = require("../../controller/admin/user/user.js");
+const { getUser, changeRoll,getUserID } = require("../../controller/admin/user/user.js");
 const { getInstitutions } = require("../../controller/admin/controller.js");
 
 const {
@@ -63,6 +63,7 @@ const {
 router.get("/getBank", getBank);
 router.get("/getCourse", getCourse);
 router.get("/getuser", getUser);
+router.get("/getuserID", getUserID);
 router.get("/getInstitution", getInstitutions);
 router.get("/getInstitute", getInstituteName);
 router.get("/getTeacher", getTeacher);

@@ -27,7 +27,7 @@ export default function AddNew({changeRoll}) {
   };
   const callList = async () =>{
     
-     fetch('/api/admin/getUser')
+     fetch('/api/admin/getuserID')
     .then(res => res.json())
     .then(data => {  
         const userList =[] 

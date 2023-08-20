@@ -23,7 +23,11 @@ exports.getTeacher = async (req, res, next) => {
     const user = await User.find();
     if (user) {
       const send = [];
-      user.map((task) => send.push({ label: task.email, id: task._id }));
+      console.log(user);
+      user.map((task) => {
+   if('student' == task.type)
+        send.push({ label: task.email, id: task._id })
+      });
       res.json({ status: "ok", message: send });
     }
   } catch (error) {}

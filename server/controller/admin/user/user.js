@@ -6,6 +6,20 @@ exports.getUser = async (req,res,next) =>{
  const user = await User.find()
  if(user) res.json({status:'succes',message:user})
 }
+exports.getUserID = async(req,res,next) =>{
+try {
+  const user = await User.find()
+  if(user){
+    const get =[]
+    user.map(task => {
+      if('student' == task.type) get.push(task)
+    })
+     res.json({status:'succes',message:get})
+}
+} catch (error) {
+  console.log(error)
+}
+}
 
 exports.changeRoll = async (req,res,next) =>{
   const id = req.body.list.id
