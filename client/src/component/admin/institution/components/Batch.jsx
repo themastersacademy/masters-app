@@ -17,16 +17,16 @@ export default function Batch({ batch,getRequestAccess }) {
   const check = [];
   return (
     <div>
-       {batch.studendList.length > 0
-        ? batch.studendList.map((task, index) => {
-            if (task.requirest == true) {
+       {batch.studentList.length > 0
+        ? batch.studentList.map((task, index) => {
+            if (task.request == true) {
               check.push(task);
             
             }
           })
         : null}
       {check.length > 0 ? (
-        <RequestList task={batch.studendList} getRequestAccess={getRequestAccess} />
+        <RequestList task={batch.studentList} getRequestAccess={getRequestAccess} />
       ) : (
         <div  style={{
             width: "100%",
@@ -37,7 +37,7 @@ export default function Batch({ batch,getRequestAccess }) {
             fontSize: "20px",
             fontWeight: "bold",
             color: "#CACACA",
-          }} >No Requirest</div>
+          }} >No request</div>
       )}
     </div>
   );
@@ -110,7 +110,7 @@ const handleCancel =(data) =>{
           {task.map((row, index) => 
           { 
             
-  if(row.requirest == true)
+  if(row.request == true)
   return (
             <TableRow
               key={index}

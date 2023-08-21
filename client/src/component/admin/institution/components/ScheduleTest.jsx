@@ -75,6 +75,7 @@ export default function ScheduleTest({
             else if (check.length !== 0)
               Notificate("info", "Please fill the level");
             else {
+              
               fetch("/api/admin/createScheduleExam", {
                 method: "POST",
                 headers: {

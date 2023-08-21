@@ -119,12 +119,13 @@ exports.createScheduleExam = async (req, res, next) => {
 
                  questionCategory.push({title:task.title,id:task.id,questionList:list})
      })
-console.log(questionCategory)
+     const examDate = new Date(details.setDate);
+
       const exam = await Exam({
         type:type,
         batchID:id,
         title: details.setExamTitle,
-        examDate: details.setDate,
+        examDate: `${examDate.getDate()}/${eval(examDate.getMonth() + 1)}/${examDate.getFullYear()}`,
         examStartTime: details.setTimeFrom,
         examEndTime: details.setTimeTo,
         examDuration: details.examDuration,

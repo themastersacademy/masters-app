@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {create,checkOtp,createDetails,chooseGoal,login,requirest,getUserData} = require('../../controller/user/controller.js')
+const {create,checkOtp,createDetails,chooseGoal,login,request,getUserData} = require('../../controller/user/controller.js')
 
 // login
 router.post('/login',login)
@@ -17,8 +17,8 @@ router.post('/createDetails',createDetails)
 // choose goal
 router.post('/chooseGoal',chooseGoal)
 
-//requirest
-router.post('/requirest',requirest)
+//request
+router.post('/request',request)
 // getUserData
 router.post('/getUserData',getUserData)
 

@@ -61,7 +61,7 @@ export default function InstitutionCard({
 
   const handleSubmit = () =>{
     console.log(details)
-    fetch('/api/user/requirest',{
+    fetch('/api/user/request',{
       method:"POST",
       headers:{
         "Content-type":"application/json"

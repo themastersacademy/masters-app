@@ -7,8 +7,10 @@ import QuestionActionCard from "./components/QuestionActionCard";
 import ExamTimerCard from "./components/ExamTimerCard";
 import QuestionCollections from "./components/QuestionCollections";
 import examInfoData from "./components/examInfoData";
+import useWindowDimensions from "../../../util/useWindowDimensions";
 
 export default function ExamState() {
+  const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState(examInfoData);
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [remainingTime, setRemainingTime] = useState("00:00:00");
