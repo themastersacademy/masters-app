@@ -1,6 +1,7 @@
 const exam = require("../../models/exam.js");
 const user = require("../../models/user.js");
-const questionCollection = require('../../models/questionCollection.js')
+const questionCollection = require("../../models/questionCollection.js");
+
 exports.getExamInfo = async function (req, res) {
   const path = req.path;
   console.log(path);
@@ -99,69 +100,64 @@ const isValidExamStart = async function (examInfo) {
 exports.getExamState = async function (req, res) {
   const path = req.path;
   const userID = req.session.userID;
-
   const examId = path.split("/")[2];
 
   try {
     const getExam = await exam.findOne({ _id: examId });
-    const getQuestionCollection = await  questionCollection.find()
-   
+    const getQuestionCollection = await questionCollection.find();
+
     if (getExam) {
       const questionCategoryList = [];
-      const questionCollections = []
-      const getQuestionID = []
+      const questionCollections = [];
+      const getQuestionID = [];
       getExam.questionCategory.map((task) =>
         questionCategoryList.push({
           title: task.title,
           questionListLength: task.questionList.length,
         })
       );
-        
-       getExam.questionCategory.map((task) =>
-        task.questionList.map( async (task) => {
-            getQuestionID.push(task.id.valueOf())
-             }
-         ));
-         getQuestionCollection.map(task => {
-            if(getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-              const options =[]
-              task.options.map(option =>  options.push(option.option))
-              
-              questionCollections.push({title:task.title,
-                imageUrl:task.imageUrl,options})
-            }
-          })
-        
-          let examDate = getExam.examDate.split("/");
-          // examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
 
-          examDate  =   `${
-            eval(examDate[0] ) < 10
-              ? "0" + eval(examDate[0])
-              : eval(examDate[0] )
-          }/${
-            eval(examDate[1]) < 10
-              ? "0" + examDate[1]
-              : examDate[1]
-          }/${examDate[2]}`
+      getExam.questionCategory.map((task) =>
+        task.questionList.map(async (task) => {
+          getQuestionID.push(task.id.valueOf());
+        })
+      );
+      getQuestionCollection.map((task) => {
+        if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
+          const options = [];
+          task.options.map((option) => options.push(option.option));
 
-          const examInfoData ={
-            examTitle:getExam.title,
-            examDate: examDate,
-            examStartTime: `${getExam.examStartTime}:00`,
-            examEndTime: `${getExam.examEndTime}:00`,
-            examDuration: `${getExam.examDuration}:00`,
-            mark: getExam.mark,
-            negativeMark: getExam.negativeMark,
-            questionCategoryList,
-            questionCollections
-          }
-          console.log(examInfoData)
+          questionCollections.push({
+            title: task.title,
+            imageUrl: task.imageUrl,
+            options,
+          });
+        }
+      });
 
-     res.json(examInfoData)
-   
+      let examDate = getExam.examDate.split("/");
+      // examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+
+      examDate = `${
+        eval(examDate[0]) < 10 ? "0" + eval(examDate[0]) : eval(examDate[0])
+      }/${eval(examDate[1]) < 10 ? "0" + examDate[1] : examDate[1]}/${
+        examDate[2]
+      }`;
+
+      const examInfoData = {
+        examTitle: getExam.title,
+        examDate: examDate,
+        examStartTime: `${getExam.examStartTime}:00`,
+        examEndTime: `${getExam.examEndTime}:00`,
+        examDuration: `${getExam.examDuration}:00`,
+        mark: getExam.mark,
+        negativeMark: getExam.negativeMark,
+        questionCategoryList,
+        questionCollections,
+      };
+      console.log(examInfoData);
+
+      res.json(examInfoData);
     }
   } catch (error) {}
 };
-
-

@@ -18,7 +18,8 @@ export default function QuestionStateCard({
   handleOptionClick,
   handleBookmarkClick,
   optionList,
-  studentAnswers
+  studentAnswers,
+  isMobileView,
 }) {
   return (
     <Paper
@@ -26,7 +27,7 @@ export default function QuestionStateCard({
         p: 2,
         display: "flex",
         flexDirection: "column",
-        borderRadius: "20px",
+        borderRadius: isMobileView ? "0px" : "20px",
         gap: "15px",
       }}
     >
@@ -38,7 +39,7 @@ export default function QuestionStateCard({
       >
         <h1
           style={{
-            fontSize: "1.5rem",
+            fontSize: isMobileView ? "1rem" :"1.5rem",
           }}
         >
           Question {index + 1}
@@ -52,6 +53,7 @@ export default function QuestionStateCard({
               borderRadius: "2px",
               padding: "0",
               margin: "0",
+              fontSize: isMobileView ? "0.7rem" : "0.8rem",
             }}
             variant="contained"
           />
@@ -63,6 +65,7 @@ export default function QuestionStateCard({
               padding: "0",
               borderRadius: "2px",
               margin: "0",
+              fontSize: isMobileView ? "0.7rem" : "0.8rem",
             }}
             variant="contained"
           />

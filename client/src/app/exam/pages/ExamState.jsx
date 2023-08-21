@@ -8,15 +8,16 @@ import ExamTimerCard from "./components/ExamTimerCard";
 import QuestionCollections from "./components/QuestionCollections";
 import examInfoData from "./components/examInfoData";
 import useWindowDimensions from "../../../util/useWindowDimensions";
-import { useLocation } from "react-router-dom";
+
 export default function ExamState() {
-  const examID = '64e2cf4e06b38fbad4f42a13'
+  const examID = "64e2cf4e06b38fbad4f42a13";
   const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState(examInfoData);
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [remainingTime, setRemainingTime] = useState("00:00:00");
   const [timePercentage, setTimePercentage] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // const [isMobileView, setIsMobileView] = useState(width < 1060);
   const [studentAnswers, setStudentAnswers] = useState(() => {
     let studentAnswers = [];
     for (let i = 0; i < examInfo.questionCollections.length; i++) {
@@ -89,11 +90,11 @@ export default function ExamState() {
     }, 1000);
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     fetch(`/api/exam/get-exam-state/${examID}`)
-    .then(res => res.json())
-    .then((data) => console.log(data))
-  },[])
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }, []);
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < examInfo.questionCollections.length - 1) {
@@ -119,17 +120,62 @@ export default function ExamState() {
 
   const handleBookmarkClick = () => {
     let newIsBookmarked = [...isBookmarked];
-    newIsBookmarked[currentQuestionIndex] = !newIsBookmarked[
-      currentQuestionIndex
-    ];
+    newIsBookmarked[currentQuestionIndex] =
+      !newIsBookmarked[currentQuestionIndex];
     setIsBookmarked(newIsBookmarked);
   };
 
+  return width > 1060 ? (
+    <DtView
+      currentQuestionIndex={currentQuestionIndex}
+      handleNextQuestion={handleNextQuestion}
+      handlePreviousQuestion={handlePreviousQuestion}
+      handleQuestionClick={handleQuestionClick}
+      handleOptionClick={handleOptionClick}
+      handleBookmarkClick={handleBookmarkClick}
+      isBookmarked={isBookmarked}
+      studentAnswers={studentAnswers}
+      examInfo={examInfo}
+      remainingTime={remainingTime}
+      timePercentage={timePercentage}
+      // isMobileView={isMobileView}
+    />
+  ) : (
+    <MobileView
+      currentQuestionIndex={currentQuestionIndex}
+      handleNextQuestion={handleNextQuestion}
+      handlePreviousQuestion={handlePreviousQuestion}
+      handleQuestionClick={handleQuestionClick}
+      handleOptionClick={handleOptionClick}
+      handleBookmarkClick={handleBookmarkClick}
+      isBookmarked={isBookmarked}
+      studentAnswers={studentAnswers}
+      examInfo={examInfo}
+      remainingTime={remainingTime}
+      timePercentage={timePercentage}
+      // isMobileView={isMobileView}
+    />
+  );
+}
+
+const DtView = ({
+  currentQuestionIndex,
+  handleNextQuestion,
+  handlePreviousQuestion,
+  handleQuestionClick,
+  handleOptionClick,
+  handleBookmarkClick,
+  isBookmarked,
+  studentAnswers,
+  examInfo,
+  remainingTime,
+  timePercentage,
+}) => {
   return (
     <Stack
       sx={{
         width: "100%",
-        padding: "20px 0",
+        padding: "20px 20px",
         maxWidth: "1240px",
         height: "100vh",
       }}
@@ -183,4 +229,48 @@ export default function ExamState() {
       </Stack>
     </Stack>
   );
-}
+};
+
+const MobileView = ({
+  currentQuestionIndex,
+  handleNextQuestion,
+  handlePreviousQuestion,
+  handleQuestionClick,
+  handleOptionClick,
+  handleBookmarkClick,
+  isBookmarked,
+  studentAnswers,
+  examInfo,
+  remainingTime,
+  timePercentage,
+}) => {
+  return (
+    <Stack
+      sx={{
+        width: "100%",
+        padding: "20 20px",
+      }}
+      direction="column"
+      gap={2}
+    >
+      <ExamTimerCard
+        remainingTime={remainingTime}
+        timePercentage={timePercentage}
+        isMobileView={true}
+      />
+      <QuestionStateCard
+        index={currentQuestionIndex}
+        mark={examInfo.mark}
+        negativeMark={examInfo.negativeMark}
+        handleOptionClick={handleOptionClick}
+        handleBookmarkClick={handleBookmarkClick}
+        isBookmarked={isBookmarked[currentQuestionIndex]}
+        imageUrl={examInfo.questionCollections[currentQuestionIndex].imageUrl}
+        question={examInfo.questionCollections[currentQuestionIndex].question}
+        optionList={examInfo.questionCollections[currentQuestionIndex].options}
+        studentAnswers={studentAnswers[currentQuestionIndex]}
+        isMobileView={true}
+      />
+    </Stack>
+  );
+};
