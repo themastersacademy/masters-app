@@ -1,7 +1,10 @@
 const session = require("express-session");
 const mongoDBstore = require("connect-mongodb-session")(session);
 
+
+
 exports.sessionManagement = async (app) => {
+
   const store = new mongoDBstore({
     uri: process.env.MONGODBURL,
     collection: "sessions",

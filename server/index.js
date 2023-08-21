@@ -5,6 +5,8 @@ const path = require("path");
 const cors = require("cors")
 const User = require("./models/user.js");
 
+
+
 const {
   sessionManagement,
   AthuVerify,
@@ -14,10 +16,14 @@ const {
   isRoll
 } = require("./auth/auth.js");
 const connectDB = require("./util/connectDB.js");
+const app = express();
+
+
+
 
 //Initlization
 require("dotenv").config();
-const app = express();
+
 app.disable('x-powered-by')
 //Middleware
 
@@ -26,7 +32,7 @@ app.use(express.text());
 //MongoBD Connection
 connectDB();
 //Auth Session Management
-sessionManagement(app);
+ sessionManagement(app);
 
 // Static Files
 
