@@ -5,8 +5,8 @@ const { generateOtp } = require("../../util/OTB.js");
 const Batch = require("../../models/batch.js");
 const Institution = require("../../models/institution.js");
 const Goal = require("../../models/goal.js");
-const { table, log } = require("console");
-
+const mongoose = require('mongoose')
+const sessions =require('../../models/session.js')
 exports.login = async (req, res, next) => {
   const password = req.body.password;
   const secret = "This is a company secret ";
@@ -16,15 +16,39 @@ exports.login = async (req, res, next) => {
   const hash = sha256Hasher.update(password).digest("hex");
   const check = await User.findOne({ email: req.body.email, password: hash });
   if (check) {
-    req.session.isAuth = true;
+  
+    let get = await sessions.find()
+    const getVerify  = await isLogin(get,check.email)   
+    console.log(getVerify)
+    if(getVerify.length == 0)
+  {  req.session.isAuth = true;
     req.session.isLogin = true;
     req.session.userID = check._id;
     req.session.userRoll = check.type;
+    req.session.userName = check.name
+    req.session.email = check.email
     res.json({ status: "success", id: check._id, roll: check.type });
+  }
+  else{
+   const isDelet  = await sessions.deleteMany({expires: getVerify[0].expires})
+   req.session.isAuth = true;
+    req.session.isLogin = true;
+    req.session.userID = check._id;
+    req.session.userRoll = check.type;
+    req.session.userName = check.name
+    req.session.email = check.email
+    res.json({ status: "success", id: check._id, roll: check.type });
+    }
+    
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
   }
 };
+
+
+function isLogin (data,email){
+ return data.filter(task => task.session.email == email)
+}
 
 exports.create = async (req, res, next) => {
   console.log(req.body);

@@ -116,48 +116,75 @@ exports.getExamState = async function (req, res) {
           questionListLength: task.questionList.length,
         })
       );
+        
+       getExam.questionCategory.map((task) =>
+        task.questionList.map( async (task) => {
+            getQuestionID.push(task.id.valueOf())
+             }
+         ));
+         getQuestionCollection.map(task => {
+            if(getQuestionID.indexOf(task._id.valueOf()) !== -1) {
+              const options =[]
+              task.options.map(option =>  options.push(option.option))
+              
+              questionCollections.push({title:task.title,
+                imageUrl:task.imageUrl,options})
+            }
+          })
+        
+          let examDate = getExam.examDate.split("/");
+      
 
-      getExam.questionCategory.map((task) =>
-        task.questionList.map(async (task) => {
-          getQuestionID.push(task.id.valueOf());
-        })
-      );
-      getQuestionCollection.map((task) => {
-        if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-          const options = [];
-          task.options.map((option) => options.push(option.option));
+          examDate  =   `${
+            eval(examDate[0] ) < 10
+              ? "0" + eval(examDate[0])
+              : eval(examDate[0] )
+          }/${
+            eval(examDate[1]) < 10
+              ? "0" + examDate[1]
+              : examDate[1]
+          }/${examDate[2]}`
 
-          questionCollections.push({
-            title: task.title,
-            imageUrl: task.imageUrl,
-            options,
-          });
-        }
-      });
+        const  studentAnswers = [];
+          for (let i = 0; i < questionCollections.length; i++) {
+            studentAnswers.push(null);
+          }
+          const isBookmarked = [];
+          for (let i = 0; i < questionCollections.length; i++) {
+            isBookmarked.push(false);
+          }
+        
 
-      let examDate = getExam.examDate.split("/");
-      // examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+          const examInfoData ={
+            examTitle:getExam.title,
+            examDate: examDate,
+            examStartTime: `${getExam.examStartTime}:00`,
+            examEndTime: `${getExam.examEndTime}:00`,
+            examDuration: `${getExam.examDuration}:00`,
+            mark: getExam.mark,
+            negativeMark: getExam.negativeMark,
+            questionCategoryList,
+            questionCollections,
+            studentsPerformance:[
+              {
+                id:req.session.userID,
+                name:req.session.userName,
+            startTime:`${getExam.examStartTime}:00`,
+            endTime:`${getExam.examEndTime}:00`,
+            // studentAnswerList:getExam.studentAnswerList,
+            studentAnswerList:studentAnswers,
+            // bookmarkedQuestionList:getExam.bookmarkedQuestionList,
+            bookmarkedQuestionList:isBookmarked,
+            mark:getExam.mark,
+            negativeMark:getExam.negativeMark,
+            totalMark:getExam.totalMark
+              }
+            ]
+          }
+     console.log(examInfoData)
 
-      examDate = `${
-        eval(examDate[0]) < 10 ? "0" + eval(examDate[0]) : eval(examDate[0])
-      }/${eval(examDate[1]) < 10 ? "0" + examDate[1] : examDate[1]}/${
-        examDate[2]
-      }`;
-
-      const examInfoData = {
-        examTitle: getExam.title,
-        examDate: examDate,
-        examStartTime: `${getExam.examStartTime}:00`,
-        examEndTime: `${getExam.examEndTime}:00`,
-        examDuration: `${getExam.examDuration}:00`,
-        mark: getExam.mark,
-        negativeMark: getExam.negativeMark,
-        questionCategoryList,
-        questionCollections,
-      };
-      console.log(examInfoData);
-
-      res.json(examInfoData);
+     res.json(examInfoData)
+   
     }
   } catch (error) {}
 };
