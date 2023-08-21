@@ -1,7 +1,7 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
-export default function ExamEndCard({ title, isMobileView, toggleDrawer }) {
+export default function ExamEndCard({ title, isMobileView, toggleDrawer, currentQuestionIndex, questionLength }) {
   return (
     <Paper
       elevation={2}
@@ -40,7 +40,7 @@ export default function ExamEndCard({ title, isMobileView, toggleDrawer }) {
               fontWeight: "500",
             }}
           >
-            {`Q1 of 13`}
+            {`Q${currentQuestionIndex+1} of ${questionLength}`}
             <ExpandMore sx={{ fontSize: "20px" }} />
           </Button>
         )}

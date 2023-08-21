@@ -275,6 +275,8 @@ const MobileView = ({
           title={examInfo.examTitle}
           isMobileView={true}
           toggleDrawer={toggleDrawer}
+          currentQuestionIndex={currentQuestionIndex}
+          questionLength={examInfo.questionCollections.length}
         />
         <QuestionStateCard
           index={currentQuestionIndex}
