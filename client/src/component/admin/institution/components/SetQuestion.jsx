@@ -26,7 +26,7 @@ console.log(avalible)
   {
     setQuestion((preValue)=>{
         const getValue = {...preValue}
-        
+       
         const avalibleQues =  getValue.avalibleQues.filter((task,index1) => index1 !== avalibleIndex )
         getValue.avalibleQues = avalibleQues
         const batchQues =  getValue.batchQues.filter((task,index2) => index2 !== index )
