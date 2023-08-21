@@ -115,10 +115,10 @@ const ExamInfoBody = ({
     getRemainingTime();
   }, 1000);
 
-    // useEffect(() => {
-    //   console.log(remainingTime);
-    //   console.log(isTimeOver);
-    // }, [currentTime, currentDate]);
+   const getExamState = () => {
+    
+   }
+
 
   return (
     <Paper

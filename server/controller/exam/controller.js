@@ -125,7 +125,7 @@ exports.getExamState = async function (req, res) {
           const options = [];
           task.options.map((option) => options.push(option.option));
           questionCollections.push({
-            title: task.title,
+            question: task.title,
             imageUrl: task.imageUrl,
             options,
           });

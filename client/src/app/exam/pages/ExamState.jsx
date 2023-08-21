@@ -10,31 +10,17 @@ import examInfoData from "./components/examInfoData";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 
 export default function ExamState() {
-  const examID = "64e2cf4e06b38fbad4f42a13";
+  const examID = "64e37483972b25e810dd5b61";
   const { width, height } = useWindowDimensions();
-  const [examInfo, setExamInfo] = useState(examInfoData);
+  const [examInfo, setExamInfo] = useState();
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [remainingTime, setRemainingTime] = useState("00:00:00");
   const [timePercentage, setTimePercentage] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [studentAnswers, setStudentAnswers] = useState(() => {
-    let studentAnswers = [];
-    for (let i = 0; i < examInfo.questionCollections.length; i++) {
-      studentAnswers.push(null);
-    }
-    return studentAnswers;
-  });
-  const [isBookmarked, setIsBookmarked] = useState(() => {
-    let isBookmarked = [];
-    for (let i = 0; i < examInfo.questionCollections.length; i++) {
-      isBookmarked.push(false);
-    }
-    return isBookmarked;
-  });
-
+  const [studentAnswers, setStudentAnswers] = useState();
+  const [isBookmarked, setIsBookmarked] = useState();
   console.log(studentAnswers);
   console.log(isBookmarked);
-
   const calculateRemainingTime = () => {
     let examTime = examInfo.examEndTime.split(":");
     let examDate = examInfo.examDate.split("/");
@@ -84,12 +70,6 @@ export default function ExamState() {
   };
 
   useEffect(() => {
-    setInterval(() => {
-      getRemainingTime();
-    }, 1000);
-  }, []);
-
-  useEffect(() => {
     fetch(`/api/exam/get-exam-state/${examID}`)
       .then((res) => res.json())
       .then((data) => {
@@ -98,7 +78,16 @@ export default function ExamState() {
         setStudentAnswers(data.studentsPerformance[0].studentAnswerList);
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
       });
+    
   }, []);
+
+  useEffect(() => {
+    if (examInfo) {
+      setInterval(() => {
+        getRemainingTime();
+      }, 1000);
+    }
+  }, [examInfo]);
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < examInfo.questionCollections.length - 1) {
@@ -129,36 +118,39 @@ export default function ExamState() {
     setIsBookmarked(newIsBookmarked);
   };
 
-  return width > 1060 ? (
-    <DtView
-      currentQuestionIndex={currentQuestionIndex}
-      handleNextQuestion={handleNextQuestion}
-      handlePreviousQuestion={handlePreviousQuestion}
-      handleQuestionClick={handleQuestionClick}
-      handleOptionClick={handleOptionClick}
-      handleBookmarkClick={handleBookmarkClick}
-      isBookmarked={isBookmarked}
-      studentAnswers={studentAnswers}
-      examInfo={examInfo}
-      remainingTime={remainingTime}
-      timePercentage={timePercentage}
-      // isMobileView={isMobileView}
-    />
-  ) : (
-    <MobileView
-      currentQuestionIndex={currentQuestionIndex}
-      handleNextQuestion={handleNextQuestion}
-      handlePreviousQuestion={handlePreviousQuestion}
-      handleQuestionClick={handleQuestionClick}
-      handleOptionClick={handleOptionClick}
-      handleBookmarkClick={handleBookmarkClick}
-      isBookmarked={isBookmarked}
-      studentAnswers={studentAnswers}
-      examInfo={examInfo}
-      remainingTime={remainingTime}
-      timePercentage={timePercentage}
-      // isMobileView={isMobileView}
-    />
+  return (
+    examInfo &&
+    (width > 1060 ? (
+      <DtView
+        currentQuestionIndex={currentQuestionIndex}
+        handleNextQuestion={handleNextQuestion}
+        handlePreviousQuestion={handlePreviousQuestion}
+        handleQuestionClick={handleQuestionClick}
+        handleOptionClick={handleOptionClick}
+        handleBookmarkClick={handleBookmarkClick}
+        isBookmarked={isBookmarked}
+        studentAnswers={studentAnswers}
+        examInfo={examInfo}
+        remainingTime={remainingTime}
+        timePercentage={timePercentage}
+        // isMobileView={isMobileView}
+      />
+    ) : (
+      <MobileView
+        currentQuestionIndex={currentQuestionIndex}
+        handleNextQuestion={handleNextQuestion}
+        handlePreviousQuestion={handlePreviousQuestion}
+        handleQuestionClick={handleQuestionClick}
+        handleOptionClick={handleOptionClick}
+        handleBookmarkClick={handleBookmarkClick}
+        isBookmarked={isBookmarked}
+        studentAnswers={studentAnswers}
+        examInfo={examInfo}
+        remainingTime={remainingTime}
+        timePercentage={timePercentage}
+        // isMobileView={isMobileView}
+      />
+    ))
   );
 }
 

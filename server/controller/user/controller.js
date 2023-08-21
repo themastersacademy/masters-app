@@ -30,7 +30,7 @@ exports.login = async (req, res, next) => {
     res.json({ status: "success", id: check._id, roll: check.type });
   }
   else{
-   const isDelet  = await sessions.deleteMany({expires: getVerify[0].expires})
+   const isDelete  = await sessions.deleteMany({expires: getVerify[0].expires})
    req.session.isAuth = true;
     req.session.isLogin = true;
     req.session.userID = check._id;
