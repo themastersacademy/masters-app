@@ -107,7 +107,20 @@ const examSchema = new Schema({
             totalMark:{
                 type: Number,
                 default: 0
-            }
+            },
+            windowCloseWarning:{
+                type: Number,
+                default: 0
+            },
+            windowResizedWarning:{
+                type: Number,
+                default: 0
+            },
+            status:{
+                type: String,
+                enum: ['notStarted', 'started', 'submitted'],
+                default: 'notStarted'
+            },
         }    
     ],
     createdAt:{
