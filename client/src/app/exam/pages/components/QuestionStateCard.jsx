@@ -30,20 +30,25 @@ export default function QuestionStateCard({
         borderRadius: isMobileView ? "0px" : "20px",
         gap: "15px",
       }}
+      elevation={isMobileView ? 0 : 2}
     >
       <Stack
         direction="row"
-        alignContent="center"
+        alignItems="center"
         justifyContent="space-between"
         spacing={2}
       >
-        <h1
-          style={{
-            fontSize: isMobileView ? "1rem" :"1.5rem",
-          }}
-        >
-          Question {index + 1}
-        </h1>
+        {isMobileView ? (
+          <div></div>
+        ) : (
+          <h1
+            style={{
+              fontSize: isMobileView ? "1rem" : "1.5rem",
+            }}
+          >
+            Question {index + 1}
+          </h1>
+        )}
         <Stack direction="row" alignContent="center" spacing={2}>
           <Chip
             label={`+${mark} marks`}
@@ -156,7 +161,7 @@ const Options = ({
   isAnswered,
   isAnsweredCorrectly,
   handleOptionClick,
-  studentAnswers
+  studentAnswers,
 }) => {
   return (
     <Stack direction="column" spacing={1}>

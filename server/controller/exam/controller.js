@@ -133,7 +133,8 @@ exports.getExamState = async function (req, res) {
           task.options.map((option) => options.push(option.option));
           questionCollections.push({
             question: task.title,
-            imageUrl: task.imageUrl,
+            // imageUrl: task.imageUrl,
+            imageUrl: "https://www.rd.com/wp-content/uploads/2021/06/mathpuzzle1.jpg?resize=3000",
             options,
           });
         }

@@ -1,4 +1,4 @@
-import { Paper, Stack, Button } from "@mui/material";
+import { Paper, Stack, Button, SwipeableDrawer } from "@mui/material";
 import { useState, useEffect } from "react";
 import ExamHeader from "./components/ExamHeader";
 import ExamEndCard from "./components/ExamEndCard";
@@ -6,7 +6,6 @@ import QuestionStateCard from "./components/QuestionStateCard";
 import QuestionActionCard from "./components/QuestionActionCard";
 import ExamTimerCard from "./components/ExamTimerCard";
 import QuestionCollections from "./components/QuestionCollections";
-import examInfoData from "./components/examInfoData";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 
 export default function ExamState() {
@@ -19,8 +18,6 @@ export default function ExamState() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [studentAnswers, setStudentAnswers] = useState();
   const [isBookmarked, setIsBookmarked] = useState();
-  console.log(studentAnswers);
-  console.log(isBookmarked);
   const calculateRemainingTime = () => {
     let examTime = examInfo.examEndTime.split(":");
     let examDate = examInfo.examDate.split("/");
@@ -78,7 +75,6 @@ export default function ExamState() {
         setStudentAnswers(data.studentsPerformance[0].studentAnswerList);
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
       });
-    
   }, []);
 
   useEffect(() => {
@@ -240,31 +236,73 @@ const MobileView = ({
   remainingTime,
   timePercentage,
 }) => {
+  const [open, setOpen] = useState(false);
+  const toggleDrawer = (open) => (event) => {
+    setOpen(open);
+  };
   return (
     <Stack
       sx={{
         width: "100%",
         padding: "20 20px",
+        height: "100%",
+        position: "fixed",
       }}
       direction="column"
-      gap={2}
+      justifyContent={"space-between"}
     >
-      <ExamTimerCard
-        remainingTime={remainingTime}
-        timePercentage={timePercentage}
-        isMobileView={true}
-      />
-      <QuestionStateCard
-        index={currentQuestionIndex}
-        mark={examInfo.mark}
-        negativeMark={examInfo.negativeMark}
-        handleOptionClick={handleOptionClick}
-        handleBookmarkClick={handleBookmarkClick}
-        isBookmarked={isBookmarked[currentQuestionIndex]}
-        imageUrl={examInfo.questionCollections[currentQuestionIndex].imageUrl}
-        question={examInfo.questionCollections[currentQuestionIndex].question}
-        optionList={examInfo.questionCollections[currentQuestionIndex].options}
-        studentAnswers={studentAnswers[currentQuestionIndex]}
+      <Stack
+        sx={{
+          height: "100%",
+        }}
+      >
+        <ExamTimerCard
+          remainingTime={remainingTime}
+          timePercentage={timePercentage}
+          isMobileView={true}
+        />
+        <ExamEndCard title={examInfo.examTitle} isMobileView={true} toggleDrawer={toggleDrawer}/>
+        <QuestionStateCard
+          index={currentQuestionIndex}
+          mark={examInfo.mark}
+          negativeMark={examInfo.negativeMark}
+          handleOptionClick={handleOptionClick}
+          handleBookmarkClick={handleBookmarkClick}
+          isBookmarked={isBookmarked[currentQuestionIndex]}
+          imageUrl={examInfo.questionCollections[currentQuestionIndex].imageUrl}
+          question={examInfo.questionCollections[currentQuestionIndex].question}
+          optionList={
+            examInfo.questionCollections[currentQuestionIndex].options
+          }
+          studentAnswers={studentAnswers[currentQuestionIndex]}
+          isMobileView={true}
+        />
+        <SwipeableDrawer
+          anchor={"bottom"}
+          open={open}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: "100%",
+              borderRadius: "20px 20px 0px 0px",
+              borderTop: "1px solid #E5E5E5",
+              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            },
+          }}
+        >
+          <QuestionCollections
+            currentQuestionIndex={currentQuestionIndex}
+            handleQuestionClick={handleQuestionClick}
+            questionCategoryList={examInfo.questionCategoryList}
+            isBookmarked={isBookmarked}
+            studentAnswers={studentAnswers}
+          />
+        </SwipeableDrawer>
+      </Stack>
+      <QuestionActionCard
+        handleNextQuestion={handleNextQuestion}
+        handlePreviousQuestion={handlePreviousQuestion}
         isMobileView={true}
       />
     </Stack>
