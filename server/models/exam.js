@@ -108,6 +108,10 @@ const examSchema = new Schema({
                 type: Number,
                 default: 0
             },
+            currentIndex:{
+                type:String,
+                default:0
+            },
             windowCloseWarning:{
                 type: Number,
                 default: 0
