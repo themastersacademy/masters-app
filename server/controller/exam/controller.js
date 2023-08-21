@@ -28,6 +28,7 @@ exports.startExam = async function (req, res) {
   const path = req.path;
   const examId = path.split("/")[2];
   const userID = req.session.userID;
+
   try {
     const examInfo = await exam.findOne({ _id: examId });
     if (!examInfo) {
@@ -37,7 +38,7 @@ exports.startExam = async function (req, res) {
       const get = examInfo.studentsPerformance.filter(
         (task) => task.id.valueOf() == userID.valueOf()
       );
-      console.log(get);
+ 
       if (get.length === 0) {
         const isValidExam = await isValidExamStart(examInfo);
         if (isValidExam) {
@@ -53,6 +54,8 @@ exports.startExam = async function (req, res) {
               bookmarkedQuestionList.push(false);
             });
           });
+        
+     
 
           console.log(studentAnswerList, bookmarkedQuestionList);
           examInfo.studentsPerformance.push({
@@ -65,7 +68,9 @@ exports.startExam = async function (req, res) {
             mark: 5,
           });
           await examInfo.save();
-        } else {
+        }
+        
+        else {
           return res.status(400).json({ message: "exam not started yet" });
         }
       } else {
@@ -76,6 +81,7 @@ exports.startExam = async function (req, res) {
     throw error;
   }
 };
+
 
 const isValidExamStart = async function (examInfo) {
   const currentTime = new Date();
@@ -105,7 +111,8 @@ exports.getExamState = async function (req, res) {
   try {
     const getExam = await exam.findOne({ _id: examId });
     const getQuestionCollection = await questionCollection.find();
-    if (getExam) {
+    const User = await user.findOne({_id:'64e181f76c5bb7b207bd23d1'}) 
+    if (getExam && User) {
       const questionCategoryList = [];
       const questionCollections = [];
       const getQuestionID = [];
@@ -138,6 +145,9 @@ exports.getExamState = async function (req, res) {
       }/${eval(examDate[1]) < 10 ? "0" + examDate[1] : examDate[1]}/${
         examDate[2]
       }`;
+
+      const studentPerform = getExam.studentsPerformance.filter(task => task.id.valueOf() == User._id.valueOf())
+
       const studentAnswers = [];
       for (let i = 0; i < questionCollections.length; i++) {
         studentAnswers.push(null);
@@ -145,7 +155,7 @@ exports.getExamState = async function (req, res) {
       const isBookmarked = [];
       for (let i = 0; i < questionCollections.length; i++) {
         isBookmarked.push(false);
-      }
+      }    
       const examInfoData = {
         examTitle: getExam.title,
         examDate: examDate,
@@ -162,11 +172,15 @@ exports.getExamState = async function (req, res) {
             name: userName,
             startTime: `${getExam.examStartTime}:00`,
             endTime: `${getExam.examEndTime}:00`,
-            studentAnswerList: studentAnswers,
-            bookmarkedQuestionList: isBookmarked,
+            studentAnswerList: studentPerform[0].studentAnswerList,
+            bookmarkedQuestionList: studentPerform[0].bookmarkedQuestionList,
             mark: getExam.mark,
+            // currentIndex:studentPerform[0].currentIndex, 
             negativeMark: getExam.negativeMark,
             totalMark: getExam.totalMark,
+            status:getExam.status,
+            windowCloseWarning:getExam.windowCloseWarning,
+            windowResizedWarning:getExam.windowResizedWarning
           },
         ],
       };
@@ -174,3 +188,32 @@ exports.getExamState = async function (req, res) {
     }
   } catch (error) {}
 };
+
+
+exports.examState = async (req,res,next) => {
+  const userID = req.session.userID;
+  const userName = req.session.userName;
+ const {examID,studentAnswerList,bookmarkedQuestionList,currentIndex,windowCloseWarning,windowResizedWarning,status} = req.body
+ try {
+  const User = await user.findOne({_id:userID})
+  const examState = await exam.findOne({_id:examID})
+  if(User){
+  if(examState){
+       examState.map(task => task.studentsPerformance.map(task => {
+        if(User._id.valueOf() == task.id.valueOf()){
+          task.currentIndex = currentIndex
+          task.studentAnswerList = studentAnswerList
+          task.bookmarkedQuestionList = bookmarkedQuestionList
+          task.windowCloseWarning = windowCloseWarning
+          task.windowResizedWarning = windowResizedWarning
+          task.status = status
+        }
+       }) )
+       examState.save()
+       res.json({status:'success',message:'Update exam state successfully'})
+  }
+  }
+ } catch (error) {
+  
+ } 
+}

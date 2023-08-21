@@ -9,7 +9,7 @@ import QuestionCollections from "./components/QuestionCollections";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 
 export default function ExamState() {
-  const examID = "64e37483972b25e810dd5b61";
+  const examID = "64e2731c9769da81cc2d705a";
   const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState();
   const [isTimeOver, setIsTimeOver] = useState(false);
