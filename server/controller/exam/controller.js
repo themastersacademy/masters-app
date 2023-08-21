@@ -133,7 +133,7 @@ exports.getExamState = async function (req, res) {
           })
         
           let examDate = getExam.examDate.split("/");
-          // examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+      
 
           examDate  =   `${
             eval(examDate[0] ) < 10
@@ -145,6 +145,16 @@ exports.getExamState = async function (req, res) {
               : examDate[1]
           }/${examDate[2]}`
 
+        const  studentAnswers = [];
+          for (let i = 0; i < questionCollections.length; i++) {
+            studentAnswers.push(null);
+          }
+          const isBookmarked = [];
+          for (let i = 0; i < questionCollections.length; i++) {
+            isBookmarked.push(false);
+          }
+        
+
           const examInfoData ={
             examTitle:getExam.title,
             examDate: examDate,
@@ -154,9 +164,24 @@ exports.getExamState = async function (req, res) {
             mark: getExam.mark,
             negativeMark: getExam.negativeMark,
             questionCategoryList,
-            questionCollections
+            questionCollections,
+            studentsPerformance:[
+              {
+                id:req.session.userID,
+                name:req.session.userName,
+            startTime:`${getExam.examStartTime}:00`,
+            endTime:`${getExam.examEndTime}:00`,
+            // studentAnswerList:getExam.studentAnswerList,
+            studentAnswerList:studentAnswers,
+            // bookmarkedQuestionList:getExam.bookmarkedQuestionList,
+            bookmarkedQuestionList:isBookmarked,
+            mark:getExam.mark,
+            negativeMark:getExam.negativeMark,
+            totalMark:getExam.totalMark
+              }
+            ]
           }
-          console.log(examInfoData)
+     console.log(examInfoData)
 
      res.json(examInfoData)
    

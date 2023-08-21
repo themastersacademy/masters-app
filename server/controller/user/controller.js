@@ -20,6 +20,7 @@ exports.login = async (req, res, next) => {
     req.session.isLogin = true;
     req.session.userID = check._id;
     req.session.userRoll = check.type;
+    req.session.userName = check.name
     res.json({ status: "success", id: check._id, roll: check.type });
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
