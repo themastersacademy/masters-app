@@ -100,12 +100,11 @@ const isValidExamStart = async function (examInfo) {
 exports.getExamState = async function (req, res) {
   const path = req.path;
   const userID = req.session.userID;
+  const userName = req.session.userName;
   const examId = path.split("/")[2];
-
   try {
     const getExam = await exam.findOne({ _id: examId });
     const getQuestionCollection = await questionCollection.find();
-
     if (getExam) {
       const questionCategoryList = [];
       const questionCollections = [];
@@ -116,75 +115,61 @@ exports.getExamState = async function (req, res) {
           questionListLength: task.questionList.length,
         })
       );
-        
-       getExam.questionCategory.map((task) =>
-        task.questionList.map( async (task) => {
-            getQuestionID.push(task.id.valueOf())
-             }
-         ));
-         getQuestionCollection.map(task => {
-            if(getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-              const options =[]
-              task.options.map(option =>  options.push(option.option))
-              
-              questionCollections.push({title:task.title,
-                imageUrl:task.imageUrl,options})
-            }
-          })
-        
-          let examDate = getExam.examDate.split("/");
-      
-
-          examDate  =   `${
-            eval(examDate[0] ) < 10
-              ? "0" + eval(examDate[0])
-              : eval(examDate[0] )
-          }/${
-            eval(examDate[1]) < 10
-              ? "0" + examDate[1]
-              : examDate[1]
-          }/${examDate[2]}`
-
-        const  studentAnswers = [];
-          for (let i = 0; i < questionCollections.length; i++) {
-            studentAnswers.push(null);
-          }
-          const isBookmarked = [];
-          for (let i = 0; i < questionCollections.length; i++) {
-            isBookmarked.push(false);
-          }
-        
-
-          const examInfoData ={
-            examTitle:getExam.title,
-            examDate: examDate,
-            examStartTime: `${getExam.examStartTime}:00`,
-            examEndTime: `${getExam.examEndTime}:00`,
-            examDuration: `${getExam.examDuration}:00`,
+      getExam.questionCategory.map((task) =>
+        task.questionList.map(async (task) => {
+          getQuestionID.push(task.id.valueOf());
+        })
+      );
+      getQuestionCollection.map((task) => {
+        if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
+          const options = [];
+          task.options.map((option) => options.push(option.option));
+          questionCollections.push({
+            title: task.title,
+            imageUrl: task.imageUrl,
+            options,
+          });
+        }
+      });
+      let examDate = getExam.examDate.split("/");
+      examDate = `${
+        eval(examDate[0]) < 10 ? "0" + eval(examDate[0]) : eval(examDate[0])
+      }/${eval(examDate[1]) < 10 ? "0" + examDate[1] : examDate[1]}/${
+        examDate[2]
+      }`;
+      const studentAnswers = [];
+      for (let i = 0; i < questionCollections.length; i++) {
+        studentAnswers.push(null);
+      }
+      const isBookmarked = [];
+      for (let i = 0; i < questionCollections.length; i++) {
+        isBookmarked.push(false);
+      }
+      const examInfoData = {
+        examTitle: getExam.title,
+        examDate: examDate,
+        examStartTime: `${getExam.examStartTime}:00`,
+        examEndTime: `${getExam.examEndTime}:00`,
+        examDuration: `${getExam.examDuration}:00`,
+        mark: getExam.mark,
+        negativeMark: getExam.negativeMark,
+        questionCategoryList,
+        questionCollections,
+        studentsPerformance: [
+          {
+            id: userID,
+            name: userName,
+            startTime: `${getExam.examStartTime}:00`,
+            endTime: `${getExam.examEndTime}:00`,
+            studentAnswerList: studentAnswers,
+            bookmarkedQuestionList: isBookmarked,
             mark: getExam.mark,
             negativeMark: getExam.negativeMark,
-            questionCategoryList,
-            questionCollections,
-            studentsPerformance:[
-              {
-                id:req.session.userID,
-                name:req.session.userName,
-            startTime:`${getExam.examStartTime}:00`,
-            endTime:`${getExam.examEndTime}:00`,
-            // studentAnswerList:getExam.studentAnswerList,
-            studentAnswerList:studentAnswers,
-            // bookmarkedQuestionList:getExam.bookmarkedQuestionList,
-            bookmarkedQuestionList:isBookmarked,
-            mark:getExam.mark,
-            negativeMark:getExam.negativeMark,
-            totalMark:getExam.totalMark
-              }
-            ]
-          }
-     console.log(examInfoData)
-
-     res.json(examInfoData)
-   
+            totalMark: getExam.totalMark,
+          },
+        ],
+      };
+      res.json(examInfoData);
     }
   } catch (error) {}
 };

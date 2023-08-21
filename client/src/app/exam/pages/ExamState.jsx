@@ -11,16 +11,13 @@ import useWindowDimensions from "../../../util/useWindowDimensions";
 
 export default function ExamState() {
   const examID = "64e2cf4e06b38fbad4f42a13";
-  const examID = '64e37483972b25e810dd5b61'
   const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState(examInfoData);
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [remainingTime, setRemainingTime] = useState("00:00:00");
   const [timePercentage, setTimePercentage] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  // const [isMobileView, setIsMobileView] = useState(width < 1060);
   const [studentAnswers, setStudentAnswers] = useState(() => {
-  const [studentAnswers, setStudentAnswers] = useState(() =>{
     let studentAnswers = [];
     for (let i = 0; i < examInfo.questionCollections.length; i++) {
       studentAnswers.push(null);
@@ -95,16 +92,13 @@ export default function ExamState() {
   useEffect(() => {
     fetch(`/api/exam/get-exam-state/${examID}`)
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        console.log(data);
+        setExamInfo(data);
+        setStudentAnswers(data.studentsPerformance[0].studentAnswerList);
+        setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
+      });
   }, []);
-    .then(res => res.json())
-    .then((data) =>{ 
-      console.log(data)
-      setExamInfo(data)
-      setStudentAnswers(data.studentsPerformance[0].studentAnswerList)
-      setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList)
-      })
-  },[])
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < examInfo.questionCollections.length - 1) {
