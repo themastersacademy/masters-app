@@ -4,7 +4,9 @@ const { SendEmail } = require("../email/email.js");
 const { generateOtp } = require("../../util/OTB.js");
 const Batch = require("../../models/batch.js");
 const Institution = require("../../models/institution.js");
-const Goal = require('../../models/goal.js')
+const Goal = require("../../models/goal.js");
+const { table, log } = require("console");
+
 exports.login = async (req, res, next) => {
   const password = req.body.password;
   const secret = "This is a company secret ";
@@ -15,10 +17,10 @@ exports.login = async (req, res, next) => {
   const check = await User.findOne({ email: req.body.email, password: hash });
   if (check) {
     req.session.isAuth = true;
-    req.session.isLogin = true
-    req.session.userID = check._id
-    req.session.userRoll = check.type
-    res.json({ status: "success", id: check._id,roll:check.type});
+    req.session.isLogin = true;
+    req.session.userID = check._id;
+    req.session.userRoll = check.type;
+    res.json({ status: "success", id: check._id, roll: check.type });
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
   }
@@ -76,37 +78,36 @@ exports.createDetails = async (req, res, next) => {
 };
 
 exports.chooseGoal = async (req, res, next) => {
- 
-  const goal = req.body.goal
- 
-   const user = await User.findOne({ _id: req.session.userID });
+  const goal = req.body.goal;
+
+  const user = await User.findOne({ _id: req.session.userID });
   // const user = await User.findOne({ _id:'64d91a8434866fe7d81ab1c0' });
 
-  if (user) {    
+  if (user) {
+    goal.map((task) => {
+      const collectTopic = [];
+      task.collections.map((task) => {
+        task.topic.map((task) =>
+          collectTopic.push({ topicName: task.title, topicId: task.id })
+        );
+      });
+      const createGoal = Goal({
+        courseName: task.title,
+        courseId: task._id,
+        userId: user._id,
+        topics: collectTopic,
+      });
+      createGoal.save();
+      user.goal.push(createGoal._id);
+    });
 
-    goal.map(task => {
-      const collectTopic =[]
-      task.collections.map(task =>{
-      task.topic.map(task => collectTopic.push({topicName:task.title,topicId:task.id}))    
-    })
-    const createGoal = Goal({
-      courseName:task.title,
-      courseId:task._id,
-      userId:user._id,
-      topics:collectTopic
-    })
- createGoal.save()
- user.goal.push(createGoal._id)
+    user.save();
 
-   })  
- 
-   user.save()
-  
     res.json({ status: "success", message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });
 };
 
-exports.requirest = async (req, res, next) => {
+exports.request = async (req, res, next) => {
   const { instituteName, userID, instituteID, rollNumber, Dept, batchCode } =
     req.body.data;
   try {
@@ -120,13 +121,12 @@ exports.requirest = async (req, res, next) => {
         });
         if (batch) {
           const check = [];
-          batch.studendList.map((task) => {
+          batch.studentList.map((task) => {
             if (user.email == task.email) check.push(task);
           });
 
           if (check.length == 0) {
-          
-            batch.studendList.push({
+            batch.studentList.push({
               name: user.name,
               avatar: user.avatar,
               email: user.email,
@@ -149,17 +149,14 @@ exports.requirest = async (req, res, next) => {
   }
 };
 
-
-exports.getUserData = async(req,res,next) =>{
+exports.getUserData = async (req, res, next) => {
   try {
     console.log(req.body);
-    const user =await User.findOne({_id:req.body.id})   
-    if(user){
-      res.json({status:'ok',message:user})
+    const user = await User.findOne({ _id: req.body.id });
+    if (user) {
+      res.json({ status: "ok", message: user });
     }
   } catch (error) {
-    res.json({staus:'error',message:"something wrong"})
+    res.json({ staus: "error", message: "something wrong" });
   }
-         
-  
-}
+};

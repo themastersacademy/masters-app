@@ -6,7 +6,8 @@ import { Stack } from "@mui/material";
 
 export default function Exam() {
   const path = window.location.pathname;
-
+  const examID = '64e2cf4e06b38fbad4f42a13'
+  const [examInfo, setExamInfo] = useState(null);
   // window.addEventListener("beforeunload", (ev) => {
   //   console.log(ev);
   //   ev.preventDefault();
@@ -52,6 +53,8 @@ export default function Exam() {
     overFlow: "hidden",
   };
 
+
+
   return (
     <Stack style={disableTextSelection}>
       <Stack
@@ -60,6 +63,7 @@ export default function Exam() {
       >
         {path === "/exam/info" && <ExamInfo />}
         {path === "/exam/state" && <ExamState />}
+        {/* {examInfo == null ? null : path === "/exam/state" && <ExamState exam={examInfo}/>} */}
         {path === "/exam/result" && <ExamResult />}
       </Stack>
     </Stack>

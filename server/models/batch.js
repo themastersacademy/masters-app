@@ -42,7 +42,7 @@ const Schema = mongoose.Schema({
     },
   ],
 
-  studendList: [
+  studentList: [
     {
       name: {
         type: String,
@@ -77,7 +77,7 @@ const Schema = mongoose.Schema({
         type: String,
         required: true,
       },
-      requirest:{
+      request:{
         type:Boolean,
         default: false
       }

@@ -7,8 +7,11 @@ import QuestionActionCard from "./components/QuestionActionCard";
 import ExamTimerCard from "./components/ExamTimerCard";
 import QuestionCollections from "./components/QuestionCollections";
 import examInfoData from "./components/examInfoData";
-
+import useWindowDimensions from "../../../util/useWindowDimensions";
+import { useLocation } from "react-router-dom";
 export default function ExamState() {
+  const examID = '64e2cf4e06b38fbad4f42a13'
+  const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState(examInfoData);
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [remainingTime, setRemainingTime] = useState("00:00:00");
@@ -85,6 +88,12 @@ export default function ExamState() {
       getRemainingTime();
     }, 1000);
   }, []);
+
+  useEffect(()=> {
+    fetch(`/api/exam/get-exam-state/${examID}`)
+    .then(res => res.json())
+    .then((data) => console.log(data))
+  },[])
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < examInfo.questionCollections.length - 1) {

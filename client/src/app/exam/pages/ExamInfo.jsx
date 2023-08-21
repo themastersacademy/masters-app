@@ -1,25 +1,46 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import ExamHeader from "./components/ExamHeader";
 
 export default function ExamInfo() {
+  const { search } = useLocation();
+  const examId = search.split("=")[1];
+  const [examInfo, setExamInfo] = useState(null);
+  const [isScheduled, setIsScheduled] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/exam/get-exam-info/${examId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setExamInfo(data);
+        setIsScheduled(()=>{
+          return data.type === "schedule" ? true : false
+        });
+        console.log(data.examDate);
+      });
+  }, [examId]);
+
   return (
-    <Stack
-      sx={{
-        width: "100%",
-        padding: "0px 20px",
-        marginTop: "20px",
-        maxWidth: "1240px",
-      }}
-    >
-      <ExamHeader />
-      <ExamInfoBody
-        isScheduled={true}
-        examName="Practice Test - 1"
-        scheduledTime="21:30:00"
-        scheduledDate="15/08/2023"
-      />
-    </Stack>
+    examInfo && (
+      <Stack
+        sx={{
+          width: "100%",
+          padding: "0px 20px",
+          marginTop: "20px",
+          maxWidth: "1240px",
+        }}
+      >
+        <ExamHeader />
+        <ExamInfoBody
+          isScheduled={isScheduled}
+          examName={examInfo.title}
+          scheduledTime={`${examInfo.examStartTime}:00`}
+          scheduledDate={examInfo.examDate}
+          examId={examId}
+        />
+      </Stack>
+    )
   );
 }
 
@@ -28,6 +49,7 @@ const ExamInfoBody = ({
   isScheduled,
   scheduledTime,
   scheduledDate,
+  examId
 }) => {
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00:00");
@@ -93,10 +115,10 @@ const ExamInfoBody = ({
     getRemainingTime();
   }, 1000);
 
-  //   useEffect(() => {
-  //     console.log(remainingTime);
-  //     console.log(isTimeOver);
-  //   }, [currentTime, currentDate]);
+    // useEffect(() => {
+    //   console.log(remainingTime);
+    //   console.log(isTimeOver);
+    // }, [currentTime, currentDate]);
 
   return (
     <Paper
@@ -141,9 +163,7 @@ const ExamInfoBody = ({
             color: "#3F3F3F",
           }}
         >
-          <li>
-            This Test booklet consists of 30 questions.
-          </li>
+          <li>This Test booklet consists of 30 questions.</li>
           <li>There is no time limit for each questions.</li>
           <li>All the questions were given as multiple choice questions.</li>
           <li>The total duration is 45 minutes.</li>
@@ -181,6 +201,14 @@ const ExamInfoBody = ({
               backgroundColor: "#187163",
               color: "#fff",
             },
+          }}
+          onClick={() => {
+            fetch(`/api/exam/start-exam/${examId}`)
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+                // window.location.href = `/exam/state?=${examId}`;
+              });
           }}
         >
           Start Test

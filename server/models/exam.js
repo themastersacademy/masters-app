@@ -77,7 +77,18 @@ const examSchema = new Schema({
                 type: String,
                 required: true
             },
+            startTime:{
+                type: Date,
+                required: true
+            },
+            endTime:{
+                type: Date,
+            },
             studentAnswerList:{
+                type: Array,
+                default: []
+            },
+            bookmarkedQuestionList:{
                 type: Array,
                 default: []
             },

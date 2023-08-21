@@ -35,7 +35,7 @@ app.use("/api", route);
 
 //Application Route
 
-console.log(app)
+
 app.get('/isLogin',(req,res) =>{
 
   if(req.session.isLogin) res.json({status:'isLogin',id:req.session.userID})

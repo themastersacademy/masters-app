@@ -93,8 +93,8 @@ exports.getRequestAccess = async(req,res,next) =>{
     const batch = await Batch.findOne({_id:id})
     if(batch){
     if(status == 'ok'){
-     batch.studendList.map((task)=>{
-         if(task.userID == data.userID) task.requirest = true
+     batch.studentList.map((task)=>{
+         if(task.userID == data.userID) task.request = true
      })
      batch.save()
   user.batchID.push(batch._id)
@@ -103,14 +103,14 @@ exports.getRequestAccess = async(req,res,next) =>{
      res.json({status:'success',message:'resquest accept successfully'})
     }
   else if(status == 'not ok' ){
-    const get = batch.studendList.filter((task)=> task.userID.valueOf() !== data.userID.valueOf())
-    batch.studendList = get
+    const get = batch.studentList.filter((task)=> task.userID.valueOf() !== data.userID.valueOf())
+    batch.studentList = get
     batch.save()
     res.json({status:'success',message:'Cancle request successfully'})
   }
   else if(status == 'remove' ){
     const get = batch.studendList.filter((task)=> task.userID.valueOf() !== data.userID.valueOf())
-    batch.studendList = get
+    batch.studentList = get
     batch.save()
     const getBatchID =  user.batchID.filter(task => task.valueOf() !== batch._id.valueOf())
     user.batchID = getBatchID
