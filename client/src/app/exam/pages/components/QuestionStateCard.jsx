@@ -20,6 +20,7 @@ export default function QuestionStateCard({
   optionList,
   studentAnswers,
   isMobileView,
+  clearAnswers
 }) {
   return (
     <Paper
@@ -87,6 +88,7 @@ export default function QuestionStateCard({
           </IconButton>
           <IconButton
             title="clear"
+            onClick={clearAnswers}
             sx={{
               color: "#187163",
               width: "30px",

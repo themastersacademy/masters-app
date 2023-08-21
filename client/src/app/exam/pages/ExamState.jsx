@@ -1,4 +1,4 @@
-import { Paper, Stack, Button, SwipeableDrawer } from "@mui/material";
+import { Stack, SwipeableDrawer } from "@mui/material";
 import { useState, useEffect } from "react";
 import ExamHeader from "./components/ExamHeader";
 import ExamEndCard from "./components/ExamEndCard";
@@ -114,6 +114,12 @@ export default function ExamState() {
     setIsBookmarked(newIsBookmarked);
   };
 
+  const clearAnswers = () => {
+    let newStudentAnswers = [...studentAnswers];
+    newStudentAnswers[currentQuestionIndex] = null;
+    setStudentAnswers(newStudentAnswers);
+  };
+
   return (
     examInfo &&
     (width > 1060 ? (
@@ -129,7 +135,7 @@ export default function ExamState() {
         examInfo={examInfo}
         remainingTime={remainingTime}
         timePercentage={timePercentage}
-        // isMobileView={isMobileView}
+        clearAnswers={clearAnswers}
       />
     ) : (
       <MobileView
@@ -144,6 +150,7 @@ export default function ExamState() {
         examInfo={examInfo}
         remainingTime={remainingTime}
         timePercentage={timePercentage}
+        clearAnswers={clearAnswers}
         // isMobileView={isMobileView}
       />
     ))
@@ -162,6 +169,7 @@ const DtView = ({
   examInfo,
   remainingTime,
   timePercentage,
+  clearAnswers,
 }) => {
   return (
     <Stack
@@ -198,6 +206,7 @@ const DtView = ({
               examInfo.questionCollections[currentQuestionIndex].options
             }
             studentAnswers={studentAnswers[currentQuestionIndex]}
+            clearAnswers={clearAnswers}
           />
           <QuestionActionCard
             handleNextQuestion={handleNextQuestion}
@@ -235,6 +244,7 @@ const MobileView = ({
   examInfo,
   remainingTime,
   timePercentage,
+  clearAnswers,
 }) => {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => (event) => {
@@ -261,7 +271,11 @@ const MobileView = ({
           timePercentage={timePercentage}
           isMobileView={true}
         />
-        <ExamEndCard title={examInfo.examTitle} isMobileView={true} toggleDrawer={toggleDrawer}/>
+        <ExamEndCard
+          title={examInfo.examTitle}
+          isMobileView={true}
+          toggleDrawer={toggleDrawer}
+        />
         <QuestionStateCard
           index={currentQuestionIndex}
           mark={examInfo.mark}
@@ -276,6 +290,7 @@ const MobileView = ({
           }
           studentAnswers={studentAnswers[currentQuestionIndex]}
           isMobileView={true}
+          clearAnswers={clearAnswers}
         />
         <SwipeableDrawer
           anchor={"bottom"}
@@ -297,6 +312,7 @@ const MobileView = ({
             questionCategoryList={examInfo.questionCategoryList}
             isBookmarked={isBookmarked}
             studentAnswers={studentAnswers}
+            isMobileView={true}
           />
         </SwipeableDrawer>
       </Stack>

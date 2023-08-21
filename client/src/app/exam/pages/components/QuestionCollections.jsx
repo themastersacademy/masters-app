@@ -6,6 +6,7 @@ export default function QuestionCollections({
   currentQuestionIndex,
   isBookmarked,
   studentAnswers,
+  isMobileView,
 }) {
   return (
     <Paper
@@ -16,6 +17,26 @@ export default function QuestionCollections({
         height: "100%",
       }}
     >
+      {isMobileView ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "40px",
+          }}
+        >
+          <div
+            style={{
+              width: "100px",
+              height: "5px",
+              backgroundColor: "#9B9B9B",
+              borderRadius: "20px",
+            }}
+          ></div>
+        </div>
+      ) : null}
       <Stack
         direction="row"
         height={"20px"}
