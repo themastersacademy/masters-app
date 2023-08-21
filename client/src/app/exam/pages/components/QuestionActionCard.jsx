@@ -1,8 +1,20 @@
 import { Paper, Stack, Button } from "@mui/material";
 
-export default function QuestionActionCard({handleNextQuestion, handlePreviousQuestion}) {
+export default function QuestionActionCard({
+  handleNextQuestion,
+  handlePreviousQuestion,
+  isMobileView,
+}) {
   return (
-    <Paper elevation={3} sx={{ padding: "20px 20px", borderRadius: "20px", height:"80px" }}>
+    <Paper
+      elevation={3}
+      sx={{
+        padding: "20px 20px",
+        borderRadius: isMobileView ? 0 : "20px",
+        height: "80px",
+        margin: isMobileView ? "20px" : 0,
+      }}
+    >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Button
           variant="contained"
