@@ -51,6 +51,7 @@ export default function Exam() {
     width: "100%",
     height: "100vh",
     overFlow: "hidden",
+    background: "#C5CFD3",
   };
 
 

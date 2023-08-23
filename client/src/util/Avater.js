@@ -13,6 +13,9 @@ import FemaleAvatar1 from '../public/image/5927577 5.png'
 import FemaleAvatar2 from '../public/image/5927577 6.png'
 import FemaleAvatar3 from '../public/image/5927577 7.png'
 import FemaleAvatar4 from '../public/image/5927577 8.png'
+import Badge1 from '../public/image/badge1.svg'
+import Badge2 from '../public/image/badge2.svg'
+import Badge3 from '../public/image/badge3.svg'
 
  const Image = {
     student: profileOne,
@@ -29,7 +32,10 @@ import FemaleAvatar4 from '../public/image/5927577 8.png'
     FemaleAvatar1,
     FemaleAvatar2,
     FemaleAvatar3,
-    FemaleAvatar4
+    FemaleAvatar4,
+    badge1: Badge1,
+    badge2: Badge2,
+    badge3: Badge3
 }
 
 export default Image
