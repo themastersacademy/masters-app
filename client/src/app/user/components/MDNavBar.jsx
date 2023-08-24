@@ -1,15 +1,18 @@
 import { Stack, Avatar, Button, SwipeableDrawer, Divider } from "@mui/material";
 import Avater from "../../../util/Avater";
 import PlanChip from "./PlanChip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExpandMore } from "@mui/icons-material";
+import AddGoal from "./AddGoal";
 
-export default function MDNavBar({user}) {
+export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,addGoal,setGoalId,id}) {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => (event) => {
     setOpen(open);
   };
-
+useEffect(()=>{
+  console.log(selectGoal)
+},[selectGoal])
   return (
     <Stack
       direction="row"
@@ -43,7 +46,7 @@ export default function MDNavBar({user}) {
               fontWeight: "500",
             }}
           >
-            Placement Training
+           {selectGoal.courseName}
           </h1>
           <ExpandMore sx={{ marginLeft: "10px" }} />
         </Stack>
@@ -79,30 +82,20 @@ export default function MDNavBar({user}) {
             My Goals
           </h1>
           <Divider />
-          {[
-            { goal: "Placement Training", plan: "Free" },
-            { goal: "GATE Exam", plan: "Free" },
-          ].map((item, index) => (
-            <div key={index}>
-              <GoalListCard key={index} goal={item.goal} plan={item.plan} />
+          {goal.map((item, index) => (
+            <div key={index} onClick={() => {
+              setGoalId(item) 
+              setOpen(false)
+              
+            }
+            }>
+              <GoalListCard key={index} goal={item.courseName} plan={item.plan} />
               <Divider />
             </div>
           ))}
           <Stack direction="column" width={"100%"} alignItems="center" margin={"20px 0"}>
-            <Button
-              variant="contained"
-              sx={{
-                textTransform: "none",
-                backgroundColor: "#187163",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#187163",
-                  color: "#fff",
-                },
-              }}
-            >
-              Add More
-            </Button>
+            <AddGoal isChange={isChange}  addGoal={addGoal} id={id} />
+         
           </Stack>
         </Stack>
       </SwipeableDrawer>
@@ -124,7 +117,9 @@ function GoalListCard({ goal, plan, onClick }) {
         },
       }}
     >
-      <Stack direction="row" spacing={2} alignItems="center" width={"100%"}>
+      <Stack direction="row" spacing={2} alignItems="center" width={"100%"} onClick={()=>{
+     
+      }} >
         <img src={Avater.FileImage} />
         <h3
           style={{

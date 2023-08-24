@@ -28,7 +28,7 @@ exports.startExam = async function (req, res) {
   const path = req.path;
   const examId = path.split("/")[2];
   const userID = req.session.userID;
-
+  
   try {
     const examInfo = await exam.findOne({ _id: examId });
     if (!examInfo) {
@@ -55,8 +55,6 @@ exports.startExam = async function (req, res) {
             });
           });
         
-     
-
           console.log(studentAnswerList, bookmarkedQuestionList);
           examInfo.studentsPerformance.push({
             id: userID,
@@ -68,6 +66,8 @@ exports.startExam = async function (req, res) {
             mark: 5,
           });
           await examInfo.save();
+          req.session.examID = examInfo._id
+          req.session.examName = examInfo.title
         }
         
         else {
@@ -81,7 +81,6 @@ exports.startExam = async function (req, res) {
     throw error;
   }
 };
-
 
 const isValidExamStart = async function (examInfo) {
   const currentTime = new Date();
@@ -190,7 +189,7 @@ exports.getExamState = async function (req, res) {
 };
 
 
-exports.examState = async (req,res,next) => {
+exports.examStateUpdate = async (req,res,next) => {
   const userID = req.session.userID;
   const userName = req.session.userName;
  const {examID,studentAnswerList,bookmarkedQuestionList,currentIndex,windowCloseWarning,windowResizedWarning,status} = req.body
@@ -202,18 +201,19 @@ exports.examState = async (req,res,next) => {
        examState.map(task => task.studentsPerformance.map(task => {
         if(User._id.valueOf() == task.id.valueOf()){
           task.currentIndex = currentIndex
-          task.studentAnswerList = studentAnswerList
+          task.studentAnswerList = studentAnswerList         
           task.bookmarkedQuestionList = bookmarkedQuestionList
           task.windowCloseWarning = windowCloseWarning
           task.windowResizedWarning = windowResizedWarning
           task.status = status
+          
         }
-       }) )
+       }))
        examState.save()
        res.json({status:'success',message:'Update exam state successfully'})
   }
   }
  } catch (error) {
-  
+     console.log(error)
  } 
 }

@@ -83,6 +83,7 @@ exports.createGroupTopic = async (req, res, next) => {
 exports.createCourseMock = async (req, res, next) => {
   const create = await Course.findOne({ _id: req.body.id });
   if (create) {
+    // req.body.course.map(task => task.topic.map(task => console.log(task)))
     create.collections = [];
     create.collections = req.body.course;
     create.mockUpdate = true;

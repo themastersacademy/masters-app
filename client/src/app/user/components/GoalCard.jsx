@@ -10,9 +10,11 @@ import { ExpandMore } from "@mui/icons-material/";
 import Avater from "../../../util/Avater";
 import PlanChip from "./PlanChip";
 import { useState } from "react";
+import AddGoal from "./AddGoal";
 
-export default function GoalCard() {
+export default function GoalCard({goal,selectGoal,id,addGoal,isChange,setGoalId}) {
   const [expanded, setExpanded] = useState(false);
+console.log(selectGoal);
   return (
     <Paper
       sx={{
@@ -43,7 +45,7 @@ export default function GoalCard() {
                 fontWeight: "500",
               }}
             >
-              Placement Training
+            { selectGoal.courseName}
             </h2>
           </Stack>
         </AccordionSummary>
@@ -59,16 +61,14 @@ export default function GoalCard() {
             My Goals
           </h1>
           <Divider />
-          {[
-            { goal: "Placement Training", plan: "Free" },
-            { goal: "GATE Exam", plan: "Free" },
-          ].map((item, index) => (
+          {goal.map((item, index) => (
             <div   key={index}>
               <GoalListCard
               
-                goal={item.goal}
-                plan={item.plan}
+                goal={item.courseName}
+                plan={item.coursePlan}
                 onClick={() => {
+                  setGoalId(item)
                     setExpanded(!expanded);
                   }}
               />
@@ -76,20 +76,8 @@ export default function GoalCard() {
             </div>
           ))}
           <Stack direction="column" alignItems="center" m={2}>
-            <Button
-              variant="contained"
-              sx={{
-                textTransform: "none",
-                backgroundColor: "#187163",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#187163",
-                  color: "#fff",
-                },
-              }}
-            >
-              Add More
-            </Button>
+          
+            <AddGoal id={id} addGoal={addGoal} isChange={isChange} />
           </Stack>
         </Stack>
       </Accordion>

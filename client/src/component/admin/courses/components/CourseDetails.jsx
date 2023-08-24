@@ -34,7 +34,7 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
           setCourse(data.message.collections);
         }
       });
-    fetch("/api/admin/getCollectionName", {
+    fetch("/api/admin/getCollectionName",{
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -45,7 +45,7 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
       .then((data) => {
         if (data.status === "ok") {
           setTask(data.message);
-       
+     
         }
       });
   };
@@ -62,6 +62,10 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
   },[Notificate]);
   useEffect(() => {
     getCourse();
+    setPageController({
+      mockPage:false,
+      courseSettingPage:false
+    })
   },[isChange]);
   const createTopic = (task) => {
     fetch("/api/admin/createCourseTopic", {

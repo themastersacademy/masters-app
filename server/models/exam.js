@@ -47,6 +47,9 @@ const examSchema = new Schema({
                 ref: 'questionBank',
                 required: true
             },
+            type:{
+                type:String
+            },
             title:{
                 type: String,
                 required: true

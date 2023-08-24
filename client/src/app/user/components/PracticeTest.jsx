@@ -11,7 +11,100 @@ import {
   Button,
 } from "@mui/material";
 
-export default function PracticeTest({MD}) {
+import { useEffect, useState } from "react";
+
+export default function PracticeTest({
+  MD,
+  selectGoal,
+  setSelectGoal,
+  Notificate,
+  createPractiesExam,
+}) {
+  const [isSelect, setSelect] = useState(false);
+  const [questionCount, setQuestionCount] = useState([]);
+  const [value, setValue] = useState({ value: "", selectLevel: "" });
+  let calLength = [];
+  useEffect(() => {
+    const check = [];
+    calLength = [];
+
+    if (MD !== true)
+      selectGoal.topic.map((task) => {
+        if (task.isSelect == true) {
+          calLength.push(task);
+          setSelect(true);
+        }
+        if (task.isSelect == false || task.isSelect == undefined)
+          check.push(task);
+        if (selectGoal.topic.length == check.length) setSelect(false);
+      });
+    else
+      selectGoal.topic.map((task) => {
+        if (task.isSelect == true) {
+          calLength.push(task);
+          setSelect(true);
+        }
+        if (task.isSelect == false || task.isSelect == undefined) check.push(task);
+          
+        if (selectGoal.topic.length == check.length) setSelect(false);
+      });
+
+    setQuestionCount((preValue) => {
+      const getValue = [...preValue];
+      const count = [];
+      const num = 5 * (calLength.length-1);
+  
+    {  for (let i = 1 ,j=5; i < 7 +1 ; i++,j+=5) {
+        const max = num + j   
+          if(max < 76) count.push(max)
+      }}
+ 
+      return count;
+    });
+
+ 
+     setValue({ value: "", selectLevel: "" });
+
+  },[selectGoal]);
+
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
+
+  const handleAttempt = () => {
+    const isSelect = [];
+    const check = [];
+    if (value.value == "") {
+      check.push(value);
+       Notificate('info','Please select no of questions')
+    }
+    if (value.selectLevel == "") {
+      check.push(value);
+         Notificate('info','Please select level')
+    }
+    if (MD !== true)
+      selectGoal.topic.map((task) => {
+        if (task.isSelect == false || task.isSelect == undefined)
+          isSelect.push(task);
+        if (selectGoal.topic.length == isSelect.length) {
+          check.push(task);
+          Notificate('info','Please select question')
+        }
+      });
+    else
+      selectGoal.topic.map((task) => {
+        if (task.isSelect == false || task.isSelect == undefined)
+          isSelect.push(task);
+        if (selectGoal.topic.length == isSelect.length) {
+          check.push(task);
+            Notificate('info','Please select question')
+        }
+      });
+
+    if (check.length == 0) {
+      createPractiesExam(value, selectGoal);
+    }
+  };
   return (
     <Paper
       elevation={MD ? 0 : 2}
@@ -39,9 +132,18 @@ export default function PracticeTest({MD}) {
           Practice Test Series
         </h3>
         <FormControlLabel
-          onClick={() => {}}
+          onChange={(e) => {
+           
+          }}
           control={
             <Checkbox
+              onChange={(e, value) => {
+                setSelectGoal((PreValue) => {
+                  const getValue = { ...PreValue };
+                  getValue.topic.map((task) => (task.isSelect = value));
+                  return getValue;
+                });
+              }}
               sx={{
                 "&.Mui-checked": {
                   color: "#187163",
@@ -57,15 +159,8 @@ export default function PracticeTest({MD}) {
       </Stack>
       <TopicList
         MD={MD}
-        topicList={[
-          "Quantitative Aptitude",
-          "Logical Reasoning",
-          "Verbal Ability",
-          "Technical Aptitude",
-          "Coding",
-          "Logical Reasoning",
-          "Verbal Ability",
-        ]}
+        setSelectGoal={setSelectGoal}
+        selectGoal={selectGoal}
       />
       <Stack direction="row" gap="10px" margin="20px 0">
         <FormControl fullWidth>
@@ -78,6 +173,7 @@ export default function PracticeTest({MD}) {
             No of questions
           </InputLabel>
           <Select
+            disabled={isSelect == false ? true : false}
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={"select"}
@@ -90,16 +186,24 @@ export default function PracticeTest({MD}) {
                 color: "#187163 !important",
               },
             }}
+            onChange={(e, value) =>
+              setValue((preValue) => {
+                const getValue = { ...preValue };
+                getValue.value = e.target.value;
+                return getValue;
+              })
+            }
             // onChange={handleChange}
           >
             <MenuItem disabled value={"select"}>
-              Select Questions
+              {value.value == "" ? "Select Questions" : value.value}
             </MenuItem>
-            <MenuItem value={20}>20</MenuItem>
-            <MenuItem value={25}>25</MenuItem>
-            <MenuItem value={30}>30</MenuItem>
-            <MenuItem value={35}>35</MenuItem>
-            <MenuItem value={40}>40</MenuItem>
+
+            {questionCount.length !== 0
+              ? questionCount.map((task) => (
+                  <MenuItem value={task}>{task}</MenuItem>
+                ))
+              : null}
           </Select>
         </FormControl>
         <FormControl fullWidth>
@@ -117,20 +221,26 @@ export default function PracticeTest({MD}) {
             value={"select"}
             label="Difficulty level"
             sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderColor: "green !important",
-                },
-                "& .MuiSvgIcon-root": {
-                  color: "#187163 !important",
-                },
-              }}
-            // onChange={handleChange}
+              "& .MuiOutlinedInput-root": {
+                borderColor: "green !important",
+              },
+              "& .MuiSvgIcon-root": {
+                color: "#187163 !important",
+              },
+            }}
+            onChange={(e, value) =>
+              setValue((preValue) => {
+                const getValue = { ...preValue };
+                getValue.selectLevel = e.target.value;
+                return getValue;
+              })
+            }
           >
             <MenuItem disabled value={"select"}>
-              Select Level
+              {value.selectLevel == "" ? "Select Level" : value.selectLevel}
             </MenuItem>
             <MenuItem value={"easy"}>Easy</MenuItem>
-            <MenuItem value={"Medium"}>Medium</MenuItem>
+            <MenuItem value={"medium"}>Medium</MenuItem>
             <MenuItem value={"hard"}>Hard</MenuItem>
           </Select>
         </FormControl>
@@ -148,6 +258,7 @@ export default function PracticeTest({MD}) {
           },
           padding: "10px",
         }}
+        onClick={handleAttempt}
       >
         Attempt Test
       </Button>
@@ -155,28 +266,56 @@ export default function PracticeTest({MD}) {
   );
 }
 
-function TopicList({ topicList, MD }) {
+function TopicList({ setSelectGoal, selectGoal, MD }) {
+  console.log(selectGoal)
   return (
     <FormGroup>
-      <Stack
-        direction={"row"}
-        flexWrap={"wrap"}
-        gap={2}
-      >
-        {topicList.map((topic, index) => {
-          return <TopicListCard key={index} topic={topic} index={index} MD={MD}/>;
-        })}
+      <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
+        {MD == undefined
+          ? selectGoal.topic.map((topic, index) => {
+              return (
+                <TopicListCard
+                  key={index}
+                  topic={topic.title}
+                  selectGoal={selectGoal}
+                  setSelectGoal={setSelectGoal}
+                  isSelect={topic.isSelect}
+                  index={index}
+                  MD={MD}
+                />
+              );
+            })
+          : selectGoal.topic.map((topic, index) => {
+              return (
+                <TopicListCard
+                  key={index}
+                  topic={topic.title}
+                  selectGoal={selectGoal}
+                  setSelectGoal={setSelectGoal}
+                  isSelect={topic.isSelect}
+                  index={index}
+                  MD={MD}
+                />
+              );
+            })}
       </Stack>
     </FormGroup>
   );
 }
 
-function TopicListCard({ topic, index, MD }) {
+function TopicListCard({
+  topic,
+  setSelectGoal,
+  index,
+  isSelect,
+  MD,
+}) {
+  console.log(topic);
   return (
     <Paper
       elevation={MD ? 0 : 1}
       sx={{
-        width: MD ? "100%" :"fit-content",
+        width: MD ? "100%" : "fit-content",
         padding: "5px 10px",
         borderRadius: "10px",
         cursor: "pointer",
@@ -188,6 +327,8 @@ function TopicListCard({ topic, index, MD }) {
       <FormControlLabel
         control={
           <Checkbox
+            checked={isSelect == true ? true : false}
+            // checked = {isSelect}
             sx={{
               "&.Mui-checked": {
                 color: "#187163",
@@ -195,6 +336,19 @@ function TopicListCard({ topic, index, MD }) {
               "&.MuiCheckbox-root": {
                 color: "#187163",
               },
+            }}
+            onChange={(e, value) => {
+              MD == undefined
+                ? setSelectGoal((PreValue) => {
+                    const getValue = { ...PreValue }
+                    getValue.topic[index].isSelect = value;
+                    return getValue;
+                  })
+                : setSelectGoal((PreValue) => {
+                    const getValue = { ...PreValue }
+                    getValue.topic[index].isSelect = value;
+                    return getValue;
+                  });
             }}
           />
         }

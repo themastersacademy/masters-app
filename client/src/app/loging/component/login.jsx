@@ -22,11 +22,11 @@ function Login({controlNotification}) {
       })
       .then(res => res.json())
       .then((data) => {
-        
-        if(data.status == 'success' || data.roll == 'student'){ 
+        console.log(data)
+        if(data.status == 'success' && data.roll == 'student'){ 
           navigator(`/?=${data.id}`)
       }
-      if(data.status == 'success' || data.roll == 'teacher'){ 
+      if(data.status == 'success' && data.roll == 'teacher' || data.status == 'success' && data.roll == 'institution' ){ 
         navigator(`/admin/dashboard?=${data.id}`)
     }
         if(data.status == 'error') controlNotification(data.status,data.message)

@@ -156,22 +156,29 @@ const SaveButton = ({
     },
   };
   const callCheck = () => {
- 
+  const check =[]
     mock.map((task) =>
       task.topic.map((task) => {
+          
         if (
           task.level.easy == "" ||
           task.level.medium == "" ||
           task.level.hard == ""
         ) {
-          ControlNotification("error", "please");
+          ControlNotification("error", "text field should not be empty");
         } else {
           course.push(task);
         }
       })
     );
-
-    if (course.length == mock.length) {
+    mock.map((task) =>
+    task.topic.map((task) => {
+      check.push(task)
+      
+    })
+  );
+    
+    if (course.length == check.length) {
       fetch("/api/admin/createCourseMock", {
         method: "POST",
         headers: {
@@ -183,7 +190,9 @@ const SaveButton = ({
         .then((data) => {
           ControlNotification(data.status, data.message);
         });
+   
     }
+ 
   };
 
   const sendData = () => {

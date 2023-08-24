@@ -15,12 +15,16 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Notification from "../../util/Alert";
 export default function Layout() {
-  const navigator = useNavigate()
+  const navigator = useNavigate();
   const { search } = useLocation();
   const id = search.split("=")[1];
   const { width } = useWindowDimensions();
   const [institute, setInstitue] = useState([]);
-  const [user,setUser] = useState([])
+  const [user, setUser] = useState([]);
+  const [goal, setGoal] = useState([]);
+  const [getGoalId, setGoalId] = useState('');
+  const [isChange, setChange] = useState(false);
+  const [selectGoal, setSelectGoal] = useState('');
   const [details, setDetails] = useState({
     userID: id,
     instituteName: "",
@@ -32,68 +36,154 @@ export default function Layout() {
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
   const [notificate, setNotification] = useState(false);
-  const Notifications =(status,message) =>{
-    setSeverity(status)
-    setMessage(message)
-    setNotification(true)
-  }
+  const Notifications = (status, message) => {
+    setSeverity(status);
+    setMessage(message);
+    setNotification(true);
+  };
 
   const getInstitute = () => {
     fetch("/api/admin/getInstitute")
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "ok") setInstitue(data.message);
-        console.log(data);
+       
       });
-   
   };
-  const getUserDetails = () =>{
-    fetch("/api/user/getUserData",{
-      method:"POST",
-      headers:{
-        "Content-type":"application/json"
+  const getUserDetails = () => {
+    fetch("/api/user/getUserData", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
       },
-      body:JSON.stringify({id:id})
+      body: JSON.stringify({ id: id }),
     })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.status == "ok") setUser(data.message);
-      console.log(data);
-    });
-  }
+      .then((res) => res.json())
+      .then((data) => {
+        
+        if (data.status == "ok") {
+          setUser(data.message);
+          setGoal(data.data);
+          setSelectGoal(data.topic);
+        }
+      });
+  };
 
-  useEffect(()=>{
-    fetch('/isLogin')
-    .then(res => res.json())
-    .then((data) =>{ 
-      if(data.status == 'isLogout') navigator('/login')
+  const addGoal = (goal) => {
+    fetch("/api/user/addGoal", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ id, goal }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "success") setChange(!isChange);
+        Notifications(data.status, data.message);
+      });
+  };
+  const createPractiesExam = (value, selectGoal) => {
+    console.log(value, selectGoal);
+    fetch("/api/exam/createPractiesExam", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ id: id, value, selectGoal }),
+    });
+  };
+  useEffect(() => {
+    if(getGoalId !== ''){
+  fetch('/api/user/getViewGoal',{
+    method:"POST",
+    headers:{
+      "Content-type":"application/json"
+    },
+    body:JSON.stringify({getGoalId})
   })
-  },[])
+  .then(res => res.json())
+  .then((data) =>{
+    
+    setSelectGoal(data.topic)
+  })
+    }
+  },[getGoalId]);
 
   useEffect(() => {
+    fetch("/isLogin")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status == "isLogout") navigator("/login");
+    });
     getInstitute();
-    getUserDetails()
-  },[]);
+    getUserDetails();
+  },[isChange]);
+  
 
   return (
     <div>
-{    width > 1024 ? (
-    <DTView institute={institute} user={user} details={details} setDetails={setDetails} Notificate={Notifications} />
-  ) : (
-    <MoView institute={institute} user={user} details={details} setDetails={setDetails} Notificate={Notifications} />
-  )}
- 
-<Notification 
-   setNotification={setNotification}
-   notificate={notificate}
-   message={message}
-   severity={severity}
-/>
-  </div>
-  )
+      {width > 1024 ? (
+        <DTView
+          institute={institute}
+          user={user}
+          goal={goal}
+          isChange={isChange}
+          addGoal={addGoal}
+          id={id}
+          setGoalId={setGoalId}
+          selectGoal={selectGoal}
+          createPractiesExam={createPractiesExam}
+          setSelectGoal={setSelectGoal}
+          details={details}
+          setDetails={setDetails}
+          Notificate={Notifications}
+        />
+      ) : (
+        <MoView
+          institute={institute}
+          user={user}
+          goal={goal}
+          id={id}
+          setGoalId={setGoalId}
+       
+          addGoal={addGoal}
+          isChange={isChange}
+          selectGoal={selectGoal}
+          createPractiesExam={createPractiesExam}
+          setSelectGoal={setSelectGoal}
+          details={details}
+          setDetails={setDetails}
+          Notificate={Notifications}
+        />
+      )}
+
+      <Notification
+        setNotification={setNotification}
+        notificate={notificate}
+        message={message}
+        severity={severity}
+      />
+    </div>
+  );
 }
 
-function DTView({ institute, setDetails, details,Notificate,user }) {
+function DTView({
+  id,
+  institute,
+  addGoal,
+  setDetails,
+  isChange,
+  details,
+  user,
+  goal,
+  selectGoal,
+  setSelectGoal,
+  Notificate,
+  setGoalId,
+  createPractiesExam,
+}) {
+  console.log(selectGoal);
   return (
     <Stack
       direction="column"
@@ -124,8 +214,23 @@ function DTView({ institute, setDetails, details,Notificate,user }) {
           }}
         >
           <Grid item xs={6} paddingRight="10px">
-            <GoalCard />
-            <TestCard />
+            <GoalCard
+              goal={goal}
+              selectGoal={selectGoal}
+              isChange={isChange}
+              addGoal={addGoal}
+              setGoalId={setGoalId}
+              setSelectGoal={setSelectGoal}
+              id={id}
+            />
+            {selectGoal !== '' ? (
+              <TestCard
+                selectGoal={selectGoal}
+                setSelectGoal={setSelectGoal}
+                Notificate={Notificate}
+                createPractiesExam={createPractiesExam}
+              />
+            ) : null}
           </Grid>
           <Grid item xs={6} paddingLeft="10px">
             <InstitutionCard
@@ -170,7 +275,21 @@ function a11yProps(index) {
   };
 }
 
-function MoView({ institute, setDetails, details,Notificate,user }) {
+function MoView({
+  institute,
+  setDetails,
+  details,
+  Notificate,
+  user,
+  goal,
+  isChange,
+  addGoal,
+  id,
+  selectGoal,
+  setSelectGoal,
+  createPractiesExam,
+  setGoalId
+}) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -182,7 +301,16 @@ function MoView({ institute, setDetails, details,Notificate,user }) {
         minHeight: "100vh",
       }}
     >
-      <MDNavBar user={user} />
+      <MDNavBar
+        user={user}
+        goal={goal}
+        selectGoal={selectGoal}
+        setSelectGoal={setSelectGoal}
+        isChange={isChange}
+        addGoal={addGoal}
+        id={id}
+        setGoalId={setGoalId}
+      />
       <Stack
         overflow={"scroll"}
         sx={{
@@ -222,8 +350,22 @@ function MoView({ institute, setDetails, details,Notificate,user }) {
         </Tabs>
       </Stack>
       <CustomTabPanel value={value} index={0}>
-        <PracticeTest MD={true} />
-        <MockTest MD={true} />
+        {selectGoal.length !== 0 ? (
+          <PracticeTest
+            MD={true}
+            goal={goal}
+            selectGoal={selectGoal}
+            setSelectGoal={setSelectGoal}
+            Notificate={Notificate}
+            createPractiesExam={createPractiesExam}
+          />
+        ) : null}
+        <MockTest
+          MD={true}
+          goal={goal}
+          selectGoal={selectGoal}
+          setSelectGoal={setSelectGoal}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <ScoreCard MD={true} />

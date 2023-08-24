@@ -2,7 +2,10 @@ const Exam = require("../../../models/exam");
 const Batch = require("../../../models/batch");
 const institution = require("../../../models/institution");
 const questionBank = require("../../../models/questionBank");
+const User = require('../../../models/user')
+const Course = require('../../../models/course')
 const questionCollection = require("../../../models/questionCollection");
+const {createPractiesExamQues} =require('../../../util/createQuestion')
 exports.createScheduleExam = async (req, res, next) => {
   const questionID = [];
   const finalQues = [];
@@ -35,7 +38,7 @@ exports.createScheduleExam = async (req, res, next) => {
         });
       });
 
-      console.log(questionID);
+      
       Collection.map((task) => {
         if (indexValue.indexOf(task.QuesbankID.valueOf()) !== -1) {
           const index = indexValue.indexOf(task.QuesbankID.valueOf());
@@ -145,3 +148,157 @@ exports.createScheduleExam = async (req, res, next) => {
     console.log(error);
   }
 };
+
+
+exports.createPractiesExam = async(req,res,next)=>{
+   try {
+    console.log(req.body)
+    const {id,selectGoal,value} = req.body
+  
+    const user = await User.findOne({_id:id})
+     const Bank = await questionBank.find()
+if(user){
+  const course = await Course.findOne({_id:selectGoal.courseId}) 
+  if(course){
+    
+    const check = []
+    const collectSelectTopic = []
+    const questionID =[]
+    const finalQuestion = []
+      selectGoal.topic.map(task => {
+        if(task.isSelect == true ) {
+          check.push(task.id.valueOf())
+         
+          questionID.push({
+            title:task.title,
+            id : task.id,
+            bankID:task.bankID,
+            type:task.type,
+            easy:[],
+            medium:[],
+            hard:[],
+            requireEasy:0,
+            requireMedium:0,
+            requireHard:0,
+          })
+          finalQuestion.push({
+            title:task.title,
+            id : task.id,
+            bankID:task.bankID,
+            type:task.type,
+            questions:[],     
+          })
+        }
+      })
+      course.collections.map(task =>
+        task.topic.map(task =>{
+             if(check.indexOf(task.id.valueOf()) !== -1) collectSelectTopic.push(task)
+        })
+      )
+
+if(value.value % check.length  == 0) {
+  for(let i=0;i<check.length;i++){
+  if(value.selectLevel == 'easy') questionID[i].requireEasy= value.value / check.length
+  if(value.selectLevel == 'medium') questionID[i].requireMedium = value.value / check.length
+  if(value.selectLevel == 'hard') questionID[i].requireHard = value.value / check.length  
+}  
+}
+else{
+  const actuelValue = value.value % check.length
+
+  for(let i=0;i<check.length;i++){
+    if(value.selectLevel == 'easy') questionID[i].requireEasy= (value.value - actuelValue) / check.length
+    if(value.selectLevel == 'medium') questionID[i].requireMedium = (value.value - actuelValue) / check.length
+    if(value.selectLevel == 'hard') questionID[i].requireHard = (value.value - actuelValue) / check.length
+  } 
+  for(let j=0;j<actuelValue;j++)
+  {
+    if(value.selectLevel == 'easy') questionID[j].requireEasy= 1 + questionID[j].requireEasy
+    if(value.selectLevel == 'medium') questionID[j].requireMedium = 1 + questionID[j].requireMedium
+    if(value.selectLevel == 'hard') questionID[j].requireHard = 1 + questionID[j].requireMedium
+  }
+     
+}
+/// get questions
+   const getBankID = []
+   
+   questionID.map(task => getBankID.push(task.bankID.valueOf()))
+   
+   const questions = await createPractiesExamQues(getBankID,questionID,finalQuestion)
+   
+  }
+ 
+ }
+ } catch (error) {
+    console.log(error)
+  }
+}
+
+
+
+
+function CallGetQuestion() {
+  
+  questions.map((task, quesIndex) => {
+    if (task.easy.length > 0 || task.requireEasy > 0) {
+      const index = [];
+      for (let i = 0; i < task.requireEasy; ) {
+        function getRandomInt(min, max) {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        const random = getRandomInt(0, task.requireEasy - 1);
+
+        if (index.indexOf(random) == -1) {
+          console.log("not match ", random);
+          finalQues[quesIndex].easy.push(task.easy[random]);
+          index.push(random);
+          i++;
+        } else {
+          console.log("match easy", random);
+        }
+      }
+    }
+    if (task.medium.length > 0 || task.requireMedium > 0) {
+      const index = [];
+      for (let i = 0; i < task.requireMedium; ) {
+        function getRandomInt(min, max) {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        const random = getRandomInt(0, task.requireMedium - 1);
+
+        if (index.indexOf(random) == -1) {
+          console.log("not match ", random);
+          finalQues[quesIndex].medium.push(task.medium[random]);
+          index.push(random);
+          i++;
+        } else {
+          console.log("match Medium", random);
+        }
+      }
+    }
+    if (task.hard.length > 0 || task.requireHard > 0) {
+      const index = [];
+      for (let i = 0; i < task.requireHard; ) {
+        function getRandomInt(min, max) {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        const random = getRandomInt(0, task.requireHard - 1);
+
+        if (index.indexOf(random) == -1) {
+          console.log("not match ", random);
+          finalQues[quesIndex].hard.push(task.hard[random]);
+          index.push(random);
+          i++;
+        } else {
+          console.log("match Hard", random);
+        }
+      }
+    }
+  });
+}

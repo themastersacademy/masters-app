@@ -10,6 +10,18 @@ exports.getCourse = async (req, res, next) => {
 
 exports.getCourseDetails = async (req, res, next) => {
   const get = await Course.findOne({ _id: req.body.id });
+  const bank = await questionBank.find()
+  const check = []
+  bank.map(task => check.push(task._id.valueOf()))
+  
+  get.collections.map(task => task.topic.map(task => {
+
+   if(check.indexOf(task.id.valueOf()) !== -1)
+   {
+    task.title = bank[check.indexOf(task.id.valueOf())].title
+   }
+  }))
+  get.save()
   if (get) res.json({ status: "ok", message: get });
   else {
     res.json({ status: "not found", message: "something wrong" });
