@@ -16,6 +16,7 @@ import FemaleAvatar4 from '../public/image/5927577 8.png'
 import Badge1 from '../public/image/badge1.svg'
 import Badge2 from '../public/image/badge2.svg'
 import Badge3 from '../public/image/badge3.svg'
+import WarningIcon from '../public/image/warning-icon.png'
 
  const Image = {
     student: profileOne,
@@ -35,7 +36,8 @@ import Badge3 from '../public/image/badge3.svg'
     FemaleAvatar4,
     badge1: Badge1,
     badge2: Badge2,
-    badge3: Badge3
+    badge3: Badge3,
+    WarningIcon
 }
 
 export default Image

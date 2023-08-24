@@ -6,8 +6,10 @@ import {
   DialogTitle,
   Button,
   Slide,
+  Stack,
 } from "@mui/material";
 import { forwardRef, useState } from "react";
+import Avater from "../../../../util/Avater";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -51,6 +53,7 @@ export default function WarningComp({}) {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
+
   return (
     <Dialog
       open={isDialogOpen}
@@ -59,21 +62,43 @@ export default function WarningComp({}) {
       disableEscapeKeyDown
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>{"Stop violating the exam protocol."}</DialogTitle>
+      {/* <DialogTitle>{"Stop violating the exam protocol."}</DialogTitle> */}
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
-          {violationMessage}
+          <Stack alignItems="center">
+            <img
+              src={Avater.WarningIcon}
+              alt="warning"
+              width="100px"
+              height="100px"
+            />
+            <h1>Stop Violating</h1>
+            <div style={{
+                width: "80%",
+                textAlign: "center",
+                fontSize: "18px",
+            }}>{violationMessage}</div>
+          </Stack>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
-          sx={{
-            color: "#187163",
-          }}
-          onClick={handleDialogClose}
-        >
-          Ok
-        </Button>
+        <Stack alignItems="center" width="100%">
+          <Button
+            variant="contained"
+            sx={{
+              textTransform: "none",
+              backgroundColor: "#FF0000",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#FF0000",
+                color: "#fff",
+              },
+            }}
+            onClick={handleDialogClose}
+          >
+            Ok
+          </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );
