@@ -7,6 +7,8 @@ import QuestionActionCard from "./components/QuestionActionCard";
 import ExamTimerCard from "./components/ExamTimerCard";
 import QuestionCollections from "./components/QuestionCollections";
 import useWindowDimensions from "../../../util/useWindowDimensions";
+import ExamEndDialog from "./components/ExamEndDialog";
+import WarningComp from "./components/WarningComp";
 
 export default function ExamState() {
   const examID = "64e2731c9769da81cc2d705a";
@@ -18,6 +20,8 @@ export default function ExamState() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [studentAnswers, setStudentAnswers] = useState();
   const [isBookmarked, setIsBookmarked] = useState();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const calculateRemainingTime = () => {
     let examTime = examInfo.examEndTime.split(":");
     let examDate = examInfo.examDate.split("/");
@@ -120,6 +124,14 @@ export default function ExamState() {
     setStudentAnswers(newStudentAnswers);
   };
 
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     examInfo &&
     (width > 1060 ? (
@@ -136,6 +148,9 @@ export default function ExamState() {
         remainingTime={remainingTime}
         timePercentage={timePercentage}
         clearAnswers={clearAnswers}
+        isDialogOpen={isDialogOpen}
+        handleDialogClose={handleDialogClose}
+        handleDialogOpen={handleDialogOpen}
       />
     ) : (
       <MobileView
@@ -151,7 +166,9 @@ export default function ExamState() {
         remainingTime={remainingTime}
         timePercentage={timePercentage}
         clearAnswers={clearAnswers}
-        // isMobileView={isMobileView}
+        isDialogOpen={isDialogOpen}
+        handleDialogClose={handleDialogClose}
+        handleDialogOpen={handleDialogOpen}
       />
     ))
   );
@@ -170,6 +187,9 @@ const DtView = ({
   remainingTime,
   timePercentage,
   clearAnswers,
+  isDialogOpen,
+  handleDialogClose,
+  handleDialogOpen,
 }) => {
   return (
     <Stack
@@ -215,7 +235,10 @@ const DtView = ({
         </Stack>
       </Stack>
       <Stack direction="column" width="70%" gap={2}>
-        <ExamEndCard title={examInfo.examTitle} />
+        <ExamEndCard
+          title={examInfo.examTitle}
+          handleDialogOpen={handleDialogOpen}
+        />
         <ExamTimerCard
           remainingTime={remainingTime}
           timePercentage={timePercentage}
@@ -228,6 +251,12 @@ const DtView = ({
           studentAnswers={studentAnswers}
         />
       </Stack>
+      <ExamEndDialog
+        isDialogOpen={isDialogOpen}
+        handleDialogClose={handleDialogClose}
+        studentAnswers={studentAnswers}
+      />
+      <WarningComp />
     </Stack>
   );
 };
@@ -245,6 +274,9 @@ const MobileView = ({
   remainingTime,
   timePercentage,
   clearAnswers,
+  isDialogOpen,
+  handleDialogClose,
+  handleDialogOpen,
 }) => {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => (event) => {
@@ -277,6 +309,7 @@ const MobileView = ({
           toggleDrawer={toggleDrawer}
           currentQuestionIndex={currentQuestionIndex}
           questionLength={examInfo.questionCollections.length}
+          handleDialogOpen={handleDialogOpen}
         />
         <QuestionStateCard
           index={currentQuestionIndex}
@@ -323,6 +356,12 @@ const MobileView = ({
         handlePreviousQuestion={handlePreviousQuestion}
         isMobileView={true}
       />
+      <ExamEndDialog
+        isDialogOpen={isDialogOpen}
+        handleDialogClose={handleDialogClose}
+        studentAnswers={studentAnswers}
+      />
+      <WarningComp />
     </Stack>
   );
 };

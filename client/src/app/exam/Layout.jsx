@@ -8,53 +8,33 @@ export default function Exam() {
   const path = window.location.pathname;
   const examID = '64e2cf4e06b38fbad4f42a13'
   const [examInfo, setExamInfo] = useState(null);
-  // window.addEventListener("beforeunload", (ev) => {
-  //   console.log(ev);
-  //   ev.preventDefault();
-  //   return (ev.returnValue = "Are you sure you want to close?");
-  // });
+  
+  window.oncontextmenu = () => {
+    return false;
+  };
+  let h = window.innerHeight;
+  let w = window.innerWidth;
 
-  // window.oncontextmenu = () => {
-  //   return false;
-  // };
+  window.addEventListener("beforeunload", (ev) => {
+    ev.preventDefault();
+    return (ev.returnValue = "Are you sure you want to close?");
+  });
 
-  // window.onkeydown =
-  //   window.onkeyup =
-  //   window.onkeypress =
-  //     () => {
-  //       window.event.returnValue = false;
-  //       return false;
-  //     };
-
-  // let h = window.innerHeight;
-  // let w = window.innerWidth;
-
-  // window.onresize = () => {
-  //   if (h !== window.innerHeight || w !== window.innerWidth) {
-  //     console.log("You are not allowed to resize the window!");
-  //   }
-  // };
-
-  // window.onblur = function () {
-  //   console.log("blur");
-  // };
-
-  // window.onfocus = function () {
-  //   console.log("focus");
-  // };
+  window.onresize = () => {
+    if (h !== window.innerHeight || w !== window.innerWidth) {
+    }
+  };
 
   const disableTextSelection = {
-    // MozUserSelect: "none",
-    // WebkitUserSelect: "none",
-    // msUserSelect: "none",
-    // userSelect: "none",
+    MozUserSelect: "none",
+    WebkitUserSelect: "none",
+    msUserSelect: "none",
+    userSelect: "none",
     width: "100%",
     height: "100vh",
     overFlow: "hidden",
     background: "#C5CFD3",
   };
-
-
 
   return (
     <Stack style={disableTextSelection}>

@@ -1,7 +1,7 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
-export default function ExamEndCard({ title, isMobileView, toggleDrawer, currentQuestionIndex, questionLength }) {
+export default function ExamEndCard({ title, isMobileView, toggleDrawer, currentQuestionIndex, questionLength, handleDialogOpen }) {
   return (
     <Paper
       elevation={2}
@@ -46,6 +46,7 @@ export default function ExamEndCard({ title, isMobileView, toggleDrawer, current
         )}
         <Button
           variant="contained"
+          onClick={handleDialogOpen}
           sx={{
             textTransform: "none",
             backgroundColor: "#187163",
