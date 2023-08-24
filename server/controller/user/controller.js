@@ -19,13 +19,13 @@ exports.login = async (req, res, next) => {
     const getVerify = await isLogin(get, check.email);
     // console.log(getVerify);
     // if (getVerify.length == 0) {
-      req.session.isAuth = true;
-      req.session.isLogin = true;
-      req.session.userID = check._id;
-      req.session.userRoll = check.type;
-      req.session.userName = check.name;
-      req.session.email = check.email;
-      res.json({ status: "success", id: check._id, roll: check.type });
+    req.session.isAuth = true;
+    req.session.isLogin = true;
+    req.session.userID = check._id;
+    req.session.userRoll = check.type;
+    req.session.userName = check.name;
+    req.session.email = check.email;
+    res.json({ status: "success", id: check._id, roll: check.type });
     // } else {
     //   const isDelete = await sessions.deleteMany({
     //     expires: getVerify[0].expires,
@@ -102,7 +102,7 @@ exports.chooseGoal = async (req, res, next) => {
   const goal = req.body.goal;
 
   const user = await User.findOne({ _id: req.session.userID });
-  // const user = await User.findOne({ _id:'64d91a8434866fe7d81ab1c0' });
+
 
   if (user) {
     goal.map((task) => {
@@ -259,14 +259,12 @@ exports.getUserData = async (req, res, next) => {
       if (get.length > 0) {
         get[0].collections.map((task, index) => {
           task.topic.map((task) => {
-            calcTolalQues += eval(
-              task.level.easy + task.level.medium + task.level.hard
-            );
+            calcTolalQues +=  eval( task.level.easy) +eval( task.level.medium) +eval( task.level.hard)
           });
         });
         (topic.duration = get[0].duration),
-          (topic.noOfQuestion = ""),
-          (topic.totalMArk = "");
+          (topic.noOfQuestion = calcTolalQues),
+          (topic.totalMArk = get[0].mark*calcTolalQues);
       }
       console.log(calcTolalQues);
       res.json({
@@ -357,7 +355,7 @@ exports.getViewGoal = async (req, res, next) => {
     const course = await Course.findOne({ _id: getGoalId.courseId });
     if (course) {
       const send = [];
-      let calcTolalQues = 0
+      let calcTolalQues = 0;
       const topic = {
         courseName: course.title,
         courseId: course._id,
@@ -418,16 +416,13 @@ exports.getViewGoal = async (req, res, next) => {
 
       course.collections.map((task, index) => {
         task.topic.map((task) => {
-          calcTolalQues += eval(
-            task.level.easy + task.level.medium + task.level.hard
-          );
+          calcTolalQues +=  eval( task.level.easy) +eval( task.level.medium) +eval( task.level.hard)
         });
       });
       (topic.duration = course.duration),
-        (topic.noOfQuestion = ""),
-        (topic.totalMArk = "");
+        (topic.noOfQuestion = calcTolalQues),
+        (topic.totalMArk = course.mark*calcTolalQues);
 
-      console.log(calcTolalQues);
       res.json({ staus: "ok", topic: topic });
     }
   } catch (error) {

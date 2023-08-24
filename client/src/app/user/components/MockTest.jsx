@@ -28,7 +28,7 @@ export default function MockTest({ MD,selectGoal }) {
           marginBottom: "10px",
         }}
       >
-        Placement Training
+       {selectGoal.courseName}
       </h4>
       <Stack direction="row" justifyContent="space-between" margin={"20px 0"}>
         <div>
@@ -70,7 +70,7 @@ export default function MockTest({ MD,selectGoal }) {
               marginBottom: "5px",
             }}
           >
-            {selectGoal.noOfquestion}
+            {selectGoal.noOfQuestion}
           </div>
         </div>
         <div>
