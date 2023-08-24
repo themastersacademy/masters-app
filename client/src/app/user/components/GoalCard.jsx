@@ -14,7 +14,7 @@ import AddGoal from "./AddGoal";
 
 export default function GoalCard({goal,selectGoal,id,addGoal,isChange,setGoalId}) {
   const [expanded, setExpanded] = useState(false);
-console.log(selectGoal);
+
   return (
     <Paper
       sx={{
@@ -45,7 +45,7 @@ console.log(selectGoal);
                 fontWeight: "500",
               }}
             >
-            { selectGoal.courseName}
+            { selectGoal.courseName == '' ? 'choose Goal' : selectGoal.courseName } 
             </h2>
           </Stack>
         </AccordionSummary>

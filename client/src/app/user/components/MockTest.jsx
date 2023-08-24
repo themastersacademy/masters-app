@@ -1,6 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
 
-export default function MockTest({ MD }) {
+export default function MockTest({ MD,selectGoal }) {
   return (
     <Paper
       elevation={MD ? 0 : 2}
@@ -49,7 +49,7 @@ export default function MockTest({ MD }) {
               marginBottom: "5px",
             }}
           >
-            60 Mins
+            {selectGoal.duration} Mins
           </div>
         </div>
         <div>
@@ -70,7 +70,7 @@ export default function MockTest({ MD }) {
               marginBottom: "5px",
             }}
           >
-            40
+            {selectGoal.noOfquestion}
           </div>
         </div>
         <div>
@@ -91,7 +91,7 @@ export default function MockTest({ MD }) {
               marginBottom: "5px",
             }}
           >
-            160
+           {selectGoal.totalMArk}
           </div>
         </div>
       </Stack>

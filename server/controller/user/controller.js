@@ -17,8 +17,8 @@ exports.login = async (req, res, next) => {
   if (check) {
     let get = await sessions.find();
     const getVerify = await isLogin(get, check.email);
-    console.log(getVerify);
-    if (getVerify.length == 0) {
+    // console.log(getVerify);
+    // if (getVerify.length == 0) {
       req.session.isAuth = true;
       req.session.isLogin = true;
       req.session.userID = check._id;
@@ -26,18 +26,18 @@ exports.login = async (req, res, next) => {
       req.session.userName = check.name;
       req.session.email = check.email;
       res.json({ status: "success", id: check._id, roll: check.type });
-    } else {
-      const isDelete = await sessions.deleteMany({
-        expires: getVerify[0].expires,
-      });
-      req.session.isAuth = true;
-      req.session.isLogin = true;
-      req.session.userID = check._id;
-      req.session.userRoll = check.type;
-      req.session.userName = check.name;
-      req.session.email = check.email;
-      res.json({ status: "success", id: check._id, roll: check.type });
-    }
+    // } else {
+    //   const isDelete = await sessions.deleteMany({
+    //     expires: getVerify[0].expires,
+    //   });
+    //   req.session.isAuth = true;
+    //   req.session.isLogin = true;
+    //   req.session.userID = check._id;
+    //   req.session.userRoll = check.type;
+    //   req.session.userName = check.name;
+    //   req.session.email = check.email;
+    //   res.json({ status: "success", id: check._id, roll: check.type });
+    // }
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
   }
@@ -177,6 +177,15 @@ exports.getUserData = async (req, res, next) => {
     const course = await Course.find();
     if (user) {
       let check = [];
+      let calcTolalQues = 0;
+      let topic = {
+        courseName: "",
+        courseId: "",
+        topic: [],
+        duration: "",
+        noOfQuestion: "",
+        totalMArk: "",
+      };
       user.goal.map((task) => check.push(task.valueOf()));
 
       const getUserGoal = goal.filter(
@@ -184,8 +193,8 @@ exports.getUserData = async (req, res, next) => {
       );
       check = [];
       const send = [];
+
       getUserGoal.map((task) => {
-        
         check.push(task.courseId.valueOf());
         send.push({
           courseName: task.courseName,
@@ -196,52 +205,77 @@ exports.getUserData = async (req, res, next) => {
       const get = course.filter(
         (task) => check.indexOf(task._id.valueOf()) !== -1
       );
-    
-      const topic = {
-        courseName:'',
-        courseId:get[0]._id,
-        topic:[]
-       
-      }
-      topic.courseName = get[0].title
-      get[0].collections.map((collection, index) => {
-        
-        if (collection.type == "topic")
-          collection.topic.map((task) => {
 
-            if (
-              eval(task.level.easy >= 0) &&
-              eval(task.level.medium >= 0) &&
-              eval(task.level.hard >= 0)
-            ) {
-             topic.topic.push({
-                title: task.title,
-                id: collection._id,
-                type: collection.type,
-                isSelect: false,
-                bankID:task.id
-              });
-            }
-          });
-        else if (collection.type == "group")
-          collection.topic.map((task) => {
-            if (
-              eval(task.level.easy >= 0) &&
-              eval(task.level.medium >= 0) &&
-              eval(task.level.hard >= 0)
-            )
-             { 
-              topic.topic.push({
-                title: collection.title,
-                id: collection._id,
-                type: collection.type,
-                isSelect: false,
-                bankID:task.id
-              });}
-          });
+      if (get.length > 0) {
+        (topic.courseId = get[0]._id), (topic.courseName = get[0].title);
+        get[0].collections.map((collection, index) => {
+          console.log(collection);
+          if (collection.type == "topic") {
+            collection.topic.map((task) => {
+              if (
+                eval(task.level.easy >= 0) &&
+                eval(task.level.medium >= 0) &&
+                eval(task.level.hard >= 0)
+              ) {
+                topic.topic.push({
+                  title: task.title,
+                  id: collection._id,
+                  type: collection.type,
+                  topicLength: collection.topic.length,
+                  isSelect: false,
+                  bankID: task.id,
+                });
+              }
+            });
+          } else if (collection.type == "group")
+            collection.topic.map((task) => {
+              if (
+                eval(task.level.easy >= 0) &&
+                eval(task.level.medium >= 0) &&
+                eval(task.level.hard >= 0)
+              ) {
+                topic.topic.push({
+                  title: collection.title,
+                  id: collection._id,
+                  type: collection.type,
+                  topicLength: collection.topic.length,
+                  isSelect: false,
+                  bankID: task.id,
+                });
+              }
+            });
+        });
+      }
+      const getIndex = [];
+      const retry = [];
+      topic.topic.map((task) => {
+        if (getIndex.indexOf(task.id.valueOf()) == -1) {
+          getIndex.push(task.id.valueOf());
+          retry.push(task);
+        }
       });
-  console.log(topic);
-      res.json({ status: "ok", message: user, goal: getUserGoal, data: send ,topic:topic });
+
+      topic.topic = retry;
+      if (get.length > 0) {
+        get[0].collections.map((task, index) => {
+          task.topic.map((task) => {
+            calcTolalQues += eval(
+              task.level.easy + task.level.medium + task.level.hard
+            );
+          });
+        });
+        (topic.duration = get[0].duration),
+          (topic.noOfQuestion = ""),
+          (topic.totalMArk = "");
+      }
+      console.log(calcTolalQues);
+      res.json({
+        status: "ok",
+        message: user,
+        goal: getUserGoal,
+        data: send,
+        topic: topic,
+      });
     }
   } catch (error) {
     res.json({ staus: "error", message: "something wrong" });
@@ -323,49 +357,80 @@ exports.getViewGoal = async (req, res, next) => {
     const course = await Course.findOne({ _id: getGoalId.courseId });
     if (course) {
       const send = [];
+      let calcTolalQues = 0
       const topic = {
-        courseName:course.title,
-        courseId:course._id,
-        topic:[]
-       
-      }
+        courseName: course.title,
+        courseId: course._id,
+        topic: [],
+        topicLength: "",
+        duration: "",
+        noOfQuestion: "",
+        totalMArk: "",
+      };
+
       course.collections.map((collection, index) => {
-        if (collection.type == "topic")
+        if (collection.type == "topic") {
           collection.topic.map((task) => {
             if (
               eval(task.level.easy >= 0) &&
               eval(task.level.medium >= 0) &&
               eval(task.level.hard >= 0)
             ) {
-             topic.topic.push({
+              topic.topic.push({
                 title: task.title,
                 id: collection._id,
                 type: collection.type,
                 isSelect: false,
-                bankID:task.id
+                topicLength: collection.topic.length,
+                bankID: task.id,
               });
             }
           });
-        else if (collection.type == "group")
+        } else if (collection.type == "group")
           collection.topic.map((task) => {
             if (
               eval(task.level.easy >= 0) &&
               eval(task.level.medium >= 0) &&
               eval(task.level.hard >= 0)
-            )
-             { topic.topic.push({
+            ) {
+              topic.topic.push({
                 title: collection.title,
                 id: collection._id,
                 type: collection.type,
                 isSelect: false,
-                bankID:task.id
-              });}
+                topicLength: collection.topic.length,
+                bankID: task.id,
+              });
+            }
           });
       });
 
+      const getIndex = [];
+      const retry = [];
+      topic.topic.map((task) => {
+        if (getIndex.indexOf(task.id.valueOf()) == -1) {
+          getIndex.push(task.id.valueOf());
+          retry.push(task);
+        }
+      });
+
+      topic.topic = retry;
+
+      course.collections.map((task, index) => {
+        task.topic.map((task) => {
+          calcTolalQues += eval(
+            task.level.easy + task.level.medium + task.level.hard
+          );
+        });
+      });
+      (topic.duration = course.duration),
+        (topic.noOfQuestion = ""),
+        (topic.totalMArk = "");
+
+      console.log(calcTolalQues);
       res.json({ staus: "ok", topic: topic });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };

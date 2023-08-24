@@ -22,9 +22,9 @@ export default function Layout() {
   const [institute, setInstitue] = useState([]);
   const [user, setUser] = useState([]);
   const [goal, setGoal] = useState([]);
-  const [getGoalId, setGoalId] = useState('');
+  const [getGoalId, setGoalId] = useState("");
   const [isChange, setChange] = useState(false);
-  const [selectGoal, setSelectGoal] = useState('');
+  const [selectGoal, setSelectGoal] = useState("");
   const [details, setDetails] = useState({
     userID: id,
     instituteName: "",
@@ -47,7 +47,6 @@ export default function Layout() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "ok") setInstitue(data.message);
-       
       });
   };
   const getUserDetails = () => {
@@ -60,11 +59,10 @@ export default function Layout() {
     })
       .then((res) => res.json())
       .then((data) => {
-        
         if (data.status == "ok") {
           setUser(data.message);
           setGoal(data.data);
-          setSelectGoal(data.topic);
+          if (data.topic.courseId !== "") setSelectGoal(data.topic);
         }
       });
   };
@@ -94,32 +92,31 @@ export default function Layout() {
     });
   };
   useEffect(() => {
-    if(getGoalId !== ''){
-  fetch('/api/user/getViewGoal',{
-    method:"POST",
-    headers:{
-      "Content-type":"application/json"
-    },
-    body:JSON.stringify({getGoalId})
-  })
-  .then(res => res.json())
-  .then((data) =>{
-    
-    setSelectGoal(data.topic)
-  })
+    if (getGoalId !== "") {
+      fetch("/api/user/getViewGoal", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ getGoalId }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setSelectGoal(data.topic);
+        });
     }
   },[getGoalId]);
 
   useEffect(() => {
     fetch("/isLogin")
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.status == "isLogout") navigator("/login");
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "isLogout") navigator("/login");
+        if (id == undefined) navigator("/login");
+      });
     getInstitute();
     getUserDetails();
-  },[isChange]);
-  
+  }, [isChange]);
 
   return (
     <div>
@@ -146,7 +143,6 @@ export default function Layout() {
           goal={goal}
           id={id}
           setGoalId={setGoalId}
-       
           addGoal={addGoal}
           isChange={isChange}
           selectGoal={selectGoal}
@@ -183,7 +179,6 @@ function DTView({
   setGoalId,
   createPractiesExam,
 }) {
-  console.log(selectGoal);
   return (
     <Stack
       direction="column"
@@ -223,7 +218,7 @@ function DTView({
               setSelectGoal={setSelectGoal}
               id={id}
             />
-            {selectGoal !== '' ? (
+            {selectGoal !== "" ? (
               <TestCard
                 selectGoal={selectGoal}
                 setSelectGoal={setSelectGoal}
@@ -288,7 +283,7 @@ function MoView({
   selectGoal,
   setSelectGoal,
   createPractiesExam,
-  setGoalId
+  setGoalId,
 }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {

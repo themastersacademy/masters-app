@@ -23,6 +23,8 @@ export default function PracticeTest({
   const [isSelect, setSelect] = useState(false);
   const [questionCount, setQuestionCount] = useState([]);
   const [value, setValue] = useState({ value: "", selectLevel: "" });
+  
+  const [questionLength,setQuestionLength] = useState(0)
   let calLength = [];
   useEffect(() => {
     const check = [];
@@ -32,10 +34,14 @@ export default function PracticeTest({
       selectGoal.topic.map((task) => {
         if (task.isSelect == true) {
           calLength.push(task);
+       
           setSelect(true);
         }
         if (task.isSelect == false || task.isSelect == undefined)
+         { 
           check.push(task);
+     
+        }
         if (selectGoal.topic.length == check.length) setSelect(false);
       });
     else
@@ -50,10 +56,16 @@ export default function PracticeTest({
       });
 
     setQuestionCount((preValue) => {
-      const getValue = [...preValue];
+      
       const count = [];
-      const num = 5 * (calLength.length-1);
-  
+      let calcTopicLength = 0
+    
+     selectGoal.topic.map(task => {
+      if(task.isSelect == true) calcTopicLength +=task.topicLength
+     })
+   
+     const num = 5 * (calcTopicLength-1);
+      //  const num = 5 * (calLength.length-1);
     {  for (let i = 1 ,j=5; i < 7 +1 ; i++,j+=5) {
         const max = num + j   
           if(max < 76) count.push(max)
@@ -67,9 +79,7 @@ export default function PracticeTest({
 
   },[selectGoal]);
 
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
+
 
   const handleAttempt = () => {
     const isSelect = [];
@@ -200,8 +210,8 @@ export default function PracticeTest({
             </MenuItem>
 
             {questionCount.length !== 0
-              ? questionCount.map((task) => (
-                  <MenuItem value={task}>{task}</MenuItem>
+              ? questionCount.map((task,index) => (
+                  <MenuItem value={task} key={index}>{task}</MenuItem>
                 ))
               : null}
           </Select>
@@ -267,7 +277,7 @@ export default function PracticeTest({
 }
 
 function TopicList({ setSelectGoal, selectGoal, MD }) {
-  console.log(selectGoal)
+ 
   return (
     <FormGroup>
       <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
@@ -310,7 +320,7 @@ function TopicListCard({
   isSelect,
   MD,
 }) {
-  console.log(topic);
+  
   return (
     <Paper
       elevation={MD ? 0 : 1}

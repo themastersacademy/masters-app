@@ -225,7 +225,7 @@ else{
    questionID.map(task => getBankID.push(task.bankID.valueOf()))
    
    const questions = await createPractiesExamQues(getBankID,questionID,finalQuestion)
-   
+   console.log(questions)
   }
  
  }
