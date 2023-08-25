@@ -9,24 +9,26 @@ const examSchema = new Schema({
     batchID:{
         type: Schema.Types.ObjectId,
                 ref: 'batch',
-                required: true
+
     },
     title:{
         type: String,
         required: true
     },
- 
+    courseId: {
+        type: Schema.Types.ObjectId,
+        ref: "course",
+        required: true,
+      },
     examDate:{
         type: String,
         required: true
     },
     examStartTime:{
         type: String,
-        required: true
     },
     examEndTime:{
         type: String,
-        required: true
     },
     examDuration:{
         type: String,
@@ -47,9 +49,7 @@ const examSchema = new Schema({
                 ref: 'questionBank',
                 required: true
             },
-            type:{
-                type:String
-            },
+           
             title:{
                 type: String,
                 required: true

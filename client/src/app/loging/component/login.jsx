@@ -23,6 +23,7 @@ function Login({controlNotification}) {
       .then(res => res.json())
       .then((data) => {
         console.log(data)
+        if(data.status == 'isExam') navigator(`/exam/state`)
         if(data.status == 'success' && data.roll == 'student'){ 
           navigator(`/?=${data.id}`)
       }

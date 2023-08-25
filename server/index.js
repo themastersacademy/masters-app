@@ -2,10 +2,8 @@
 const express = require("express");
 const route = require("./router/route.js");
 const path = require("path");
-const cors = require("cors")
+const cors = require("cors");
 const User = require("./models/user.js");
-
-
 
 const {
   sessionManagement,
@@ -13,18 +11,17 @@ const {
   userVerify,
   isLogin,
   userCreate,
-  isRoll
+  isRoll,
+  examInfo,
+  isValueExam
 } = require("./auth/auth.js");
 const connectDB = require("./util/connectDB.js");
 const app = express();
 
-
-
-
 //Initlization
 require("dotenv").config();
 
-app.disable('x-powered-by')
+app.disable("x-powered-by");
 //Middleware
 
 app.use(express.json());
@@ -32,7 +29,7 @@ app.use(express.text());
 //MongoBD Connection
 connectDB();
 //Auth Session Management
- sessionManagement(app);
+sessionManagement(app);
 
 // Static Files
 
@@ -41,28 +38,28 @@ app.use("/api", route);
 
 //Application Route
 
+app.get("/isLogin", (req, res) => {
+  if (req.session.isLogin)
+   { 
+    if(req.session.examID){
+      res.json({ status: "isExam", message:'go to exam'});
+    }
+    else res.json({ status: "isLogin", id: req.session.userID });
+  }
+  else res.json({ status: "isLogout" });
+});
 
-app.get('/isLogin',(req,res) =>{
-
-  if(req.session.isLogin) res.json({status:'isLogin',id:req.session.userID})
-  else res.json({status:'isLogout'})
-  })
-
-
-app.get("/", userVerify, (req, res) => {
-  
+app.get("/",examInfo,userVerify, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
 /// user route
 
-app.get('/logout',(req,res)=>{
-
-    req.session.destroy()
-    res.json({status:'logout'})
-})
-app.get("/login",isLogin,(req, res) => {
- 
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.json({ status: "logout" });
+});
+app.get("/login", isLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 app.get("/signup", (req, res) => {
@@ -80,7 +77,7 @@ app.get("/login/goal", userCreate, (req, res) => {
 
 /// admin route
 
-app.get("/admin/dashboard", isRoll,(req, res) => {
+app.get("/admin/dashboard", isRoll, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 app.get("/admin/bank/collection", (req, res) => {
@@ -107,7 +104,6 @@ app.get("/admin/dashboard/course", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
-
 /// institute
 app.get("/admin/institution/page", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
@@ -115,6 +111,23 @@ app.get("/admin/institution/page", (req, res) => {
 app.get("/admin/institution/page/batch", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
+
+/// exam route
+
+
+app.get("/exam/info",examInfo,(req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+app.get("/exam/state",isValueExam,(req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+app.get("/exam/result", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
+
+
+
 
 
 

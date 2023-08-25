@@ -1,6 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ExamHeader from "./components/ExamHeader";
 
 export default function ExamInfo() {
@@ -14,12 +14,12 @@ export default function ExamInfo() {
       .then((res) => res.json())
       .then((data) => {
         setExamInfo(data);
-        setIsScheduled(()=>{
-          return data.type === "schedule" ? true : false
+        setIsScheduled(() => {
+          return data.type === "schedule" ? true : false;
         });
-        console.log(data.examDate);
+        console.log(data);
       });
-  }, [examId]);
+  }, []);
 
   return (
     examInfo && (
@@ -49,12 +49,13 @@ const ExamInfoBody = ({
   isScheduled,
   scheduledTime,
   scheduledDate,
-  examId
+  examId,
 }) => {
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00:00");
   const [currentDate, setCurrentDate] = useState("00/00/0000");
   const [remainingTime, setRemainingTime] = useState("0d 0h 0m 0s");
+  const navigate = useNavigate();
 
   const updateExamTime = () => {
     let date = new Date();
@@ -115,10 +116,7 @@ const ExamInfoBody = ({
     getRemainingTime();
   }, 1000);
 
-   const getExamState = () => {
-    
-   }
-
+  const getExamState = () => {};
 
   return (
     <Paper
@@ -192,7 +190,7 @@ const ExamInfoBody = ({
         ) : null}
         <Button
           variant="contained"
-          disabled={!isTimeOver}
+          disabled={!isTimeOver && isScheduled}
           sx={{
             textTransform: "none",
             backgroundColor: "#187163",
@@ -206,8 +204,8 @@ const ExamInfoBody = ({
             fetch(`/api/exam/start-exam/${examId}`)
               .then((res) => res.json())
               .then((data) => {
-                console.log(data);
-                // window.location.href = `/exam/state?=${examId}`;
+                if (data.status === "success")
+                  navigate(`/exam/state?=${examId}`);
               });
           }}
         >

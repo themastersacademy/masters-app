@@ -13,12 +13,12 @@ const {
  
 } = require("../../controller/user/controller.js");
 
-
+const { isExam } = require("../../util/checkLogin.js")
 //get
 
 //post
 // login
-router.post("/login", login);
+router.post("/login", isExam,login);
 // create account
 
 router.post("/create", create);

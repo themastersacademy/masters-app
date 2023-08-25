@@ -1,5 +1,6 @@
 import { Stack, SwipeableDrawer } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ExamHeader from "./components/ExamHeader";
 import ExamEndCard from "./components/ExamEndCard";
 import QuestionStateCard from "./components/QuestionStateCard";
@@ -11,7 +12,8 @@ import ExamEndDialog from "./components/ExamEndDialog";
 import WarningComp from "./components/WarningComp";
 
 export default function ExamState() {
-  const examID = "64e2731c9769da81cc2d705a";
+  const { search } = useLocation();
+  const examID = search.split("=")[1];
   const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState();
   const [isTimeOver, setIsTimeOver] = useState(false);

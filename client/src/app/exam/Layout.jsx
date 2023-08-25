@@ -6,19 +6,16 @@ import { Stack } from "@mui/material";
 
 export default function Exam() {
   const path = window.location.pathname;
-  const examID = '64e2cf4e06b38fbad4f42a13'
-  const [examInfo, setExamInfo] = useState(null);
-  
   window.oncontextmenu = () => {
     return false;
   };
   let h = window.innerHeight;
   let w = window.innerWidth;
 
-  window.addEventListener("beforeunload", (ev) => {
-    ev.preventDefault();
-    return (ev.returnValue = "Are you sure you want to close?");
-  });
+  // window.addEventListener("beforeunload", (ev) => {
+  //   ev.preventDefault();
+  //   return (ev.returnValue = "Are you sure you want to close?");
+  // });
 
   window.onresize = () => {
     if (h !== window.innerHeight || w !== window.innerWidth) {

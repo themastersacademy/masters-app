@@ -18,7 +18,7 @@ export default function PracticeTest({
   selectGoal,
   setSelectGoal,
   Notificate,
-  createPractiesExam,
+  createPracticesExam,
 }) {
   const [isSelect, setSelect] = useState(false);
   const [questionCount, setQuestionCount] = useState([]);
@@ -112,7 +112,7 @@ export default function PracticeTest({
       });
 
     if (check.length == 0) {
-      createPractiesExam(value, selectGoal);
+      createPracticesExam(value, selectGoal);
     }
   };
   return (

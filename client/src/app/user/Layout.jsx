@@ -7,7 +7,7 @@ import TestCard from "./components/TestCard";
 import PracticeTest from "./components/PracticeTest";
 import MockTest from "./components/MockTest";
 import MDNavBar from "./components/MDNavBar";
-import { Stack, Grid, Tab, Tabs, Box, Paper } from "@mui/material";
+import { Stack, Grid, Tab, Tabs, Paper } from "@mui/material";
 import PropTypes from "prop-types";
 import useWindowDimensions from "../../util/useWindowDimensions";
 import { useEffect, useState } from "react";
@@ -81,15 +81,21 @@ export default function Layout() {
         Notifications(data.status, data.message);
       });
   };
-  const createPractiesExam = (value, selectGoal) => {
+  const createPracticesExam = (value, selectGoal) => {
     console.log(value, selectGoal);
-    fetch("/api/exam/createPractiesExam", {
+    fetch("/api/exam/createPracticesExam", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify({ id: id, value, selectGoal }),
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "success") {
+          navigator(`/exam/info?=${data.examId}`);
+        }
+      });
   };
   useEffect(() => {
     if (getGoalId !== "") {
@@ -105,13 +111,14 @@ export default function Layout() {
           setSelectGoal(data.topic);
         });
     }
-  },[getGoalId]);
+  }, [getGoalId]);
 
   useEffect(() => {
     fetch("/isLogin")
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "isLogout") navigator("/login");
+        if (data.status == "isExam" ) navigator("/exam/state");
         if (id == undefined) navigator("/login");
       });
     getInstitute();
@@ -130,7 +137,7 @@ export default function Layout() {
           id={id}
           setGoalId={setGoalId}
           selectGoal={selectGoal}
-          createPractiesExam={createPractiesExam}
+          createPracticesExam={createPracticesExam}
           setSelectGoal={setSelectGoal}
           details={details}
           setDetails={setDetails}
@@ -146,7 +153,7 @@ export default function Layout() {
           addGoal={addGoal}
           isChange={isChange}
           selectGoal={selectGoal}
-          createPractiesExam={createPractiesExam}
+          createPracticesExam={createPracticesExam}
           setSelectGoal={setSelectGoal}
           details={details}
           setDetails={setDetails}
@@ -177,7 +184,7 @@ function DTView({
   setSelectGoal,
   Notificate,
   setGoalId,
-  createPractiesExam,
+  createPracticesExam,
 }) {
   return (
     <Stack
@@ -223,7 +230,7 @@ function DTView({
                 selectGoal={selectGoal}
                 setSelectGoal={setSelectGoal}
                 Notificate={Notificate}
-                createPractiesExam={createPractiesExam}
+                createPracticesExam={createPracticesExam}
               />
             ) : null}
           </Grid>
@@ -282,7 +289,7 @@ function MoView({
   id,
   selectGoal,
   setSelectGoal,
-  createPractiesExam,
+  createPracticesExam,
   setGoalId,
 }) {
   const [value, setValue] = useState(0);
@@ -352,7 +359,7 @@ function MoView({
             selectGoal={selectGoal}
             setSelectGoal={setSelectGoal}
             Notificate={Notificate}
-            createPractiesExam={createPractiesExam}
+            createPracticesExam={createPracticesExam}
           />
         ) : null}
         <MockTest

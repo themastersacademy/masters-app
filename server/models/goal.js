@@ -35,6 +35,11 @@ const goalSchema = mongoose.Schema(
             ref: "exam",
             required: true,
           },
+          type:{
+            type: String,
+            required: true,
+            enum: ['schedule', 'mock', 'practice']
+          },
           examName: {
             type: String,
             required: true,

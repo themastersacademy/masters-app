@@ -19,6 +19,9 @@ exports.login = async (req, res, next) => {
     const getVerify = await isLogin(get, check.email);
     // console.log(getVerify);
     // if (getVerify.length == 0) {
+    
+
+    
     req.session.isAuth = true;
     req.session.isLogin = true;
     req.session.userID = check._id;

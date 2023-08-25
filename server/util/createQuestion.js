@@ -1,18 +1,18 @@
 
-const  QuestionBank  = require('../models/questionBank')
+
 const Collections = require('../models/questionCollection')
-exports.createPractiesExamQues = async (bankID,collectQuestion,finalQuestion) => {
+exports.createPracticeExamQues = async (bankID,collectQuestion,finalQuestion) => {
 try {
-     const questions = await QuestionBank.find()
+    
      const collection = await Collections.find()
   
   
    const getCollection = collection.filter(task => bankID.indexOf(task.QuesbankID.valueOf()) !== -1)
    getCollection.map(task => {
     if(bankID.indexOf(task.QuesbankID.valueOf()) !== -1){
-        if(task.level == 'Easy')  collectQuestion[bankID.indexOf(task.QuesbankID.valueOf())].easy.push(task)
-        if(task.level == 'Medium')  collectQuestion[bankID.indexOf(task.QuesbankID.valueOf())].medium.push(task)
-        if(task.level == 'Hard')  collectQuestion[bankID.indexOf(task.QuesbankID.valueOf())].hard.push(task)
+        if(task.level == 'Easy')  collectQuestion[bankID.indexOf(task.QuesbankID.valueOf())].easy.push(task._id)
+        if(task.level == 'Medium')  collectQuestion[bankID.indexOf(task.QuesbankID.valueOf())].medium.push(task._id)
+        if(task.level == 'Hard')  collectQuestion[bankID.indexOf(task.QuesbankID.valueOf())].hard.push(task._id)
     }
    })
    collectQuestion.map((task,quesIndex) => {
@@ -28,7 +28,7 @@ try {
 
           if (index.indexOf(random) == -1) {
             console.log("not match ", random);
-            finalQuestion[quesIndex].questions.push(task.easy[random]);
+            finalQuestion[quesIndex].questions.push({id:task.easy[random]});
             index.push(random);
             i++;
           } else {
@@ -48,7 +48,7 @@ try {
 
           if (index.indexOf(random) == -1) {
             console.log("not match ", random);
-            finalQuestion[quesIndex].questions.push(task.medium[random]);
+            finalQuestion[quesIndex].questions.push({id:task.medium[random]});
             index.push(random);
             i++;
           } else {
@@ -68,7 +68,7 @@ try {
 
           if (index.indexOf(random) == -1) {
             console.log("not match ", random);
-            finalQuestion[quesIndex].questions.push(task.hard[random]);
+            finalQuestion[quesIndex].questions.push({id:task.hard[random]});
             index.push(random);
             i++;
           } else {

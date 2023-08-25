@@ -197,16 +197,14 @@ export default function ScheduleTest({
 }
 
 const SetDetailsExam = ({ setDetails, details }) => {
-  const [from, setFromValue] = useState(
-    dayjs(`2022-04-17T${details.setTimeFrom}`)
-  );
-  const [to, setToValue] = useState(dayjs(`2022-04-17T${details.setTimeTo}`));
-  const [date, setDate] = useState(new Date());
+  const from  = dayjs(`2022-04-17T${details.setTimeFrom}`)
+  const to = dayjs(`2022-04-17T${details.setTimeTo}`)
+  const date  = new Date()
   const handleChange = (e) => {
    
-    const date = new Date(e.$d);
+    
   
-    var finaldate = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+    
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setDate = e.$d;
