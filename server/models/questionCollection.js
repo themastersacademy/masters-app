@@ -16,8 +16,7 @@ const Schema = mongoose.Schema({
         enum: ["Easy", "Medium", "Hard"]
     },
     options:{
-        type: Array,
-      
+        type: Array, 
         default: []
     },
     Number:{

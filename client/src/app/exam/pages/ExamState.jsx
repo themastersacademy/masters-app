@@ -13,6 +13,7 @@ import WarningComp from "./components/WarningComp";
 
 export default function ExamState() {
   const { search } = useLocation();
+  const navigate = useNavigate();
   const examID = search.split("=")[1];
   const { width, height } = useWindowDimensions();
   const [examInfo, setExamInfo] = useState();
@@ -20,8 +21,8 @@ export default function ExamState() {
   const [remainingTime, setRemainingTime] = useState("00:00:00");
   const [timePercentage, setTimePercentage] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [studentAnswers, setStudentAnswers] = useState();
-  const [isBookmarked, setIsBookmarked] = useState();
+  const [studentAnswers, setStudentAnswers] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const calculateRemainingTime = () => {
@@ -80,6 +81,7 @@ export default function ExamState() {
         setExamInfo(data);
         setStudentAnswers(data.studentsPerformance[0].studentAnswerList);
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
+        setCurrentQuestionIndex(eval(data.studentsPerformance[0].currentIndex));
       });
   }, []);
 
@@ -90,6 +92,26 @@ export default function ExamState() {
       }, 1000);
     }
   }, [examInfo]);
+  useEffect(() => {
+    console.log("call");
+    // if (isTimeOver) {
+    console.log(studentAnswers);
+    if (studentAnswers.length !== 0) {
+      fetch("/api/exam/stateUpdate", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          studentAnswerList: studentAnswers,
+          bookmarkedQuestionList: isBookmarked,
+          currentIndex: currentQuestionIndex,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    }
+  }, [studentAnswers, isBookmarked, currentQuestionIndex]);
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < examInfo.questionCollections.length - 1) {
@@ -131,7 +153,14 @@ export default function ExamState() {
   };
 
   const handleDialogClose = () => {
-    setIsDialogOpen(false);
+    fetch("/api/exam/submitExam")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "success") {
+          navigate(`/exam/result?=${examID}`);
+          setIsDialogOpen(false);
+        }
+      });
   };
 
   return (

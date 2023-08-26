@@ -18,7 +18,6 @@ const examSchema = new Schema({
     courseId: {
         type: Schema.Types.ObjectId,
         ref: "course",
-        required: true,
       },
     examDate:{
         type: String,
@@ -99,6 +98,10 @@ const examSchema = new Schema({
                 type: Array,
                 default: []
             },
+            
+            questionAttempted:{
+                type: Number,
+            },
             mark:{
                 type: Number,
                 default: 0
@@ -115,6 +118,17 @@ const examSchema = new Schema({
                 type:String,
                 default:0
             },
+            topics:[
+                {
+                   topicName:{  
+                    type:String,
+                   },
+                   accuracy:{
+                    type:Number,
+                   }
+                
+                }
+            ],
             windowCloseWarning:{
                 type: Number,
                 default: 0
@@ -125,7 +139,7 @@ const examSchema = new Schema({
             },
             status:{
                 type: String,
-                enum: ['notStarted', 'started', 'submitted'],
+                enum: ['notStarted', 'started', 'submitted', "terminated"],
                 default: 'notStarted'
             },
         }    

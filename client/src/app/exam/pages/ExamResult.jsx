@@ -5,9 +5,13 @@ import ExamResultAction from "./components/ExamResultAction";
 import ExamResultStat from "./components/ExamResultStat";
 import ExamResultAnalytics from "./components/ExamResultAnalytics";
 import LeaderBoard from "./components/LeaderBoard";
-
+import { useLocation } from "react-router-dom";
 export default function ExamResult() {
+  const { search } = useLocation();
+
+  const examID = search.split("=")[1];
   const { width } = useWindowDimensions();
+  
   const analyticsList = [
     {
       title: "Accuracy",

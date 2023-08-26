@@ -41,6 +41,7 @@ function Login({controlNotification}) {
       fetch('/isLogin')
       .then(res => res.json())
       .then((data) =>{ 
+        if(data.status == 'isExam') navigator(`/exam/state`)
         if(data.status == 'isLogin') navigator(`/?=${data.id}`)
     })
     },[])

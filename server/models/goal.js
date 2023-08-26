@@ -44,6 +44,29 @@ const goalSchema = mongoose.Schema(
             type: String,
             required: true,
           },
+          topics:[{ 
+            topicName: {
+              type: String,
+              required: true,
+            },
+            accuracy: {
+              type: Number,
+              required: true,
+            },
+          totalQuestion: {  
+            type: Number,
+            required: true,
+          },
+          correctQuestion: {
+            type: Number,
+            required: true,
+          },
+          wrongQuestion: {
+            type: Number,
+            required: true,
+          },
+          } ]
+,
           score: {
             type: Number,
             required: true,
@@ -53,7 +76,7 @@ const goalSchema = mongoose.Schema(
             required: true,
           },
           date: {
-            type: Date,
+            type: String,
             required: true,
           },
         },
@@ -69,7 +92,7 @@ const goalSchema = mongoose.Schema(
             ref: "question-bank",
             required: true,
           },
-
+          
           questionAttempted: {
             type: Number,
             required: true,

@@ -243,7 +243,8 @@ exports.createPracticesExam = async (req, res, next) => {
         const questions = await createPracticeExamQues(
           getBankID,
           questionID,
-          finalQuestion
+          finalQuestion,
+          
         );
         console.log(questions);
         const questionCategory = [];
@@ -286,6 +287,7 @@ exports.createPracticesExam = async (req, res, next) => {
           examDuration,
           mark: 4,
           negativeMark: 1,
+          
         });
         createExam.save();
         res.json({

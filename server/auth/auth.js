@@ -75,11 +75,14 @@ exports.userCreate = (req, res, next) => {
 
 exports.isLogin = (req, res, next) =>{
  console.log('login');
+
   if (req.session.isAuth){
     console.log('isAtuth');
-    if(req.session.userRoll == 'teacher')  res.redirect(`/admin/dashboard?=${req.session.userID}`);
-    else
-    res.redirect(`/?=${req.session.userID}`);
+    console.log(req.session.examID);
+    if(req.session.examID)  res.redirect(`/exam/state`);
+    else if(req.session.userRoll == 'teacher')  res.redirect(`/admin/dashboard?=${req.session.userID}`);
+    else  res.redirect(`/?=${req.session.userID}`);
+   
   } else {
     next()
   }
@@ -87,6 +90,7 @@ exports.isLogin = (req, res, next) =>{
 
 exports.isRoll= async(req,res,next) =>{
 try {
+  
   if (req.session.isAuth) {
     if(req.session.userRoll == 'teacher') next()
     else res.redirect(`/?=${req.session.userID}`);

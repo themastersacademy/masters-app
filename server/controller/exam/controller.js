@@ -2,6 +2,7 @@ const exam = require("../../models/exam.js");
 const user = require("../../models/user.js");
 const questionCollection = require("../../models/questionCollection.js");
 const examState = require("../../models/examState.js");
+const Goal = require("../../models/goal.js");
 
 exports.getExamInfo = async function (req, res) {
   try {
@@ -31,22 +32,22 @@ exports.startExam = async function (req, res) {
   const userID = req.session.userID;
   req.session.examID = examID;
   console.log(examID);
-  const State = await examState({examID,userID});
-  State.save()
+  const State = await examState({ examID, userID });
+  // State.save();
   try {
+    const getQuestionCollection = await questionCollection.find();
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
       return res.status(404).send("exam not found");
     }
     if (examInfo.type === "schedule") {
-     
-
       const get = examInfo.studentsPerformance.filter(
         (task) => task.id.valueOf() == userID.valueOf()
       );
 
       if (get.length === 0) {
         const isValidExam = await isValidExamStart(examInfo);
+        console.log(isValidExam);
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
@@ -60,8 +61,21 @@ exports.startExam = async function (req, res) {
               bookmarkedQuestionList.push(false);
             });
           });
-          // examInfo.examEndTime  =
-          console.log(studentAnswerList, bookmarkedQuestionList);
+          const actualAnswerList = [];
+          const getQuestionID = [];
+          examInfo.questionCategory.map((task) =>
+            task.questionList.map(async (task) => {
+              getQuestionID.push(task.id.valueOf());
+            })
+          );
+          getQuestionCollection.map((task, index) => {
+            if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
+              task.options.map((option, index) => {
+                if (option.isCorrect) actualAnswerList.push(index);
+              });
+            }
+          });
+          examInfo.actualAnswerList = actualAnswerList;
           examInfo.studentsPerformance.push({
             id: userID,
             name: "Avinash",
@@ -70,10 +84,14 @@ exports.startExam = async function (req, res) {
             bookmarkedQuestionList,
             score: 0,
             mark: 5,
+            status: "started",
           });
           await examInfo.save();
           req.session.examID = examInfo._id;
           req.session.examName = examInfo.title;
+          return res
+            .status(200)
+            .json({ message: "exam started", status: "success" });
         } else {
           return res.status(400).json({ message: "exam not started yet" });
         }
@@ -109,7 +127,21 @@ exports.startExam = async function (req, res) {
             bookmarkedQuestionList.push(false);
           });
         });
-        console.log(studentAnswerList, bookmarkedQuestionList);
+        const actualAnswerList = [];
+        const getQuestionID = [];
+        examInfo.questionCategory.map((task) =>
+          task.questionList.map(async (task) => {
+            getQuestionID.push(task.id.valueOf());
+          })
+        );
+        getQuestionCollection.map((task, index) => {
+          if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
+            task.options.map((option, index) => {
+              if (option.isCorrect) actualAnswerList.push(index);
+            });
+          }
+        });
+        examInfo.actualAnswerList = actualAnswerList;
         examInfo.studentsPerformance.push({
           id: userID,
           name: "Avinash",
@@ -118,6 +150,7 @@ exports.startExam = async function (req, res) {
           bookmarkedQuestionList,
           score: 0,
           mark: 5,
+          status: "started",
         });
         await examInfo.save();
         req.session.examID = examInfo._id;
@@ -137,18 +170,11 @@ exports.startExam = async function (req, res) {
 const isValidExamStart = async function (examInfo) {
   const currentTime = new Date();
   let examDate = examInfo.examDate.split("/");
-
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
   return (
     examInfo.examDate ===
-      `${
-        eval(currentTime.getDate()) < 10
-          ? "0" + currentTime.getDate()
-          : currentTime.getDate()
-      }/${
-        eval(currentTime.getMonth() + 1) < 10
-          ? "0" + eval(currentTime.getMonth() + 1)
-          : eval(currentTime.getMonth() + 1)
+      `${currentTime.getDate()}/${
+        currentTime.getMonth() + 1
       }/${currentTime.getFullYear()}` &&
     currentTime > new Date(examDate + " " + examInfo.examStartTime) &&
     currentTime < new Date(examDate + " " + examInfo.examEndTime)
@@ -156,19 +182,21 @@ const isValidExamStart = async function (examInfo) {
 };
 
 exports.getExamState = async function (req, res) {
-  const path = req.path;
   const userID = req.session.userID;
   const userName = req.session.userName;
   const examId = req.session.examID;
-  
+
   try {
     const getExam = await exam.findOne({ _id: examId });
+
     const getQuestionCollection = await questionCollection.find();
-    const User = await user.findOne({ _id:userID });
+    const User = await user.findOne({ _id: userID });
     if (getExam && User) {
       const questionCategoryList = [];
       const questionCollections = [];
       const getQuestionID = [];
+      const actualAnswerList = [];
+
       getExam.questionCategory.map((task) =>
         questionCategoryList.push({
           title: task.title,
@@ -180,10 +208,13 @@ exports.getExamState = async function (req, res) {
           getQuestionID.push(task.id.valueOf());
         })
       );
-      getQuestionCollection.map((task) => {
+
+      getQuestionCollection.map((task, index) => {
         if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
           const options = [];
-          task.options.map((option) => options.push(option.option));
+          task.options.map((option, index) => {
+            options.push(option.option);
+          });
           questionCollections.push({
             question: task.title,
             imageUrl: task.imageUrl,
@@ -202,53 +233,61 @@ exports.getExamState = async function (req, res) {
         (task) => task.id.valueOf() == User._id.valueOf()
       );
 
-      const studentAnswers = [];
-      for (let i = 0; i < questionCollections.length; i++) {
-        studentAnswers.push(null);
+      getExam.save();
+      // console.log(getExam);
+      if (studentPerform[0].status == "started") {
+        const examInfoData = {
+          examTitle: getExam.title,
+          examDate: getExam.examDate ? getExam.examDate : examDate,
+          examStartTime:
+            getExam.examStartTime.split(":").length == 3
+              ? getExam.examStartTime
+              : `${getExam.examStartTime}:00`,
+          examEndTime:
+            getExam.examEndTime.split(":").length == 3
+              ? getExam.examEndTime
+              : `${getExam.examEndTime}:00`,
+          examDuration:
+            getExam.examDuration.split(":").length == 3
+              ? getExam.examDuration
+              : `${getExam.examDuration}:00`,
+          mark: getExam.mark,
+          negativeMark: getExam.negativeMark,
+          currentTime: Date.now(),
+          questionCategoryList,
+          questionCollections,
+          studentsPerformance: [
+            {
+              id: userID,
+              name: userName,
+              startTime: `${getExam.examStartTime}:00`,
+              endTime: `${getExam.examEndTime}:00`,
+              studentAnswerList: studentPerform[0].studentAnswerList,
+              bookmarkedQuestionList: studentPerform[0].bookmarkedQuestionList,
+              mark: getExam.mark,
+              currentIndex: studentPerform[0].currentIndex,
+              negativeMark: getExam.negativeMark,
+              totalMark: getExam.totalMark,
+              status: getExam.status,
+              windowCloseWarning: getExam.windowCloseWarning,
+              windowResizedWarning: getExam.windowResizedWarning,
+            },
+          ],
+        };
+
+        return res.json(examInfoData);
+      } else {
+        if (studentPerform[0].status == "submitted")
+          return res.json({
+            status: "error",
+            message: "exam already submitted",
+          });
+        if (studentPerform[0].status == "terminated")
+          return res.json({ status: "error", message: "exam terminated" });
+        if (studentPerform[0].status == "notStarted")
+          return res.json({ status: "error", message: "exam not started yet" });
+        return res.json({ status: "error", message: "something went wrong" });
       }
-      const isBookmarked = [];
-      for (let i = 0; i < questionCollections.length; i++) {
-        isBookmarked.push(false);
-      }
-      console.log(getExam.examStartTime.split(":").length);
-      const examInfoData = {
-        examTitle: getExam.title,
-        examDate: getExam.examDate ? getExam.examDate : examDate,
-        examStartTime:
-          getExam.examStartTime.split(":").length == 3
-            ? getExam.examStartTime
-            : `${getExam.examStartTime}:00`,
-        examEndTime:
-          getExam.examEndTime.split(":").length == 3
-            ? getExam.examEndTime
-            : `${getExam.examEndTime}:00`,
-        examDuration:
-          getExam.examDuration.split(":").length == 3
-            ? getExam.examDuration
-            : `${getExam.examDuration}:00`,
-        mark: getExam.mark,
-        negativeMark: getExam.negativeMark,
-        questionCategoryList,
-        questionCollections,
-        studentsPerformance: [
-          {
-            id: userID,
-            name: userName,
-            startTime: `${getExam.examStartTime}:00`,
-            endTime: `${getExam.examEndTime}:00`,
-            studentAnswerList: studentPerform[0].studentAnswerList,
-            bookmarkedQuestionList: studentPerform[0].bookmarkedQuestionList,
-            mark: getExam.mark,
-            // currentIndex:studentPerform[0].currentIndex,
-            negativeMark: getExam.negativeMark,
-            totalMark: getExam.totalMark,
-            status: getExam.status,
-            windowCloseWarning: getExam.windowCloseWarning,
-            windowResizedWarning: getExam.windowResizedWarning,
-          },
-        ],
-      };
-      res.json(examInfoData);
     }
   } catch (error) {
     console.log(error);
@@ -264,29 +303,299 @@ exports.examStateUpdate = async (req, res, next) => {
     currentIndex,
     windowCloseWarning,
     windowResizedWarning,
-    status,
   } = req.body;
+  console.log(windowCloseWarning, windowResizedWarning);
+  console.log(studentAnswerList);
+  console.log(bookmarkedQuestionList);
   try {
     const User = await user.findOne({ _id: userID });
     const examState = await exam.findOne({ _id: examID });
+    // console.log(examState);
     if (User) {
       if (examState) {
-        examState.map((task) =>
-          task.studentsPerformance.map((task) => {
-            if (User._id.valueOf() == task.id.valueOf()) {
-              task.currentIndex = currentIndex;
-              task.studentAnswerList = studentAnswerList;
-              task.bookmarkedQuestionList = bookmarkedQuestionList;
-              task.windowCloseWarning = windowCloseWarning;
-              task.windowResizedWarning = windowResizedWarning;
-              task.status = status;
-            }
-          })
-        );
+        // if (windowCloseWarning >= 3 || windowResizedWarning >= 3) {
+        examState.studentsPerformance.map((task) => {
+          if (User._id.valueOf() == task.id.valueOf()) {
+            task.currentIndex = currentIndex;
+            task.studentAnswerList = studentAnswerList;
+            task.bookmarkedQuestionList = bookmarkedQuestionList;
+            // task.windowCloseWarning = windowCloseWarning;
+            // task.windowResizedWarning = windowResizedWarning;
+            // task.status = status;
+          }
+        });
         examState.save();
         res.json({
           status: "success",
           message: "Update exam state successfully",
+        });
+      }
+      // else {
+      //   examState.studentsPerformance.map((task) => {
+      //     if (User._id.valueOf() == task.id.valueOf()) {
+      //       task.status = "terminated";
+      //     }
+      // });
+      // examState.save();
+      // }
+      // }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.submitExam = async (req, res, next) => {
+  try {
+    const userID = req.session.userID;
+    const examID = req.session.examID;
+    const date = new Date();
+    if (examID) {
+      const examInfo = await exam.findOne({ _id: examID });
+      if (examInfo.type == "practice" || examInfo.type == "mock") {
+        const get = examInfo.studentsPerformance.filter(
+          (task) => task.id.valueOf() == userID.valueOf()
+        );
+        if (get.length !== 0) {
+          let totalQuestion = 0;
+          examInfo.questionCategory.map((task) => {
+            totalQuestion += task.questionList.length;
+          });
+          const studentAnswerList = get[0].studentAnswerList;
+          const actualAnswerList = examInfo.actualAnswerList;
+          const mark = examInfo.mark;
+          let studentNegativeMark = 0;
+          const negativeMark = examInfo.negativeMark;
+          const totalMark = mark * totalQuestion;
+
+          let actualCorrectAttend = 0;
+          let actualWrongAttend = 0;
+          let score = 0;
+          actualAnswerList.map((task, index) => {
+            if (actualAnswerList[index] == studentAnswerList[index]) {
+              score += mark;
+              actualCorrectAttend += 1;
+            } else if (studentAnswerList[index] !== null) {
+              studentNegativeMark += negativeMark;
+              actualWrongAttend += 1;
+            }
+          });
+
+          get[0].totalMark = totalMark;
+          get[0].correctedAnswerList = actualAnswerList;
+          get[0].mark = score;
+          get[0].negativeMark = studentNegativeMark;
+          get[0].status = "submitted";
+          examInfo.studentsPerformance.map((task) => {
+            if (task.id.valueOf() == userID.valueOf()) {
+              task = get[0];
+            }
+          });
+          const goal = await Goal.findOne({
+            courseId: examInfo.courseId,
+            userId: userID,
+          });
+          if (goal) {
+            const questionCategoryList = [];
+            examInfo.questionCategory.map((task) =>
+              questionCategoryList.push({
+                title: task.title,
+                questionListLength: task.questionList.length,
+              })
+            );
+            const topics = [];
+            let countLength = 0;
+            questionCategoryList.map((task, index) => {
+              let actualAnswerList = examInfo.actualAnswerList;
+              let studentAnswerList = get[0].studentAnswerList;
+              let correctQuestion = 0;
+              let wrongQuestion = 0;
+              let totalQuestion = task.questionListLength;
+              if (index == 0) {
+                actualAnswerList = actualAnswerList.slice(
+                  0,
+                  task.questionListLength
+                );
+                studentAnswerList = studentAnswerList.slice(
+                  0,
+                  task.questionListLength
+                );
+                countLength = task.questionListLength;
+              } else {
+                actualAnswerList = actualAnswerList.slice(
+                  countLength,
+                  countLength + task.questionListLength
+                );
+                studentAnswerList = studentAnswerList.slice(
+                  countLength,
+                  countLength + task.questionListLength
+                );
+                countLength += task.questionListLength;
+              }
+              actualAnswerList.map((task, index) => {
+                if (actualAnswerList[index] == studentAnswerList[index]) {
+                  correctQuestion += 1;
+                } else if (studentAnswerList[index] !== null) {
+                  wrongQuestion += 1;
+                }
+              }),
+                topics.push({
+                  topicName: task.title,
+                  totalQuestion,
+                  correctQuestion,
+                  wrongQuestion,
+                  accuracy: (correctQuestion / totalQuestion) * 100,
+                });
+            });
+
+            topics.map((task) => {
+              goal.topics.map((task1) => {
+                if (task.topicName == task1.topicName) {
+                  task1.questionAttempted +=
+                    task.correctQuestion + task.wrongQuestion;
+                  task1.questionTotal += task.totalQuestion;
+                  task1.questionCorrect += task.correctQuestion;
+                  task1.questionSkipped +=
+                    task.totalQuestion -
+                    (task.correctQuestion + task.wrongQuestion);
+                  task1.questionWrong += task.wrongQuestion;
+                  task1.accuracy =
+                    (task1.questionCorrect / task1.questionTotal) * 100;
+                }
+              });
+            });
+            goal.examHistory.push({
+              examId: examID,
+              type: examInfo.type,
+              examName: examInfo.title,
+              totalMarks: totalMark,
+              score,
+              date: `${date.getDate()}/${
+                date.getMonth() + 1
+              }/${date.getFullYear()}`,
+              topics,
+            });
+            goal.save();
+            examInfo.save();
+            const state = await examState.deleteOne({ examID, userID });
+            res.json({
+              status: "success",
+              message: "exam submitted successfully",
+            });
+          }
+        }
+      } else if (examInfo.type == "schedule") {
+        const get = examInfo.studentsPerformance.filter(
+          (task) => task.id.valueOf() == userID.valueOf()
+        );
+        
+        if (get.length !== 0) {
+          let totalQuestion = 0;
+          examInfo.questionCategory.map((task) => {
+            totalQuestion += task.questionList.length;
+          });
+          const studentAnswerList = get[0].studentAnswerList;
+          
+          const actualAnswerList = examInfo.actualAnswerList;
+          const mark = examInfo.mark;
+          let studentNegativeMark = 0;
+          const negativeMark = examInfo.negativeMark;
+          const totalMark = mark * totalQuestion;
+
+          let actualCorrectAttend = 0;
+          let actualWrongAttend = 0;
+          let score = 0;
+          let questionAttempted = 0;
+          actualAnswerList.map((task, index) => {
+            if (actualAnswerList[index] == studentAnswerList[index]) {
+              score += mark;
+              questionAttempted   += 1
+              actualCorrectAttend += 1;
+            } else if (studentAnswerList[index] !== null) {
+              studentNegativeMark += negativeMark;
+              actualWrongAttend += 1;
+              questionAttempted   += 1
+            }
+            
+          });
+          get[0].totalMark = totalMark;
+          get[0].questionAttempted = questionAttempted;
+          get[0].correctedAnswerList = actualAnswerList;
+          get[0].mark = score;
+
+          get[0].negativeMark = studentNegativeMark;
+          get[0].status = "submitted";
+          
+
+          const questionCategoryList = [];
+          examInfo.questionCategory.map((task) =>
+            questionCategoryList.push({
+              title: task.title,
+              questionListLength: task.questionList.length,
+            })
+          );
+          const topics = [];
+          let countLength = 0;
+          questionCategoryList.map((task, index) => {
+            let actualAnswerList = examInfo.actualAnswerList;
+            let studentAnswerList = get[0].studentAnswerList;
+            let correctQuestion = 0;
+            let wrongQuestion = 0;
+            let totalQuestion = task.questionListLength;
+            if (index == 0) {
+              actualAnswerList = actualAnswerList.slice(
+                0,
+                task.questionListLength
+              );
+              studentAnswerList = studentAnswerList.slice(
+                0,
+                task.questionListLength
+              );
+              countLength = task.questionListLength;
+            } else {
+              actualAnswerList = actualAnswerList.slice(
+                countLength,
+                countLength + task.questionListLength
+              );
+              studentAnswerList = studentAnswerList.slice(
+                countLength,
+                countLength + task.questionListLength
+              );
+              countLength += task.questionListLength;
+            }
+            actualAnswerList.map((task, index) => {
+              if (actualAnswerList[index] == studentAnswerList[index]) {
+                correctQuestion += 1;
+              } else if (studentAnswerList[index] !== null) {
+                wrongQuestion += 1;
+              }
+            }),
+              topics.push({
+                topicName: task.title,
+   
+                accuracy: (correctQuestion / totalQuestion) * 100,
+              });
+          });
+
+          get[0].topics = topics;
+          examInfo.studentsPerformance.map((task) => {
+            if (task.id.valueOf() == userID.valueOf()) {
+              
+              task = get[0];
+            }
+          });
+         
+          // examInfo.save();
+          const state = await examState.deleteOne({ examID, userID });
+          res.json({
+            status: "success",
+            message: "exam submitted successfully",
+          });
+        }
+      } else {
+        res.json({
+          status: "success",
+          message: "something went wrong",
         });
       }
     }

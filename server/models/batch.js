@@ -15,32 +15,32 @@ const Schema = mongoose.Schema({
     ref: "institution",
     required: true,
   },
-  scheduleTest: [
-    {
-      quesID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "question-bank",
-        required: true,
-      },
-      title: {
-        type: String,
-      },
-      level: {
-        easy: {
-          type: String,
-          default: "0",
-        },
-        medium: {
-          type: String,
-          default: "0",
-        },
-        hard: {
-          type: String,
-          default: "0",
-        },
-      },
-    },
-  ],
+  // scheduleTest: [
+  //   {
+  //     quesID: {
+  //       type: mongoose.Schema.Types.ObjectId,
+  //       ref: "question-bank",
+  //       required: true,
+  //     },
+  //     title: {
+  //       type: String,
+  //     },
+  //     level: {
+  //       easy: {
+  //         type: String,
+  //         default: "0",
+  //       },
+  //       medium: {
+  //         type: String,
+  //         default: "0",
+  //       },
+  //       hard: {
+  //         type: String,
+  //         default: "0",
+  //       },
+  //     },
+  //   },
+  // ],
 
   studentList: [
     {

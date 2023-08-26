@@ -5,7 +5,8 @@ const { generateOtp } = require("../../util/OTB.js");
 const Batch = require("../../models/batch.js");
 const Institution = require("../../models/institution.js");
 const Goal = require("../../models/goal.js");
-const mongoose = require("mongoose");
+
+const examState = require("../../models/examState.js");
 const sessions = require("../../models/session.js");
 const Course = require("../../models/course.js");
 exports.login = async (req, res, next) => {
@@ -28,7 +29,15 @@ exports.login = async (req, res, next) => {
     req.session.userRoll = check.type;
     req.session.userName = check.name;
     req.session.email = check.email;
+    const State = await examState.findOne({userID:check._id})
+    if(State){
+      req.session.examID = State.examID;
+      
+      res.json({status:'isExam'});
+    }
+    else{
     res.json({ status: "success", id: check._id, roll: check.type });
+    }
     // } else {
     //   const isDelete = await sessions.deleteMany({
     //     expires: getVerify[0].expires,
