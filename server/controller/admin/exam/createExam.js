@@ -296,7 +296,7 @@ exports.createPracticesExam = async (req, res, next) => {
           status: "success",
           message: "Create practice exam successfully",
           examId: createExam._id,
-        });
+        })
       }
     }
   } catch (error) {
