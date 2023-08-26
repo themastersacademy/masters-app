@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const {getExamInfo, startExam, getExamState,examStateUpdate,submitExam,getExamResult} = require('../../controller/exam/controller.js')
-const { createPracticesExam } = require('../../controller/admin/exam/createExam.js')
+const { createPracticesExam,createMockExam } = require('../../controller/admin/exam/createExam.js')
 
 
 //get
@@ -17,6 +17,6 @@ router.post('/stateUpdate',examStateUpdate)
 
 //createPractiesExam
 router.post("/createPracticesExam", createPracticesExam);
-
+router.post("/createMockExam",createMockExam)
 
 module.exports = router;

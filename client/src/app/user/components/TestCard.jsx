@@ -6,6 +6,7 @@ export default function TestCard(
 {  selectGoal,
   setSelectGoal,
   Notificate,
+  createMockExam,
   createPracticesExam
 }
 ) {
@@ -25,7 +26,7 @@ export default function TestCard(
           Notificate={Notificate}
           createPracticesExam={createPracticesExam}
         />
-        <MockTest selectGoal={selectGoal} setSelectGoal={setSelectGoal} />
+        <MockTest selectGoal={selectGoal} createMockExam={createMockExam} setSelectGoal={setSelectGoal} />
       </Paper>
     // )
   );

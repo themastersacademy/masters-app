@@ -97,6 +97,15 @@ export default function Layout() {
         }
       });
   };
+  const createMockExam =(data)=>{
+  fetch("/api/exam/createMockExam",{
+    method:"POST",
+    headers:{
+      "Content-type":"application/json"
+    },
+    body:JSON.stringify({selectGoal})
+  })
+  }
   useEffect(() => {
     if (getGoalId !== "") {
       fetch("/api/user/getViewGoal", {
@@ -142,6 +151,7 @@ export default function Layout() {
           details={details}
           setDetails={setDetails}
           Notificate={Notifications}
+          createMockExam={createMockExam}
         />
       ) : (
         <MoView
@@ -156,6 +166,7 @@ export default function Layout() {
           createPracticesExam={createPracticesExam}
           setSelectGoal={setSelectGoal}
           details={details}
+          createMockExam={createMockExam}
           setDetails={setDetails}
           Notificate={Notifications}
         />
@@ -185,6 +196,7 @@ function DTView({
   Notificate,
   setGoalId,
   createPracticesExam,
+  createMockExam
 }) {
   return (
     <Stack
@@ -230,6 +242,7 @@ function DTView({
                 selectGoal={selectGoal}
                 setSelectGoal={setSelectGoal}
                 Notificate={Notificate}
+                createMockExam={createMockExam}
                 createPracticesExam={createPracticesExam}
               />
             ) : null}
@@ -280,6 +293,7 @@ function a11yProps(index) {
 function MoView({
   institute,
   setDetails,
+  createMockExam,
   details,
   Notificate,
   user,
@@ -367,6 +381,7 @@ function MoView({
           goal={goal}
           selectGoal={selectGoal}
           setSelectGoal={setSelectGoal}
+          createMockExam={createMockExam}
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>

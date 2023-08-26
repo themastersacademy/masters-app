@@ -6,7 +6,11 @@ const User = require("../../../models/user");
 const Course = require("../../../models/course");
 const Goal = require("../../../models/goal");
 const questionCollection = require("../../../models/questionCollection");
-const { createPracticeExamQues } = require("../../../util/createQuestion");
+const {
+  createPracticeExamQues,
+  createMockExamQues,
+} = require("../../../util/createQuestion");
+
 exports.createScheduleExam = async (req, res, next) => {
   const questionID = [];
   const finalQues = [];
@@ -243,8 +247,7 @@ exports.createPracticesExam = async (req, res, next) => {
         const questions = await createPracticeExamQues(
           getBankID,
           questionID,
-          finalQuestion,
-          
+          finalQuestion
         );
         console.log(questions);
         const questionCategory = [];
@@ -281,13 +284,12 @@ exports.createPracticesExam = async (req, res, next) => {
             eval(date.getDate()) < 10 ? "0" + date.getDate() : date.getDate()
           }/${
             eval(date.getMonth() + 1) < 10
-              ? "0" + eval(date.getMonth() +1)
+              ? "0" + eval(date.getMonth() + 1)
               : date.getMonth()
           }/${date.getFullYear()}`,
           examDuration,
           mark: 4,
           negativeMark: 1,
-          
         });
         createExam.save();
         res.json({
@@ -295,6 +297,155 @@ exports.createPracticesExam = async (req, res, next) => {
           message: "Create practice exam successfully",
           examId: createExam._id,
         });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.createMockExam = async (req, res, next) => {
+  try {
+    const { selectGoal } = req.body;
+
+    const userId = req.session.userID;
+    const goal = await Goal.findOne({
+      courseId: selectGoal.courseId,
+      userId: userId,
+    });
+    const user = await User.findOne({ _id: userId });
+
+    if (user) {
+      const course = await Course.findOne({ _id: selectGoal.courseId });
+      const collection = await questionCollection.find();
+
+      if (course) {
+        const check = [];
+        const collectSelectTopic = [];
+        const questionID = [];
+        const finalQuestion = [];
+        const indexValue = [];
+        course.collections.map((task, index) => {
+          collectSelectTopic.push({
+            title: task.type == "group" ? task.title : task.topic[0].title,
+            index: index,
+            questions: [],
+          });
+          task.topic.map((task1) => {
+            questionID.push({
+              title: task.type == "group" ? task.title : task.topic[0].title,
+              requireEasy: eval(task1.level.easy),
+              requireMedium: eval(task1.level.medium),
+              requireHard: eval(task1.level.hard),
+              index: index,
+              easy: [],
+              medium: [],
+              hard: [],
+            });
+            finalQuestion.push({
+              title: task.type == "group" ? task.title : task.topic[0].title,
+              id: task.id,
+              type: task.type,
+              questions: [],
+              index: index,
+            });
+            check.push(task1.id.valueOf());
+            indexValue.push(task1.id.valueOf());
+          });
+
+          console.log(questionID);
+          //const collect = [];
+          // task.topic.map((task1) => {
+
+          //   collect.push({
+          //     requireEasy: task1.level.easy,
+          //     requireMedium: task1.level.medium,
+          //     requireHard: task1.level.hard,
+          //     easy: [],
+          //     medium: [],
+          //     hard: [],
+          //   })
+          //   check.push(task1.id.valueOf());
+          //   }
+          // );
+
+          // questionID.push({
+          //   title: task.type == "group" ? task.title : task.topic[0].title,
+          //   id: task.id,
+          //   collect,
+          //   type: task.type,
+
+          // });
+          // finalQuestion.push({
+          //   title: task.type == "group" ? task.title : task.topic[0].title,
+          //   id: task.id,
+          //   bankID: task.bankID,
+          //   type: task.type,
+          //   questions: [],
+          // });
+        });
+
+        const getBankID = [];
+
+        //   questionID.map((task) => getBankID.push(task.bankID.valueOf()));
+
+        const questions = await createMockExamQues(
+          check,
+          questionID,
+          finalQuestion
+        );
+     
+        
+      
+                   
+        //   const questionCategory = [];
+
+        //   questions.map((task, index) => {
+        //     const questionList = [];
+        //     task.questions.map((task) => questionList.push({ id: task.id }));
+        //     questionCategory.push({
+        //       title: task.title,
+        //       id: task.bankID,
+        //       questionList,
+        //     });
+        //   });
+        //   const countPractice = goal.examHistory.filter(
+        //     (task) => task.type == "practice"
+        //   );
+        //   const durationPerQuestion = 90; //seconds;
+        //   //examDuration = "00:00:00"
+        //   const questionCount = value.value;
+        //   let totalSeconds = durationPerQuestion * questionCount;
+        //   let hours = Math.floor(totalSeconds / 3600);
+
+        //   totalSeconds %= 3600;
+        //   let minutes = Math.floor(totalSeconds / 60);
+        //   let seconds = totalSeconds % 60;
+        //   const examDuration = `${hours}:${minutes}:${seconds}`;
+
+        //   const date = new Date();
+        //   const createExam = await Exam({
+        //     type: "practice",
+        //     title: `Practice Exam ${countPractice.length + 1}`,
+        //     courseId: selectGoal.courseId,
+        //     questionCategory,
+        //     examDate: `${
+        //       eval(date.getDate()) < 10 ? "0" + date.getDate() : date.getDate()
+        //     }/${
+        //       eval(date.getMonth() + 1) < 10
+        //         ? "0" + eval(date.getMonth() + 1)
+        //         : date.getMonth()
+        //     }/${date.getFullYear()}`,
+        //     examDuration,
+        //     mark: 4,
+        //     negativeMark: 1,
+        //   });
+        //   createExam.save();
+        //   res.json({
+        //     status: "success",
+        //     message: "Create practice exam successfully",
+        //     examId: createExam._id,
+        //   });
       }
     }
   } catch (error) {

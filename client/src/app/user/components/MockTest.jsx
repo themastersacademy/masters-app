@@ -1,6 +1,11 @@
 import { Paper, Stack, Button } from "@mui/material";
 
-export default function MockTest({ MD,selectGoal }) {
+export default function MockTest({ MD,selectGoal,createMockExam }) {
+
+  const handleStartMock = () =>{
+    createMockExam(selectGoal)
+  }
+
   return (
     <Paper
       elevation={MD ? 0 : 2}
@@ -108,6 +113,7 @@ export default function MockTest({ MD,selectGoal }) {
           },
           padding: "10px",
         }}
+        onClick={handleStartMock}
       >
         Start Mock
       </Button>
