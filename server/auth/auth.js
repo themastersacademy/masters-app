@@ -2,9 +2,7 @@ const session = require("express-session");
 const mongoDBstore = require("connect-mongodb-session")(session);
 const examState = require("../models/examState");
 
-
 exports.sessionManagement = async (app) => {
-
   const store = new mongoDBstore({
     uri: process.env.MONGODBURL,
     collection: "sessions",
@@ -16,8 +14,8 @@ exports.sessionManagement = async (app) => {
     session({
       secret: "This is a secret",
       resave: false,
-      httpOnly:true,
-      saveUninitialized:false,
+      httpOnly: true,
+      saveUninitialized: false,
       cookie: {
         // expires: 60000
       },
@@ -59,10 +57,11 @@ exports.isUser = (req, res, next) => {
 
 exports.userVerify = (req, res, next) => {
   if (req.session.isAuth) {
-    if(req.session.userRoll == 'student') next();
-    if(req.session.userRoll == 'teacher') res.redirect(`/admin/dashboard?=${req.session.userID}`);
+    if (req.session.userRoll == "student") next();
+    if (req.session.userRoll == "teacher")
+      res.redirect(`/admin/dashboard?=${req.session.userID}`);
   } else {
-    res.redirect("/login")
+    res.redirect("/login");
   }
 };
 exports.userCreate = (req, res, next) => {
@@ -73,71 +72,61 @@ exports.userCreate = (req, res, next) => {
   }
 };
 
-exports.isLogin = (req, res, next) =>{
- console.log('login');
-
-  if (req.session.isAuth){
-    console.log('isAtuth');
-    console.log(req.session.examID);
-    if(req.session.examID)  res.redirect(`/exam/state`);
-    else if(req.session.userRoll == 'teacher')  res.redirect(`/admin/dashboard?=${req.session.userID}`);
-    else  res.redirect(`/?=${req.session.userID}`);
-   
-  } else {
-    next()
-  }
-}
-
-exports.isRoll= async(req,res,next) =>{
-try {
-  
+exports.isLogin = (req, res, next) => {
   if (req.session.isAuth) {
-    if(req.session.userRoll == 'teacher') next()
+    if (req.session.examID) res.redirect(`/exam/state?=${req.session.examID}`);
+    else if (req.session.userRoll == "teacher")
+      res.redirect(`/admin/dashboard?=${req.session.userID}`);
     else res.redirect(`/?=${req.session.userID}`);
   } else {
-    res.redirect("/login");
+    next();
   }
-} catch (error) {
-  console.log();
-}
-}
+};
+
+exports.isRoll = async (req, res, next) => {
+  try {
+    if (req.session.isAuth) {
+      if (req.session.userRoll == "teacher") next();
+      else res.redirect(`/?=${req.session.userID}`);
+    } else {
+      res.redirect("/login");
+    }
+  } catch (error) {
+    console.log();
+  }
+};
 
 exports.examInfo = async (req, res, next) => {
   try {
-    if(!req.session.examID){
+    if (!req.session.examID) {
       console.log(req.session.userID);
-      const State = await examState.findOne({userID:req.session.userID})
-      if(State){
-        console.log('call');
+      const State = await examState.findOne({ userID: req.session.userID });
+      if (State) {
+        console.log("call");
         req.session.examID = State.examID;
-        res.redirect("/exam/state");
-      }
-      else if(req.session.examID){
-        res.redirect("/exam/state");
-        
-      }
-      else{
-        console.log('ssssssss');
+        res.redirect(`/exam/state?=${req.session.examID}`);
+      } else if (req.session.examID) {
+        res.redirect(`/exam/state?=${req.session.examID}`);
+      } else {
+        console.log("ssssssss");
         next();
       }
-    }
-    else {
-      res.redirect("/exam/state");
+    } else {
+      res.redirect(`/exam/state?=${req.session.examID}`);
     }
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 exports.isValueExam = async (req, res, next) => {
-try {
-  if(req.session.examID){
-    next()
+  try {
+    if (req.session.examID) {
+      next();
+    } else {
+      res.redirect("/");
+    }
+  } catch (error) {
+    console.log(error);
   }
-  else{
-    res.redirect("/");
-  }
-} catch (error) {
-  console.log(error);
-}
-}
+};

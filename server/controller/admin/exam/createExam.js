@@ -325,7 +325,11 @@ exports.createMockExam = async (req, res, next) => {
         const questionID = [];
         const finalQuestion = [];
         const indexValue = [];
-        course.collections.map((task, index) => {
+        const questionType = [];
+        let countGroup = 0;
+        course.collections.map((task,index) => {
+          
+          if (task.type == "group") countGroup++;
           collectSelectTopic.push({
             title: task.type == "group" ? task.title : task.topic[0].title,
             index: index,
@@ -347,13 +351,12 @@ exports.createMockExam = async (req, res, next) => {
               id: task.id,
               type: task.type,
               questions: [],
-              index: index,
+              index: countGroup -1,
             });
             check.push(task1.id.valueOf());
             indexValue.push(task1.id.valueOf());
           });
 
-          console.log(questionID);
           //const collect = [];
           // task.topic.map((task1) => {
 
@@ -394,61 +397,105 @@ exports.createMockExam = async (req, res, next) => {
           questionID,
           finalQuestion
         );
-     
+        const questionGroup = [];
+        const questionGroupCollectionArray = [];
+        const questionGroupCollection = [];
+        for (let i = 0; i < countGroup; i++) {
+          questionGroupCollectionArray.push([]);
+        }
+        questions.filter((task) => {
+          if (task.type == "group") {
+            questionGroup.push(task);
+          }
+        });
+        questionGroup.map((task) => {
+          console.log(task.index);
+          questionGroupCollectionArray[task.index].push(task);
+        });
+        questionGroupCollectionArray.map((task, index) => {
+          task.map((task1, index1) => {
+            if (index1 == 0) {
+              questionGroupCollection.push(task1);
+            } else {
+              questionGroupCollection[index].questions = [
+                ...questionGroupCollection[index].questions,
+                ...task1.questions,
+              ];
+            }
+          });
+        });
         
+        
+       const topic = questions.filter((task) => task.type == "topic");
+
+       topic.map((task) => {
+        questionGroupCollection.push(task)
+       });
       
-                   
-        //   const questionCategory = [];
 
-        //   questions.map((task, index) => {
-        //     const questionList = [];
-        //     task.questions.map((task) => questionList.push({ id: task.id }));
-        //     questionCategory.push({
-        //       title: task.title,
-        //       id: task.bankID,
-        //       questionList,
-        //     });
-        //   });
-        //   const countPractice = goal.examHistory.filter(
-        //     (task) => task.type == "practice"
-        //   );
-        //   const durationPerQuestion = 90; //seconds;
-        //   //examDuration = "00:00:00"
-        //   const questionCount = value.value;
-        //   let totalSeconds = durationPerQuestion * questionCount;
-        //   let hours = Math.floor(totalSeconds / 3600);
 
-        //   totalSeconds %= 3600;
-        //   let minutes = Math.floor(totalSeconds / 60);
-        //   let seconds = totalSeconds % 60;
-        //   const examDuration = `${hours}:${minutes}:${seconds}`;
+        //  questionGroup.filter ((task) => {
 
-        //   const date = new Date();
-        //   const createExam = await Exam({
-        //     type: "practice",
-        //     title: `Practice Exam ${countPractice.length + 1}`,
-        //     courseId: selectGoal.courseId,
-        //     questionCategory,
-        //     examDate: `${
-        //       eval(date.getDate()) < 10 ? "0" + date.getDate() : date.getDate()
-        //     }/${
-        //       eval(date.getMonth() + 1) < 10
-        //         ? "0" + eval(date.getMonth() + 1)
-        //         : date.getMonth()
-        //     }/${date.getFullYear()}`,
-        //     examDuration,
-        //     mark: 4,
-        //     negativeMark: 1,
-        //   });
-        //   createExam.save();
-        //   res.json({
-        //     status: "success",
-        //     message: "Create practice exam successfully",
-        //     examId: createExam._id,
-        //   });
+        //  if(questionGroup.indexOf(task.index) !== -1) {
+        //   const index = questionGroup.indexOf(task.index);
+        
+        //  }
+
+        // })
+
+        // console.log(questionGroup);
+        
+
+          const questionCategory = [];
+
+        questionGroupCollection.map((task, index) => {
+         
+          const questionList = [];
+          task.questions.map((task) => questionList.push({ id: task.id }));
+          questionCategory.push({
+            title: task.title,
+            id: task.id,
+            questionList,
+          });
+        });
+        console.log(questionCategory);
+        const countMock = goal.examHistory.filter(
+          (task) => task.type == "mock"
+        );
+        
+        let totalMinutes = course.duration 
+        let hours = Math.floor(totalMinutes / 60);
+        let minutes = totalMinutes % 60;
+        const examDuration = `${hours}:${minutes}:00`;
+
+        const date = new Date();
+        const createExam = await Exam({
+          type: "mock",
+          title: `Mock Exam ${countMock.length + 1}`,
+          courseId: selectGoal.courseId,
+          questionCategory,
+          examDate: `${
+            eval(date.getDate()) < 10 ? "0" + date.getDate() : date.getDate()
+          }/${
+            eval(date.getMonth() + 1) < 10
+              ? "0" + eval(date.getMonth() + 1)
+              : date.getMonth()
+          }/${date.getFullYear()}`,
+          examDuration,
+          mark: course.mark,
+          negativeMark: course.negativeMark,
+        });
+        createExam.save();
+        res.json({
+          status: "success",
+          message: "Create practice exam successfully",
+          examId: createExam._id,
+        });
       }
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+

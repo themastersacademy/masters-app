@@ -52,11 +52,10 @@ exports.startExam = async function (req, res) {
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
-           
-      totalQuestion += category.questionList.length,
-            category.questionList.forEach((question) => {
-              studentAnswerList.push(null);
-            });
+            (totalQuestion += category.questionList.length),
+              category.questionList.forEach((question) => {
+                studentAnswerList.push(null);
+              });
           });
           const bookmarkedQuestionList = [];
           examInfo.questionCategory.forEach((category) => {
@@ -103,7 +102,7 @@ exports.startExam = async function (req, res) {
         return res.status(400).json({ message: "exam already started" });
       }
     }
-    if (examInfo.type === "practice") {
+    if (examInfo.type === "practice" || examInfo.type === "mock") {
       const date = new Date();
       examInfo.examStartTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       const duration = examInfo.examDuration;
@@ -120,7 +119,9 @@ exports.startExam = async function (req, res) {
 
       if (get.length === 0) {
         const studentAnswerList = [];
+        console.log(examInfo.questionCategory)
         examInfo.questionCategory.forEach((category) => {
+  console.log(category.questionList.length);
           category.questionList.forEach((question) => {
             studentAnswerList.push(null);
           });
@@ -174,6 +175,7 @@ exports.startExam = async function (req, res) {
 const isValidExamStart = async function (examInfo) {
   const currentTime = new Date();
   let examDate = examInfo.examDate.split("/");
+  console.log(currentTime < new Date(examDate + " " + examInfo.examEndTime));
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
   return (
     examInfo.examDate ===
@@ -200,18 +202,13 @@ exports.getExamState = async function (req, res) {
       const questionCollections = [];
       const getQuestionID = [];
       const actualAnswerList = [];
-      
-      getExam.questionCategory.map((task) =>
 
-      {  
-        
+      getExam.questionCategory.map((task) => {
         questionCategoryList.push({
           title: task.title,
-          questionListLength: task.questionList.length 
-        })
-      
-      }
-      );
+          questionListLength: task.questionList.length,
+        });
+      });
       getExam.questionCategory.map((task) =>
         task.questionList.map(async (task) => {
           getQuestionID.push(task.id.valueOf());
@@ -241,7 +238,7 @@ exports.getExamState = async function (req, res) {
       const studentPerform = getExam.studentsPerformance.filter(
         (task) => task.id.valueOf() == User._id.valueOf()
       );
-     
+
       getExam.save();
       // console.log(getExam);
       if (studentPerform[0].status == "started") {
@@ -370,6 +367,7 @@ exports.submitExam = async (req, res, next) => {
           examInfo.questionCategory.map((task) => {
             totalQuestion += task.questionList.length;
           });
+
           const studentAnswerList = get[0].studentAnswerList;
           const actualAnswerList = examInfo.actualAnswerList;
           const mark = examInfo.mark;
@@ -380,26 +378,32 @@ exports.submitExam = async (req, res, next) => {
           let actualCorrectAttend = 0;
           let actualWrongAttend = 0;
           let score = 0;
+          let questionAttempted = 0;
           actualAnswerList.map((task, index) => {
             if (actualAnswerList[index] == studentAnswerList[index]) {
               score += mark;
               actualCorrectAttend += 1;
+              questionAttempted += 1;
             } else if (studentAnswerList[index] !== null) {
               studentNegativeMark += negativeMark;
               actualWrongAttend += 1;
+              questionAttempted += 1;
             }
           });
 
           get[0].totalMark = totalMark;
+          get[0].questionAttempted = questionAttempted;
           get[0].correctedAnswerList = actualAnswerList;
           get[0].mark = score;
           get[0].negativeMark = studentNegativeMark;
           get[0].status = "submitted";
-          examInfo.studentsPerformance.map((task) => {
-            if (task.id.valueOf() == userID.valueOf()) {
-              task = get[0];
-            }
-          });
+          const questionCategoryList = [];
+          examInfo.questionCategory.map((task) =>
+            questionCategoryList.push({
+              title: task.title,
+              questionListLength: task.questionList.length,
+            })
+          );
           const goal = await Goal.findOne({
             courseId: examInfo.courseId,
             userId: userID,
@@ -448,6 +452,9 @@ exports.submitExam = async (req, res, next) => {
                   wrongQuestion += 1;
                 }
               }),
+              
+              console.log((correctQuestion / totalQuestion) * 100);
+              console.log(correctQuestion, wrongQuestion, totalQuestion);
                 topics.push({
                   topicName: task.title,
                   totalQuestion,
@@ -456,8 +463,12 @@ exports.submitExam = async (req, res, next) => {
                   accuracy: (correctQuestion / totalQuestion) * 100,
                 });
             });
-
+            const examTopic = [];
             topics.map((task) => {
+              examTopic.push({
+                topicName: task.topicName,
+                accuracy: task.accuracy,
+              });
               goal.topics.map((task1) => {
                 if (task.topicName == task1.topicName) {
                   task1.questionAttempted +=
@@ -473,6 +484,12 @@ exports.submitExam = async (req, res, next) => {
                 }
               });
             });
+            get[0].topics = examTopic;
+            examInfo.studentsPerformance.map((task) => {
+              if (task.id.valueOf() == userID.valueOf()) {
+                task = get[0];
+              }
+            });
             goal.examHistory.push({
               examId: examID,
               type: examInfo.type,
@@ -487,6 +504,8 @@ exports.submitExam = async (req, res, next) => {
             goal.save();
             examInfo.save();
             const state = await examState.deleteOne({ examID, userID });
+            console.log(state);
+            delete req.session.examID;
             res.json({
               status: "success",
               message: "exam submitted successfully",
@@ -497,14 +516,14 @@ exports.submitExam = async (req, res, next) => {
         const get = examInfo.studentsPerformance.filter(
           (task) => task.id.valueOf() == userID.valueOf()
         );
-        
+
         if (get.length !== 0) {
           let totalQuestion = 0;
           examInfo.questionCategory.map((task) => {
             totalQuestion += task.questionList.length;
           });
           const studentAnswerList = get[0].studentAnswerList;
-          
+
           const actualAnswerList = examInfo.actualAnswerList;
           const mark = examInfo.mark;
           let studentNegativeMark = 0;
@@ -518,24 +537,20 @@ exports.submitExam = async (req, res, next) => {
           actualAnswerList.map((task, index) => {
             if (actualAnswerList[index] == studentAnswerList[index]) {
               score += mark;
-              questionAttempted   += 1
+              questionAttempted += 1;
               actualCorrectAttend += 1;
             } else if (studentAnswerList[index] !== null) {
               studentNegativeMark += negativeMark;
               actualWrongAttend += 1;
-              questionAttempted   += 1
+              questionAttempted += 1;
             }
-            
           });
           get[0].totalMark = totalMark;
           get[0].questionAttempted = questionAttempted;
           get[0].correctedAnswerList = actualAnswerList;
           get[0].mark = score;
-
           get[0].negativeMark = studentNegativeMark;
           get[0].status = "submitted";
-          
-
           const questionCategoryList = [];
           examInfo.questionCategory.map((task) =>
             questionCategoryList.push({
@@ -579,9 +594,9 @@ exports.submitExam = async (req, res, next) => {
                 wrongQuestion += 1;
               }
             }),
+            console.log(correctQuestion, wrongQuestion, totalQuestion);
               topics.push({
                 topicName: task.title,
-   
                 accuracy: (correctQuestion / totalQuestion) * 100,
               });
           });
@@ -589,13 +604,12 @@ exports.submitExam = async (req, res, next) => {
           get[0].topics = topics;
           examInfo.studentsPerformance.map((task) => {
             if (task.id.valueOf() == userID.valueOf()) {
-              
               task = get[0];
             }
           });
-         
-           examInfo.save();
+          examInfo.save();
           const state = await examState.deleteOne({ examID, userID });
+          delete req.session.examID;
           res.json({
             status: "success",
             message: "exam submitted successfully",
@@ -613,38 +627,34 @@ exports.submitExam = async (req, res, next) => {
   }
 };
 
-
-
 exports.getExamResult = async (req, res, next) => {
   try {
     const path = req.path;
     const examID = path.split("/")[2];
     console.log(examID);
     const userID = req.session.userID;
-    
-  const examInfo = await exam.findOne({ _id: examID });
-  if (examInfo) {
-    const get = examInfo.studentsPerformance.filter(
-      (task) => task.id.valueOf() == userID.valueOf()
-    );
-    if (get.length !== 0) {
-      const examResult = {
-         mark:get[0].mark,
-        topics: get[0].topics,
-        totalMarks : examInfo.mark * examInfo.totalQuestion,
-    
-        questionAttempted: get[0].questionAttempted,
-       totalQuestion:examInfo.totalQuestion,
-       questionUnAttempted:examInfo.totalQuestion - get[0].questionAttempted,
-      };
-      res.json(examResult);
-    }
-  }
-  else{
-    return res.status(404).send("exam not found");  
 
-  }
+    const examInfo = await exam.findOne({ _id: examID });
+    if (examInfo) {
+      const get = examInfo.studentsPerformance.filter(
+        (task) => task.id.valueOf() == userID.valueOf()
+      );
+      if (get.length !== 0) {
+        const examResult = {
+          mark: get[0].mark - get[0].negativeMark,
+          topics: get[0].topics,
+          totalMarks: examInfo.mark * examInfo.actualAnswerList.length,
+          questionAttempted: get[0].questionAttempted,
+          totalQuestion: examInfo.actualAnswerList.length,
+          questionUnAttempted:
+            examInfo.actualAnswerList.length - get[0].questionAttempted,
+        };
+        res.json(examResult);
+      }
+    } else {
+      return res.status(404).send("exam not found");
+    }
   } catch (error) {
     console.log(error);
   }
-}
+};

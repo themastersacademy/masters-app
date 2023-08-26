@@ -27,7 +27,6 @@ export default function ExamEndDialog({
       open={isDialogOpen}
       TransitionComponent={Transition}
       keepMounted
-      onClose={handleDialogClose}
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle>{"Are you sure you want to end the exam?"}</DialogTitle>
@@ -67,7 +66,7 @@ export default function ExamEndDialog({
           sx={{
             color: "#187163",
           }}
-          onClick={handleDialogClose}
+          onClick={()=>handleDialogClose(false)}
         >
           Cancel
         </Button>
@@ -75,7 +74,7 @@ export default function ExamEndDialog({
           sx={{
             color: "#187163",
           }}
-          onClick={handleDialogClose}
+          onClick={()=>handleDialogClose(true)}
         >
           Submit
         </Button>
