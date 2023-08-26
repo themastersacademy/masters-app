@@ -46,11 +46,14 @@ exports.startExam = async function (req, res) {
       );
 
       if (get.length === 0) {
+        let totalQuestion = 0;
         const isValidExam = await isValidExamStart(examInfo);
         console.log(isValidExam);
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
+           
+      totalQuestion += category.questionList.length,
             category.questionList.forEach((question) => {
               studentAnswerList.push(null);
             });
@@ -75,6 +78,7 @@ exports.startExam = async function (req, res) {
               });
             }
           });
+          examInfo.totalQuestion = totalQuestion;
           examInfo.actualAnswerList = actualAnswerList;
           examInfo.studentsPerformance.push({
             id: userID,
@@ -196,12 +200,17 @@ exports.getExamState = async function (req, res) {
       const questionCollections = [];
       const getQuestionID = [];
       const actualAnswerList = [];
-
+      
       getExam.questionCategory.map((task) =>
+
+      {  
+        
         questionCategoryList.push({
           title: task.title,
-          questionListLength: task.questionList.length,
+          questionListLength: task.questionList.length 
         })
+      
+      }
       );
       getExam.questionCategory.map((task) =>
         task.questionList.map(async (task) => {
@@ -232,7 +241,7 @@ exports.getExamState = async function (req, res) {
       const studentPerform = getExam.studentsPerformance.filter(
         (task) => task.id.valueOf() == User._id.valueOf()
       );
-
+     
       getExam.save();
       // console.log(getExam);
       if (studentPerform[0].status == "started") {
@@ -585,7 +594,7 @@ exports.submitExam = async (req, res, next) => {
             }
           });
          
-          // examInfo.save();
+           examInfo.save();
           const state = await examState.deleteOne({ examID, userID });
           res.json({
             status: "success",
@@ -603,3 +612,39 @@ exports.submitExam = async (req, res, next) => {
     console.log(error);
   }
 };
+
+
+
+exports.getExamResult = async (req, res, next) => {
+  try {
+    const path = req.path;
+    const examID = path.split("/")[2];
+    console.log(examID);
+    const userID = req.session.userID;
+    
+  const examInfo = await exam.findOne({ _id: examID });
+  if (examInfo) {
+    const get = examInfo.studentsPerformance.filter(
+      (task) => task.id.valueOf() == userID.valueOf()
+    );
+    if (get.length !== 0) {
+      const examResult = {
+         mark:get[0].mark,
+        topics: get[0].topics,
+        totalMarks : examInfo.mark * examInfo.totalQuestion,
+    
+        questionAttempted: get[0].questionAttempted,
+       totalQuestion:examInfo.totalQuestion,
+       questionUnAttempted:examInfo.totalQuestion - get[0].questionAttempted,
+      };
+      res.json(examResult);
+    }
+  }
+  else{
+    return res.status(404).send("exam not found");  
+
+  }
+  } catch (error) {
+    console.log(error);
+  }
+}

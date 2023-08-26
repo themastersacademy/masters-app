@@ -4,6 +4,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 
 export default function ExamResultAnalytics({analyticsList, isMobileView}) {
+  console.log(analyticsList);
   return (
     <Stack direction="column" sx={{ width: "100%" }} spacing={2}>
       <h1
@@ -26,7 +27,7 @@ export default function ExamResultAnalytics({analyticsList, isMobileView}) {
         overflow="scroll"
       >
         {analyticsList.map((item, index) => (
-          <ProgressCard key={index} title={item.title} value={item.value} />
+          <ProgressCard key={index} title={item.topicName} value={item.accuracy} />
         ))}
       </Stack>
     </Stack>
@@ -34,6 +35,7 @@ export default function ExamResultAnalytics({analyticsList, isMobileView}) {
 }
 
 const ProgressCard = ({ title, value }) => {
+ 
   return (
     <Paper
       sx={{

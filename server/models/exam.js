@@ -41,6 +41,10 @@ const examSchema = new Schema({
         type: Number,
         required: true
     },
+    totalQuestion:{
+        type: Number,
+        required: true
+    },
     questionCategory:[
         {
             id:{
