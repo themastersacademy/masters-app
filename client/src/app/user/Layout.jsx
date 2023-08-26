@@ -105,6 +105,14 @@ export default function Layout() {
     },
     body:JSON.stringify({selectGoal})
   })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data)
+    if (data.status == "success") {
+      navigator(`/exam/info?=${data.examId}`);
+    }
+  
+  })
   }
   useEffect(() => {
     if (getGoalId !== "") {

@@ -6,21 +6,20 @@ import ExamResultStat from "./components/ExamResultStat";
 import ExamResultAnalytics from "./components/ExamResultAnalytics";
 import LeaderBoard from "./components/LeaderBoard";
 import { useLocation } from "react-router-dom";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 export default function ExamResult() {
   const { search } = useLocation();
-
   const examID = search.split("=")[1];
   const { width } = useWindowDimensions();
- const [examResult, setExamResult] = useState([]);
-useEffect(() => {
+  const [examResult, setExamResult] = useState([]);
+  useEffect(() => {
     fetch(`/api/exam/get-exam-result/${examID}`)
       .then((res) => res.json())
       .then((data) => {
         setExamResult(data);
         console.log(data);
       });
-}, [examID]);
+  }, [examID]);
 
   const analyticsList = [
     {
@@ -95,14 +94,12 @@ useEffect(() => {
     >
       {width > 1024 ? (
         <DtView
-        examResult={examResult}
-          analyticsList={analyticsList}
+          examResult={examResult}
           leaderBoardList={leaderBoardList}
         />
       ) : (
         <MobileView
-        examResult={examResult}
-          analyticsList={analyticsList}
+          examResult={examResult}
           leaderBoardList={leaderBoardList}
         />
       )}
@@ -110,7 +107,7 @@ useEffect(() => {
   );
 }
 
-const DtView = ({ analyticsList, leaderBoardList,examResult }) => {
+const DtView = ({ leaderBoardList, examResult }) => {
   return (
     <Stack direction="column" spacing={2} width={"100%"}>
       <ExamHeader />
@@ -132,13 +129,9 @@ const DtView = ({ analyticsList, leaderBoardList,examResult }) => {
               attempted={examResult.questionAttempted}
               unAttempted={examResult.questionUnAttempted}
             />
-            {examResult.topics && 
-          
-          <ExamResultAnalytics 
-          analyticsList={examResult.topics}
-         
-          /> 
-        }
+            {examResult.topics && (
+              <ExamResultAnalytics analyticsList={examResult.topics} />
+            )}
           </Stack>
           <LeaderBoard leaderBoardList={leaderBoardList} />
         </Stack>
@@ -147,7 +140,7 @@ const DtView = ({ analyticsList, leaderBoardList,examResult }) => {
   );
 };
 
-const MobileView = ({ analyticsList, leaderBoardList,examResult }) => {
+const MobileView = ({ leaderBoardList, examResult }) => {
   return (
     <Stack direction="column" spacing={2}>
       <ExamHeader isMobileView={true} />
@@ -160,10 +153,10 @@ const MobileView = ({ analyticsList, leaderBoardList,examResult }) => {
         }}
       >
         <ExamResultStat
-     totalMark={examResult.totalMarks}
-     mark={examResult.mark}
-     attempted={examResult.questionAttempted}
-     unAttempted={examResult.questionUnAttempted}
+          totalMark={examResult.totalMarks}
+          mark={examResult.mark}
+          attempted={examResult.questionAttempted}
+          unAttempted={examResult.questionUnAttempted}
         />
       </Paper>
       <LeaderBoard leaderBoardList={leaderBoardList} isMobileView={true} />
@@ -174,14 +167,12 @@ const MobileView = ({ analyticsList, leaderBoardList,examResult }) => {
           padding: "20px",
         }}
       >
-        {examResult.topics && 
-          
-          <ExamResultAnalytics 
-          analyticsList={examResult.topics}
-          isMobileView={true}
-          /> 
-        }
-       
+        {examResult.topics && (
+          <ExamResultAnalytics
+            analyticsList={examResult.topics}
+            isMobileView={true}
+          />
+        )}
       </Paper>
     </Stack>
   );

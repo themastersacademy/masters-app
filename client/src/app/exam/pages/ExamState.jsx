@@ -113,6 +113,18 @@ export default function ExamState() {
     }
   }, [studentAnswers, isBookmarked, currentQuestionIndex]);
 
+  useEffect(() => {
+    if (isTimeOver) {
+      fetch("/api/exam/submitExam")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status == "success") {
+            navigate(`/exam/result?=${examID}`);
+          }
+        });
+    }
+  }, [isTimeOver]);
+
   const handleNextQuestion = () => {
     if (currentQuestionIndex < examInfo.questionCollections.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -152,15 +164,19 @@ export default function ExamState() {
     setIsDialogOpen(true);
   };
 
-  const handleDialogClose = () => {
-    fetch("/api/exam/submitExam")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status == "success") {
-          navigate(`/exam/result?=${examID}`);
-          setIsDialogOpen(false);
-        }
-      });
+  const handleDialogClose = (isSubmit) => {
+    if (isSubmit) {
+      fetch("/api/exam/submitExam")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status == "success") {
+            navigate(`/exam/result?=${examID}`);
+            setIsDialogOpen(false);
+          }
+        });
+    } else {
+      setIsDialogOpen(false);
+    }
   };
 
   return (
