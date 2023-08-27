@@ -5,7 +5,7 @@ const { generateOtp } = require("../../util/OTB.js");
 const Batch = require("../../models/batch.js");
 const Institution = require("../../models/institution.js");
 const Goal = require("../../models/goal.js");
-const Exam = require('../../models/exam.js')
+const Exam = require("../../models/exam.js");
 const examState = require("../../models/examState.js");
 const sessions = require("../../models/session.js");
 const Course = require("../../models/course.js");
@@ -20,23 +20,20 @@ exports.login = async (req, res, next) => {
     const getVerify = await isLogin(get, check.email);
     // console.log(getVerify);
     // if (getVerify.length == 0) {
-    
 
-    
     req.session.isAuth = true;
     req.session.isLogin = true;
     req.session.userID = check._id;
     req.session.userRoll = check.type;
     req.session.userName = check.name;
     req.session.email = check.email;
-    const State = await examState.findOne({userID:check._id})
-    if(State){
+    const State = await examState.findOne({ userID: check._id });
+    if (State) {
       req.session.examID = State.examID;
-      
-      res.json({status:'isExam'});
-    }
-    else{
-    res.json({ status: "success", id: check._id, roll: check.type });
+
+      res.json({ status: "isExam" });
+    } else {
+      res.json({ status: "success", id: check._id, roll: check.type });
     }
     // } else {
     //   const isDelete = await sessions.deleteMany({
@@ -62,7 +59,6 @@ function isLogin(data, email) {
 exports.create = async (req, res, next) => {
   console.log(req.body);
   const check = await User.findOne({ email: req.body.email });
-  console.log(check);
   if (!check) {
     req.session.isCreate = true;
     const password = req.body.password;
@@ -79,7 +75,7 @@ exports.create = async (req, res, next) => {
 
     req.session.Otp = otp;
     SendEmail(req.body.email, otp);
-    res.json({ status: "success", message: "Account create successfully" });
+    res.json({ status: "success", message: "Verify your account" });
   } else {
     res.json({ status: "error", message: "Account already exists " });
   }
@@ -114,7 +110,6 @@ exports.chooseGoal = async (req, res, next) => {
   const goal = req.body.goal;
 
   const user = await User.findOne({ _id: req.session.userID });
-
 
   if (user) {
     goal.map((task) => {
@@ -184,11 +179,11 @@ exports.request = async (req, res, next) => {
 
 exports.getUserData = async (req, res, next) => {
   try {
-    const userID =  req.body.id
+    const userID = req.body.id;
     const user = await User.findOne({ _id: req.body.id });
     const goal = await Goal.find();
     const course = await Course.find();
-    const exam = await Exam.find()
+    const exam = await Exam.find();
 
     if (user) {
       let check = [];
@@ -200,7 +195,6 @@ exports.getUserData = async (req, res, next) => {
         duration: "",
         noOfQuestion: "",
         totalMArk: "",
-
       };
       user.goal.map((task) => check.push(task.valueOf()));
 
@@ -209,24 +203,22 @@ exports.getUserData = async (req, res, next) => {
       );
       check = [];
       const send = [];
-      const studentsPerformance =[]
-      getUserGoal.map((task,index) => {
-   if(index == 0) studentsPerformance.push(task.examHistory)
-        check.push(task.courseId.valueOf())
-      send.push({
+      const studentsPerformance = [];
+      getUserGoal.map((task, index) => {
+        if (index == 0) studentsPerformance.push(task.examHistory);
+        check.push(task.courseId.valueOf());
+        send.push({
           courseName: task.courseName,
           coursePlan: task.plan,
           courseId: task.courseId,
-         
         });
       });
       const get = course.filter(
         (task) => check.indexOf(task._id.valueOf()) !== -1
       );
 
-      if  (get.length > 0) {
-       
-        topic.courseId = get[0]._id
+      if (get.length > 0) {
+        topic.courseId = get[0]._id;
         topic.courseName = get[0].title;
         get[0].collections.map((collection, index) => {
           console.log(collection);
@@ -244,7 +236,6 @@ exports.getUserData = async (req, res, next) => {
                   topicLength: collection.topic.length,
                   isSelect: false,
                   bankID: task.id,
-                 
                 });
               }
             });
@@ -280,21 +271,24 @@ exports.getUserData = async (req, res, next) => {
       if (get.length > 0) {
         get[0].collections.map((task, index) => {
           task.topic.map((task) => {
-            calcTolalQues +=  eval( task.level.easy) +eval( task.level.medium) +eval( task.level.hard)
+            calcTolalQues +=
+              eval(task.level.easy) +
+              eval(task.level.medium) +
+              eval(task.level.hard);
           });
         });
         (topic.duration = get[0].duration),
           (topic.noOfQuestion = calcTolalQues),
-          (topic.totalMArk = get[0].mark*calcTolalQues);
+          (topic.totalMArk = get[0].mark * calcTolalQues);
       }
-    
+
       res.json({
         status: "ok",
         message: user,
         goal: getUserGoal,
         data: send,
         topic: topic,
-        studentsPerformance:studentsPerformance[0]
+        studentsPerformance: studentsPerformance[0],
       });
     }
   } catch (error) {
@@ -373,11 +367,14 @@ exports.addGoal = async (req, res, next) => {
 
 exports.getViewGoal = async (req, res, next) => {
   try {
-    const userID = req.session.userID
+    const userID = req.session.userID;
     const { getGoalId } = req.body;
     const course = await Course.findOne({ _id: getGoalId.courseId });
-    const goal = await Goal.findOne({courseId:getGoalId.courseId,userId:userID})
-  
+    const goal = await Goal.findOne({
+      courseId: getGoalId.courseId,
+      userId: userID,
+    });
+
     if (course) {
       const send = [];
       let calcTolalQues = 0;
@@ -441,14 +438,17 @@ exports.getViewGoal = async (req, res, next) => {
 
       course.collections.map((task, index) => {
         task.topic.map((task) => {
-          calcTolalQues +=  eval( task.level.easy) +eval( task.level.medium) +eval( task.level.hard)
+          calcTolalQues +=
+            eval(task.level.easy) +
+            eval(task.level.medium) +
+            eval(task.level.hard);
         });
       });
       (topic.duration = course.duration),
         (topic.noOfQuestion = calcTolalQues),
-        (topic.totalMArk = course.mark*calcTolalQues);
+        (topic.totalMArk = course.mark * calcTolalQues);
 
-      res.json({ staus: "ok", topic: topic,goal:goal.examHistory });
+      res.json({ staus: "ok", topic: topic, goal: goal.examHistory });
     }
   } catch (error) {
     console.log(error);

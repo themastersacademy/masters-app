@@ -71,7 +71,7 @@ const ProgressCard = ({ title, value }) => {
               color: "#656565",
             }}
           >
-            {value}/100
+            {Math.floor(value)}/100
           </p>
         </Stack>
       </Stack>
