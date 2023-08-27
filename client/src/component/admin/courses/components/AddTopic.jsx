@@ -6,13 +6,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import AddOption from "./AddOption";
-export default function FormDialog({ createBank,task}) {
+export default function FormDialog({ createBank,task,Notificate,checkPublish}) {
 
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
 
   const handleClickOpen = () => {
-    setOpen(true);
+    if(checkPublish !== 'publish')
+    {setOpen(true);}
+    else   Notificate('info', 'Please switch to publish mode');
   };
   const handleClose = () => {
     setOpen(false);

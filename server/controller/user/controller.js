@@ -5,7 +5,7 @@ const { generateOtp } = require("../../util/OTB.js");
 const Batch = require("../../models/batch.js");
 const Institution = require("../../models/institution.js");
 const Goal = require("../../models/goal.js");
-
+const Exam = require('../../models/exam.js')
 const examState = require("../../models/examState.js");
 const sessions = require("../../models/session.js");
 const Course = require("../../models/course.js");
@@ -184,9 +184,12 @@ exports.request = async (req, res, next) => {
 
 exports.getUserData = async (req, res, next) => {
   try {
+    const userID =  req.body.id
     const user = await User.findOne({ _id: req.body.id });
     const goal = await Goal.find();
     const course = await Course.find();
+    const exam = await Exam.find()
+
     if (user) {
       let check = [];
       let calcTolalQues = 0;
@@ -197,6 +200,7 @@ exports.getUserData = async (req, res, next) => {
         duration: "",
         noOfQuestion: "",
         totalMArk: "",
+
       };
       user.goal.map((task) => check.push(task.valueOf()));
 
@@ -205,21 +209,25 @@ exports.getUserData = async (req, res, next) => {
       );
       check = [];
       const send = [];
-
-      getUserGoal.map((task) => {
-        check.push(task.courseId.valueOf());
-        send.push({
+      const studentsPerformance =[]
+      getUserGoal.map((task,index) => {
+   if(index == 0) studentsPerformance.push(task.examHistory)
+        check.push(task.courseId.valueOf())
+      send.push({
           courseName: task.courseName,
           coursePlan: task.plan,
           courseId: task.courseId,
+         
         });
       });
       const get = course.filter(
         (task) => check.indexOf(task._id.valueOf()) !== -1
       );
 
-      if (get.length > 0) {
-        (topic.courseId = get[0]._id), (topic.courseName = get[0].title);
+      if  (get.length > 0) {
+       
+        topic.courseId = get[0]._id
+        topic.courseName = get[0].title;
         get[0].collections.map((collection, index) => {
           console.log(collection);
           if (collection.type == "topic") {
@@ -236,6 +244,7 @@ exports.getUserData = async (req, res, next) => {
                   topicLength: collection.topic.length,
                   isSelect: false,
                   bankID: task.id,
+                 
                 });
               }
             });
@@ -278,13 +287,14 @@ exports.getUserData = async (req, res, next) => {
           (topic.noOfQuestion = calcTolalQues),
           (topic.totalMArk = get[0].mark*calcTolalQues);
       }
-      console.log(calcTolalQues);
+    
       res.json({
         status: "ok",
         message: user,
         goal: getUserGoal,
         data: send,
         topic: topic,
+        studentsPerformance:studentsPerformance[0]
       });
     }
   } catch (error) {
@@ -363,8 +373,11 @@ exports.addGoal = async (req, res, next) => {
 
 exports.getViewGoal = async (req, res, next) => {
   try {
+    const userID = req.session.userID
     const { getGoalId } = req.body;
     const course = await Course.findOne({ _id: getGoalId.courseId });
+    const goal = await Goal.findOne({courseId:getGoalId.courseId,userId:userID})
+  
     if (course) {
       const send = [];
       let calcTolalQues = 0;
@@ -435,7 +448,7 @@ exports.getViewGoal = async (req, res, next) => {
         (topic.noOfQuestion = calcTolalQues),
         (topic.totalMArk = course.mark*calcTolalQues);
 
-      res.json({ staus: "ok", topic: topic });
+      res.json({ staus: "ok", topic: topic,goal:goal.examHistory });
     }
   } catch (error) {
     console.log(error);

@@ -4,6 +4,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 
 export default function ScoreCard({
+  studentsPerformance,
   scorecard = [
     {
       name: "Practice Test 2",
@@ -30,7 +31,10 @@ export default function ScoreCard({
       dateTime: "05:43PM 30 Jul 2023",
     },
   ], MD
-}) {
+}) 
+
+{
+console.log(studentsPerformance)
   return (
     <Paper
       elevation={MD ? 0 : 2}
@@ -62,7 +66,7 @@ export default function ScoreCard({
         marginTop={2}
         className="scrollHide"
       >
-        {scorecard.map((item, index) => (
+        {studentsPerformance.map((item, index) => (
           <ScoreCardItem key={index} {...item} />
         ))}
       </Stack>
@@ -70,8 +74,8 @@ export default function ScoreCard({
   );
 }
 
-function ScoreCardItem({ name, score, maxScore, dateTime }) {
-  const scorePercentage = (score / maxScore) * 100;
+function ScoreCardItem({ examName , score, totalMarks , date }) {
+  const scorePercentage = (score / totalMarks) * 100;
   return (
     <Paper
       sx={{
@@ -85,8 +89,8 @@ function ScoreCardItem({ name, score, maxScore, dateTime }) {
         justifyContent="space-between"
         marginBottom={1}
       >
-        <h4>{name}</h4>
-        <h4>{dateTime}</h4>
+        <h4>{examName}</h4>
+        <h4>{date}</h4>
       </Stack>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap={2}>
@@ -123,7 +127,7 @@ function ScoreCardItem({ name, score, maxScore, dateTime }) {
             }}
           />
           <div>
-            {score}/{maxScore}
+            {score}/{totalMarks}
           </div>
         </Stack>
         <Button

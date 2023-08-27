@@ -7,6 +7,7 @@ import {
   Filler,
   Tooltip,
 } from "chart.js";
+import { useEffect, useState } from "react";
 import { Radar } from "react-chartjs-2";
 
 ChartJS.register(
@@ -18,20 +19,27 @@ ChartJS.register(
   //   Legend
 );
 
-export default function AnalysisCard({ MD }) {
+export default function AnalysisCard({ MD ,studentsPerformance}) {
+
+ const subName = () =>{
+  const list = []
+  studentsPerformance.map((task) =>list.push(task.examName))
+  return list
+}
+
+const subMark = () =>{
+  const list = []
+  studentsPerformance.map((task) =>list.push(task.score))
+  return list
+}
+ 
   const data = {
-    labels: [
-      "Quantitative Aptitude",
-      "Logical Reasoning",
-      "Verbal Ability",
-      "Technical Aptitude",
-      "Coding",
-      "Logical Reasoning",
-      "Verbal Ability",
-    ],
+    labels: 
+    subName()
+    ,
     datasets: [
       {
-        data: [60, 90, 45, 53, 29, 78, 90],
+        data:subMark(),
         backgroundColor: "#FEA80060",
         borderColor: "#FEA800",
         borderWidth: 2,
@@ -39,6 +47,7 @@ export default function AnalysisCard({ MD }) {
     ],
   };
   return (
+   data.labels.length !==0  && 
     <Paper
       elevation={MD ? 0 : 2}
       sx={{

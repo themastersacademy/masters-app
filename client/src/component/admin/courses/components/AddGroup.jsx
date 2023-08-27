@@ -7,13 +7,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 
-export default function FormDialog({ createGroup ,task ,Notificate}) {
+export default function FormDialog({ createGroup ,task ,Notificate,checkPublish}) {
 
   const [notificate,setNotification] = useState(false)
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const handleClickOpen = () => {
-    setOpen(true);
+if(checkPublish !== 'publish') setOpen(true);
+    else  Notificate('info', 'Please switch to publish mode');
   };
   const handleClose = () => {
     setOpen(false);

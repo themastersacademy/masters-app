@@ -8,7 +8,7 @@ import {  IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import AddOption from "./AddOption";
-export default function GroupAddTopic({ createTopic,task }) {
+export default function GroupAddTopic({ createTopic,task ,checkPublish,Notificate}) {
 //   const [task,setTask] = useState([])
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
@@ -28,7 +28,11 @@ export default function GroupAddTopic({ createTopic,task }) {
     getCourse()
   },[])
   const handleClickOpen = () => {
-    setOpen(true);
+   if(checkPublish !== 'publish') 
+   { setOpen(true);}
+else{
+  Notificate('info', 'Please switch to publish mode');
+}
   };
   const handleClose = () => {
     setOpen(false);

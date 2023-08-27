@@ -166,7 +166,7 @@ exports.createPracticesExam = async (req, res, next) => {
       courseId: selectGoal.courseId,
       userId: id,
     });
-    //console.log(goal);
+  
     const user = await User.findOne({ _id: id });
     if (user) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
@@ -291,7 +291,8 @@ exports.createPracticesExam = async (req, res, next) => {
           mark: 4,
           negativeMark: 1,
         });
-        createExam.save();
+     
+         createExam.save();
         res.json({
           status: "success",
           message: "Create practice exam successfully",
@@ -433,17 +434,16 @@ exports.createMockExam = async (req, res, next) => {
        });
       
 
-
         //  questionGroup.filter ((task) => {
-
         //  if(questionGroup.indexOf(task.index) !== -1) {
         //   const index = questionGroup.indexOf(task.index);
+
         
         //  }
 
         // })
 
-        // console.log(questionGroup);
+        // console.log(questionGroup);  
         
 
           const questionCategory = [];

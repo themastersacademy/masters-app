@@ -9,13 +9,17 @@ import { useState } from "react";
 import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
-export default function EditGroupNameCourseCollection({task ,Notificate,collectionsID,courseID,title}) {
+export default function EditGroupNameCourseCollection({task ,Notificate,collectionsID,courseID,title,checkPublish}) {
 
   const [notificate,setNotification] = useState(false)
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const handleClickOpen = () => {
-    setOpen(true);
+    if(checkPublish !== 'publish')
+   { setOpen(true);}
+   else{
+    Notificate('info', 'Please switch to publish mode');
+   }
   };
   const handleClose = () => {
     setOpen(false);

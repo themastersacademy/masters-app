@@ -119,6 +119,7 @@ useEffect(()=>{getCourse()},[])
           ) : (
             <SaveButton
               mock={mock}
+              checkPublish={checkPublish}
               collectDetails={collectDetails}
               ControlNotification={ControlNotification}
               pageControl={pageControl}
@@ -135,6 +136,7 @@ const SaveButton = ({
   ControlNotification,
   pageControl,
   mock,
+  checkPublish
 }) => {
   const course = [];
   const { search } = useLocation();
@@ -218,10 +220,13 @@ const SaveButton = ({
 
   return (
     <>
-      {pageControl.mockPage == false &&
+      {
+      checkPublish.status !== 'publish' ?  
+      
+      pageControl.mockPage == false &&
       pageControl.courseSettingPage == true ? (
         collectDetails.mark > '0' &&
-        collectDetails.duration > '0'  ? (
+        collectDetails.duration > '0'   ? (
           <Button
             variant="contained"
             sx={styleButton.save}
@@ -249,7 +254,9 @@ const SaveButton = ({
         >
           Save
         </Button>
-      )}
+      )
+    : null
+    }
     </>
   );
 };

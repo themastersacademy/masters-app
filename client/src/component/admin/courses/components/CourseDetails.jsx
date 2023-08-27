@@ -1,8 +1,8 @@
-import { Button, IconButton, Paper } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import {  IconButton, Paper } from "@mui/material";
+
 import GroupAddTopic from "./GroupAddTopic";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -19,6 +19,7 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
   const id = search.split("?")[1];
   const [task, setTask] = useState([]);
   const [course, setCourse] = useState([]);
+  const [checkPublishMode,setPublish] = useState([])
   const [isChange,setChange] = useState(false)
   const getCourse = () => {
     fetch("/api/admin/getCourseDetails", {
@@ -30,6 +31,7 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
     })
       .then((res) => res.json())
       .then((data) => {
+        setPublish(data.message.status)
         if (data.status == "ok") {
           setCourse(data.message.collections);
         }
@@ -114,11 +116,12 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
           margin: "20px 0",
         }}
       >
-        <AddTopic createBank={createTopic} task={task} />
+        <AddTopic createBank={createTopic} task={task} checkPublish={checkPublishMode} Notificate={Notificate} />
         <AddGroup
           createGroup={createGroup}
           id={id}
           task={task}
+          checkPublish={checkPublishMode}
           Notificate={Notificate}
         />
       </div>
@@ -147,6 +150,8 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
                 collectionsID={item._id}
                 index={index}
                 courseID={id}
+                checkPublish={checkPublish}
+                checkPublishMode={checkPublishMode}
                 isNotify={isNotify} setNotify={setNotify}
                 Notificate={Notificate}
                setChange={setChange}
@@ -162,7 +167,10 @@ export default function CourseDetails({ Notificate,notificate,setPageController,
                 courseID={id}
                 quesBankID={item.topic[0]._id}
                 index={index}
-                isNotify={isNotify} setNotify={setNotify}
+                checkPublish={checkPublish}
+                checkPublishMode={checkPublishMode}
+                isNotify={isNotify} 
+                setNotify={setNotify}
                 Notificate={Notificate}
                 setChange={setChange}
                 isChange={isChange}
@@ -192,9 +200,11 @@ function AccordionCards({
   topicList,
   index,
   id,
+  checkPublishMode,
   groupID,
   setChange,
-  isChange
+  isChange,
+  checkPublish
 }) {
   const createTopic = (data) => {
     fetch("/api/admin/createGroupTopic", {
@@ -211,6 +221,8 @@ function AccordionCards({
   };
 
   const deleteCourse = () => {
+    if(checkPublishMode !== "publish")
+  {
     fetch("/api/admin/deleteGroupCourseCollection", {
       method: "POST",
       headers: {
@@ -229,7 +241,10 @@ function AccordionCards({
         Notificate(data.status, data.message);
         setChange(!isChange)
         setNotify(!isNotify)
-      });
+      });}
+      else{
+        Notificate('info', 'Please switch to publish mode');
+      }
   };
  
   return (
@@ -261,9 +276,9 @@ function AccordionCards({
               <IconButton title="Delete Group" onClick={deleteCourse}>
                 <DeleteIcon />
               </IconButton>
-              <EditGroupNameCourseCollection  task={task} Notificate={Notificate} courseID={courseID} title={title} collectionsID={collectionsID} />
+              <EditGroupNameCourseCollection checkPublish={checkPublishMode}  task={task} Notificate={Notificate} courseID={courseID} title={title} collectionsID={collectionsID} />
     
-              <GroupAddTopic task={task} createTopic={createTopic} />
+              <GroupAddTopic task={task} createTopic={createTopic} checkPublish={checkPublishMode} Notificate ={Notificate} />
        
             </div>
           </div>
@@ -281,6 +296,8 @@ function AccordionCards({
                 key={index}
                 collectionsID={collectionsID}
                 courseID={id}
+                checkPublishMode={checkPublishMode}
+                checkPublish={checkPublish}
                 quesBankID={topic._id}
                 title={topic.title}
                 index={index}
@@ -307,10 +324,13 @@ function TopicCard({
   courseID,
   quesBankID,
   isChange,
-  setChange
+  setChange,
+  checkPublish,
+  checkPublishMode
 }) {
   const deletCollection = () => {
-    fetch("/api/admin/deleteCourseCollection", {
+    if(checkPublishMode !== "publish")
+ {   fetch("/api/admin/deleteCourseCollection", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -330,6 +350,9 @@ function TopicCard({
         setChange(!isChange)
         setNotify(!isNotify)
       });
+    } else{
+      Notificate('info', 'Please switch to publish mode');
+    }
   };
   return (
     <Paper

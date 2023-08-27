@@ -83,7 +83,11 @@ exports.getCollectionName = async (req, res, next) => {
 }
   bank.map((task) => {
     if (getName.indexOf(task.title) == -1) {
-      send.push(task);
+     
+      if(task.level.easy >= 5 && task.level.medium >= 5 && task.level.hard >= 5 )   {
+        console.log(task)
+        send.push(task);}
+    
     }
   });
   send.push({ fileName: fileName });
