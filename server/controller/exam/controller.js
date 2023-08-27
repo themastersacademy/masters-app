@@ -7,7 +7,7 @@ const Goal = require("../../models/goal.js");
 exports.getExamInfo = async function (req, res) {
   try {
     const path = req.path;
-    console.log(path);
+
     const examId = path.split("/")[2];
     const examInfo = await exam.findOne({ _id: examId });
     if (!examInfo) {
@@ -31,9 +31,10 @@ exports.startExam = async function (req, res) {
   const examID = path.split("/")[2];
   const userID = req.session.userID;
   req.session.examID = examID;
+  const userName = req.session.userName
   console.log(examID);
   const State = await examState({ examID, userID });
-  // State.save();
+    State.save();
   try {
     const getQuestionCollection = await questionCollection.find();
     const examInfo = await exam.findOne({ _id: examID });
@@ -81,7 +82,7 @@ exports.startExam = async function (req, res) {
           examInfo.actualAnswerList = actualAnswerList;
           examInfo.studentsPerformance.push({
             id: userID,
-            name: "Avinash",
+            name: userName,
             startTime: Date.now(),
             studentAnswerList,
             bookmarkedQuestionList,
@@ -149,7 +150,7 @@ exports.startExam = async function (req, res) {
         examInfo.actualAnswerList = actualAnswerList;
         examInfo.studentsPerformance.push({
           id: userID,
-          name: "Avinash",
+          name: userName,
           startTime: Date.now(),
           studentAnswerList,
           bookmarkedQuestionList,

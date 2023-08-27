@@ -2,7 +2,7 @@ import { Stack, Paper, Button } from "@mui/material";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-
+import { useNavigate } from "react-router-dom";
 export default function ScoreCard({
   studentsPerformance,
   scorecard = [
@@ -34,7 +34,8 @@ export default function ScoreCard({
 }) 
 
 {
-console.log(studentsPerformance)
+ 
+
   return (
     <Paper
       elevation={MD ? 0 : 2}
@@ -74,8 +75,9 @@ console.log(studentsPerformance)
   );
 }
 
-function ScoreCardItem({ examName , score, totalMarks , date }) {
+function ScoreCardItem({ examName , examId, score, totalMarks , date }) {
   const scorePercentage = (score / totalMarks) * 100;
+  const navigator = useNavigate();
   return (
     <Paper
       sx={{
@@ -146,6 +148,9 @@ function ScoreCardItem({ examName , score, totalMarks , date }) {
               color: "#fff",
             },
             zIndex: "1",
+          }}
+          onClick={() =>{
+            navigator(`/exam/result?=${examId}`)
           }}
         >
           View Result
