@@ -119,9 +119,9 @@ exports.startExam = async function (req, res) {
 
       if (get.length === 0) {
         const studentAnswerList = [];
-        console.log(examInfo.questionCategory)
+        console.log(examInfo.questionCategory);
         examInfo.questionCategory.forEach((category) => {
-  console.log(category.questionList.length);
+          console.log(category.questionList.length);
           category.questionList.forEach((question) => {
             studentAnswerList.push(null);
           });
@@ -195,13 +195,13 @@ exports.getExamState = async function (req, res) {
   try {
     const getExam = await exam.findOne({ _id: examId });
 
-    const getQuestionCollection = await questionCollection.find();
+    // const getQuestionCollection = await questionCollection.find();
     const User = await user.findOne({ _id: userID });
     if (getExam && User) {
       const questionCategoryList = [];
       const questionCollections = [];
       const getQuestionID = [];
-      const actualAnswerList = [];
+      
 
       getExam.questionCategory.map((task) => {
         questionCategoryList.push({
@@ -211,23 +211,30 @@ exports.getExamState = async function (req, res) {
       });
       getExam.questionCategory.map((task) =>
         task.questionList.map(async (task) => {
-          getQuestionID.push(task.id.valueOf());
+          getQuestionID.push(task.id);
         })
       );
 
-      getQuestionCollection.map((task, index) => {
-        if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-          const options = [];
-          task.options.map((option, index) => {
-            options.push(option.option);
-          });
-          questionCollections.push({
-            question: task.title,
-            imageUrl: task.imageUrl,
-            options,
-          });
-        }
-      });
+     
+      async function getQuestion(task) {
+        const collectQues = await questionCollection.findOne({ _id: task });
+        const options = [];
+        collectQues.options.map((option, index) => {
+          options.push(option.option);
+        });
+        return {
+          question: collectQues.title,
+          imageUrl: collectQues.imageUrl,
+          type: collectQues.type,
+          options
+        };
+      }
+      for(let i = 0; i < getQuestionID.length; i++) {
+        const ques = await getQuestion(getQuestionID[i]);
+        questionCollections.push(ques);
+      }
+
+     
       let examDate = getExam.examDate.split("/");
       examDate = `${
         eval(examDate[0]) < 10 ? "0" + eval(examDate[0]) : eval(examDate[0])
@@ -452,16 +459,15 @@ exports.submitExam = async (req, res, next) => {
                   wrongQuestion += 1;
                 }
               }),
-              
-              console.log((correctQuestion / totalQuestion) * 100);
+                console.log((correctQuestion / totalQuestion) * 100);
               console.log(correctQuestion, wrongQuestion, totalQuestion);
-                topics.push({
-                  topicName: task.title,
-                  totalQuestion,
-                  correctQuestion,
-                  wrongQuestion,
-                  accuracy: (correctQuestion / totalQuestion) * 100,
-                });
+              topics.push({
+                topicName: task.title,
+                totalQuestion,
+                correctQuestion,
+                wrongQuestion,
+                accuracy: (correctQuestion / totalQuestion) * 100,
+              });
             });
             const examTopic = [];
             topics.map((task) => {
@@ -594,11 +600,11 @@ exports.submitExam = async (req, res, next) => {
                 wrongQuestion += 1;
               }
             }),
-            console.log(correctQuestion, wrongQuestion, totalQuestion);
-              topics.push({
-                topicName: task.title,
-                accuracy: (correctQuestion / totalQuestion) * 100,
-              });
+              console.log(correctQuestion, wrongQuestion, totalQuestion);
+            topics.push({
+              topicName: task.title,
+              accuracy: (correctQuestion / totalQuestion) * 100,
+            });
           });
 
           get[0].topics = topics;

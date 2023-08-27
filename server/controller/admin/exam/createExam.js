@@ -249,7 +249,8 @@ exports.createPracticesExam = async (req, res, next) => {
           questionID,
           finalQuestion
         );
-        console.log(questions);
+        
+       questions.map((task) => console.log(task))
         const questionCategory = [];
 
         questions.map((task, index) => {
@@ -497,5 +498,3 @@ exports.createMockExam = async (req, res, next) => {
     console.log(error);
   }
 };
-
-
