@@ -87,11 +87,15 @@ const goalSchema = mongoose.Schema(
             type: String,
             required: true,
           },
-          topicId:{
+          type:{
+            type:String,
+            require:true,
+          },
+          topicId:[{
             type: mongoose.Schema.Types.ObjectId,
             ref: "question-bank",
             required: true,
-          },
+          }],
           
           questionAttempted: {
             type: Number,

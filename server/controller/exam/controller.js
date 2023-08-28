@@ -34,7 +34,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName
 
   const State = await examState({ examID, userID });
-   // State.save();
+   //   State.save();
   try {
     const getQuestionCollection = await questionCollection.find();
     const examInfo = await exam.findOne({ _id: examID });
@@ -366,8 +366,12 @@ exports.submitExam = async (req, res, next) => {
     const examID = req.session.examID;
     const date = new Date();
     if (examID) {
+      
       const examInfo = await exam.findOne({ _id: examID });
+
       if (examInfo.type == "practice" || examInfo.type == "mock") {
+ 
+
         const get = examInfo.studentsPerformance.filter(
           (task) => task.id.valueOf() == userID.valueOf()
         );
@@ -417,7 +421,9 @@ exports.submitExam = async (req, res, next) => {
             courseId: examInfo.courseId,
             userId: userID,
           });
+        
           if (goal) {
+            console.log(goal)
             const questionCategoryList = [];
             examInfo.questionCategory.map((task) =>
               questionCategoryList.push({
@@ -428,7 +434,7 @@ exports.submitExam = async (req, res, next) => {
             const topics = [];
             let countLength = 0;
             questionCategoryList.map((task, index) => {
-              console.log(task);
+                
               let actualAnswerList = examInfo.actualAnswerList;
               let studentAnswerList = get[0].studentAnswerList;
               let correctQuestion = 0;
@@ -471,7 +477,7 @@ exports.submitExam = async (req, res, next) => {
                 wrongQuestion,
                 accuracy: (correctQuestion / totalQuestion) * 100,
               });
-              console.log(topics)
+             
             });
             const examTopic = [];
             topics.map((task) => {
@@ -480,7 +486,10 @@ exports.submitExam = async (req, res, next) => {
                 accuracy: task.accuracy,
               });
               goal.topics.map((task1) => {
+             
+               
                 if (task.topicName == task1.topicName) {
+                  
                   task1.questionAttempted +=
                     task.correctQuestion + task.wrongQuestion;
                   task1.questionTotal += task.totalQuestion;
@@ -491,10 +500,13 @@ exports.submitExam = async (req, res, next) => {
                   task1.questionWrong += task.wrongQuestion;
                   task1.accuracy =
                     (task1.questionCorrect / task1.questionTotal) * 100;
+                   
                 }
               });
             });
           
+
+
             get[0].topics = examTopic;
             
             examInfo.studentsPerformance.map((task) => {

@@ -25,6 +25,7 @@ export default function Layout() {
   const [getGoalId, setGoalId] = useState("");
   const [isChange, setChange] = useState(false);
   const [selectGoal, setSelectGoal] = useState("");
+  const [analysis,setAnalysis] = useState('')
   const [studentsPerformance,setStudentsPerformance] = useState([])
   const [details, setDetails] = useState({
     userID: id,
@@ -61,8 +62,9 @@ export default function Layout() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "ok") {
-         
-         setStudentsPerformance(data.studentsPerformance)
+         console.log(data)
+         setStudentsPerformance(data.studentsPerformance.score)
+         setAnalysis(data.studentsPerformance.Analysis)
           setUser(data.message);
           setGoal(data.data);
           if (data.topic.courseId !== "") setSelectGoal(data.topic);
@@ -163,6 +165,7 @@ export default function Layout() {
           createPracticesExam={createPracticesExam}
           setSelectGoal={setSelectGoal}
           details={details}
+          analysis={analysis}
           setDetails={setDetails}
           Notificate={Notifications}
           studentsPerformance={studentsPerformance}
@@ -174,6 +177,7 @@ export default function Layout() {
           user={user}
           goal={goal}
           id={id}
+          analysis={analysis}
           setGoalId={setGoalId}
           addGoal={addGoal}
           isChange={isChange}
@@ -213,7 +217,8 @@ function DTView({
   setGoalId,
   createPracticesExam,
   createMockExam,
-  studentsPerformance
+  studentsPerformance,
+  analysis
 }) {
   return (
     <Stack
@@ -254,7 +259,7 @@ function DTView({
               setSelectGoal={setSelectGoal}
               id={id}
             />
-            {selectGoal !== "" ? (
+            {selectGoal  && 
               <TestCard
                 selectGoal={selectGoal}
                 setSelectGoal={setSelectGoal}
@@ -262,7 +267,7 @@ function DTView({
                 createMockExam={createMockExam}
                 createPracticesExam={createPracticesExam}
               />
-            ) : null}
+             }
           </Grid>
           <Grid item xs={6} paddingLeft="10px">
             <InstitutionCard
@@ -272,8 +277,8 @@ function DTView({
               Notificate={Notificate}
             />
 
-           {studentsPerformance.length !== 0 ? <ScoreCard  studentsPerformance={studentsPerformance}/>: null }              
-         {  studentsPerformance.length !==0 && <AnalysisCard studentsPerformance={studentsPerformance} />}
+          { studentsPerformance.length !== 0 &&<ScoreCard  studentsPerformance={studentsPerformance}/> }              
+         {  analysis !=='' && <AnalysisCard analysis={analysis} />}
           </Grid>
         </Grid>
       </Stack>
@@ -323,7 +328,8 @@ function MoView({
   setSelectGoal,
   createPracticesExam,
   setGoalId,
-  studentsPerformance
+  studentsPerformance,
+  analysis
 }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -407,7 +413,7 @@ function MoView({
       {studentsPerformance  && <ScoreCard MD={true}  studentsPerformance={studentsPerformance} />  }
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-       { studentsPerformance.length !== 0 ? <AnalysisCard MD={true} studentsPerformance={studentsPerformance} /> : null}
+       { analysis !== '' && <AnalysisCard MD={true} analysis={analysis} /> }
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
         <InstitutionCard

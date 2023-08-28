@@ -19,17 +19,17 @@ ChartJS.register(
   //   Legend
 );
 
-export default function AnalysisCard({ MD ,studentsPerformance}) {
+export default function AnalysisCard({ MD ,analysis}) {
 
  const subName = () =>{
   const list = []
-  studentsPerformance.map((task) =>list.push(task.examName))
+  analysis.topicName.map((task) =>list.push(task))
   return list
 }
 
 const subMark = () =>{
   const list = []
-  studentsPerformance.map((task) =>list.push(task.score))
+  analysis.topicAnalysis.map((task) =>list.push(task))
   return list
 }
  

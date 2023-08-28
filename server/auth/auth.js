@@ -58,7 +58,7 @@ exports.isUser = (req, res, next) => {
 exports.userVerify = (req, res, next) => {
   if (req.session.isAuth) {
     if (req.session.userRoll == "student") next();
-    if (req.session.userRoll == "teacher")
+    if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" )
       res.redirect(`/admin/dashboard?=${req.session.userID}`);
   } else {
     res.redirect("/login");
@@ -75,7 +75,7 @@ exports.userCreate = (req, res, next) => {
 exports.isLogin = (req, res, next) => {
   if (req.session.isAuth) {
     if (req.session.examID) res.redirect(`/exam/state?=${req.session.examID}`);
-    else if (req.session.userRoll == "teacher")
+    else if (req.session.userRoll == "teacher" || req.session.userRoll == "admin")
       res.redirect(`/admin/dashboard?=${req.session.userID}`);
     else res.redirect(`/?=${req.session.userID}`);
   } else {
@@ -86,7 +86,7 @@ exports.isLogin = (req, res, next) => {
 exports.isRoll = async (req, res, next) => {
   try {
     if (req.session.isAuth) {
-      if (req.session.userRoll == "teacher") next();
+      if (req.session.userRoll == "teacher" || req.session.userRoll == "admin") next();
       else res.redirect(`/?=${req.session.userID}`);
     } else {
       res.redirect("/login");
@@ -102,13 +102,13 @@ exports.examInfo = async (req, res, next) => {
       console.log(req.session.userID);
       const State = await examState.findOne({ userID: req.session.userID });
       if (State) {
-        console.log("call");
+     
         req.session.examID = State.examID;
         res.redirect(`/exam/state?=${req.session.examID}`);
       } else if (req.session.examID) {
         res.redirect(`/exam/state?=${req.session.examID}`);
       } else {
-        console.log("ssssssss");
+        
         next();
       }
     } else {

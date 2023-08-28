@@ -114,21 +114,32 @@ exports.chooseGoal = async (req, res, next) => {
   if (user) {
     goal.map((task) => {
       const collectTopic = [];
+      const getID = []
       task.collections.map((task) => {
-        task.topic.map((task) =>
-          collectTopic.push({ topicName: task.title, topicId: task.id })
+
+        task.topic.map((task1) =>
+        {
+          if( task.type == "group")  getID.push(task1.id)     
+        }
         );
+        collectTopic.push({
+          type: task.type,
+          topicName: task.type == "group" ? task.title : task.topic[0].title,
+          topicId: task.type == "group" ? getID : [task.topic[0].id],
+        })
       });
+      
       const createGoal = Goal({
         courseName: task.title,
         courseId: task._id,
         userId: user._id,
         topics: collectTopic,
       });
+    
       createGoal.save();
       user.goal.push(createGoal._id);
     });
-
+  
     user.save();
 
     res.json({ status: "success", message: "Save the details successfully" });
@@ -205,8 +216,23 @@ exports.getUserData = async (req, res, next) => {
       const send = [];
       const studentsPerformance = [];
       getUserGoal.map((task, index) => {
-        console.log(task)
-        if (index == 0) studentsPerformance.push(task.examHistory);
+        console.log(task);
+        const topicName = []
+        const topicAnalysis = []
+        task.topics.map(task => {
+          topicName.push(task.topicName)
+          topicAnalysis.push(task.accuracy)
+        })
+        if (index == 0) studentsPerformance.push(
+        {  
+          score:task.examHistory,
+          Analysis:{
+            topicName,
+            topicAnalysis
+          }
+        }
+
+          );
         check.push(task.courseId.valueOf());
         send.push({
           courseName: task.courseName,
@@ -222,7 +248,7 @@ exports.getUserData = async (req, res, next) => {
         topic.courseId = get[0]._id;
         topic.courseName = get[0].title;
         get[0].collections.map((collection, index) => {
-          console.log(collection);
+       
           if (collection.type == "topic") {
             collection.topic.map((task) => {
               if (
@@ -330,7 +356,7 @@ exports.getGoal = async (req, res, next) => {
 
 exports.addGoal = async (req, res, next) => {
   const { id, goal } = req.body;
-
+console.log('goal call');
   try {
     const user = await User.findOne({ _id: id });
     const course = await Course.find();
@@ -340,26 +366,32 @@ exports.addGoal = async (req, res, next) => {
       const getCourse = course.filter(
         (task) => getGoalID.indexOf(task._id.valueOf()) !== -1
       );
-      console.log(getCourse);
+
       getCourse.map(async (task) => {
         const collectTopic = [];
         task.collections.map((task) => {
-          task.topic.map((task) =>
-            collectTopic.push({ topicName: task.title, topicId: task.id })
-          );
+          const getID = [];
+          
+          task.topic.map((task) => getID.push(task.id));
+          collectTopic.push({
+            type: task.type,
+            topicName: task.type == "group" ? task.title : task.topic[0].title,
+            topicId: getID,
+          });
         });
+       
         const createGoal = await Goal({
           courseName: task.title,
           courseId: task._id,
           userId: user._id,
           topics: collectTopic,
         });
-
-        createGoal.save();
+console.log(createGoal)
+        // createGoal.save();
         user.goal.push(createGoal._id);
       });
-      user.save();
-      res.json({ status: "success", message: "Add goal successfully" });
+      // user.save();
+      // res.json({ status: "success", message: "Add goal successfully" });
     }
   } catch (error) {
     res.json({ status: "error", message: "something wrong" });

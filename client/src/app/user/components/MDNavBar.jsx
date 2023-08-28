@@ -11,7 +11,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
     setOpen(open);
   };
 useEffect(()=>{
-  console.log(selectGoal)
+ 
 },[selectGoal])
   return (
     <Stack
