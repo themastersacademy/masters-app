@@ -32,9 +32,9 @@ exports.startExam = async function (req, res) {
   const userID = req.session.userID;
   req.session.examID = examID;
   const userName = req.session.userName
-  console.log(examID);
+
   const State = await examState({ examID, userID });
-    State.save();
+   // State.save();
   try {
     const getQuestionCollection = await questionCollection.find();
     const examInfo = await exam.findOne({ _id: examID });
@@ -120,9 +120,9 @@ exports.startExam = async function (req, res) {
 
       if (get.length === 0) {
         const studentAnswerList = [];
-        console.log(examInfo.questionCategory)
+        console.log(examInfo.questionCategory);
         examInfo.questionCategory.forEach((category) => {
-  console.log(category.questionList.length);
+          console.log(category.questionList.length);
           category.questionList.forEach((question) => {
             studentAnswerList.push(null);
           });
@@ -196,13 +196,13 @@ exports.getExamState = async function (req, res) {
   try {
     const getExam = await exam.findOne({ _id: examId });
 
-    const getQuestionCollection = await questionCollection.find();
+   
     const User = await user.findOne({ _id: userID });
     if (getExam && User) {
       const questionCategoryList = [];
       const questionCollections = [];
       const getQuestionID = [];
-      const actualAnswerList = [];
+      
 
       getExam.questionCategory.map((task) => {
         questionCategoryList.push({
@@ -212,23 +212,31 @@ exports.getExamState = async function (req, res) {
       });
       getExam.questionCategory.map((task) =>
         task.questionList.map(async (task) => {
-          getQuestionID.push(task.id.valueOf());
+          getQuestionID.push(task.id);
         })
       );
 
-      getQuestionCollection.map((task, index) => {
-        if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-          const options = [];
-          task.options.map((option, index) => {
-            options.push(option.option);
-          });
-          questionCollections.push({
-            question: task.title,
-            imageUrl: task.imageUrl,
-            options,
-          });
-        }
-      });
+     
+      async function getQuestion(task) {
+        const collectQues = await questionCollection.findOne({ _id: task });
+        const options = [];
+        collectQues.options.map((option, index) => {
+          options.push(option.option);
+        });
+        return {
+          question: collectQues.title,
+          imageUrl: collectQues.imageUrl,
+          type: collectQues.type,
+          options
+        };
+      }
+      for(let i = 0; i < getQuestionID.length; i++) {
+        console.log(getQuestionID[i])
+        const ques = await getQuestion(getQuestionID[i]);
+        questionCollections.push(ques);
+      }
+console.log(questionCollections);
+     
       let examDate = getExam.examDate.split("/");
       examDate = `${
         eval(examDate[0]) < 10 ? "0" + eval(examDate[0]) : eval(examDate[0])
@@ -240,8 +248,8 @@ exports.getExamState = async function (req, res) {
         (task) => task.id.valueOf() == User._id.valueOf()
       );
 
-      getExam.save();
-      // console.log(getExam);
+       getExam.save();
+    
       if (studentPerform[0].status == "started") {
         const examInfoData = {
           examTitle: getExam.title,
@@ -282,7 +290,7 @@ exports.getExamState = async function (req, res) {
           ],
         };
 
-        return res.json(examInfoData);
+         return res.json(examInfoData);
       } else {
         if (studentPerform[0].status == "submitted")
           return res.json({
@@ -317,7 +325,7 @@ exports.examStateUpdate = async (req, res, next) => {
   try {
     const User = await user.findOne({ _id: userID });
     const examState = await exam.findOne({ _id: examID });
-    // console.log(examState);
+   
     if (User) {
       if (examState) {
         // if (windowCloseWarning >= 3 || windowResizedWarning >= 3) {
@@ -420,6 +428,7 @@ exports.submitExam = async (req, res, next) => {
             const topics = [];
             let countLength = 0;
             questionCategoryList.map((task, index) => {
+              console.log(task);
               let actualAnswerList = examInfo.actualAnswerList;
               let studentAnswerList = get[0].studentAnswerList;
               let correctQuestion = 0;
@@ -453,16 +462,16 @@ exports.submitExam = async (req, res, next) => {
                   wrongQuestion += 1;
                 }
               }),
-              
-              console.log((correctQuestion / totalQuestion) * 100);
-              console.log(correctQuestion, wrongQuestion, totalQuestion);
-                topics.push({
-                  topicName: task.title,
-                  totalQuestion,
-                  correctQuestion,
-                  wrongQuestion,
-                  accuracy: (correctQuestion / totalQuestion) * 100,
-                });
+                
+            
+              topics.push({
+                topicName: task.title,
+                totalQuestion,
+                correctQuestion,
+                wrongQuestion,
+                accuracy: (correctQuestion / totalQuestion) * 100,
+              });
+              console.log(topics)
             });
             const examTopic = [];
             topics.map((task) => {
@@ -485,7 +494,9 @@ exports.submitExam = async (req, res, next) => {
                 }
               });
             });
+          
             get[0].topics = examTopic;
+            
             examInfo.studentsPerformance.map((task) => {
               if (task.id.valueOf() == userID.valueOf()) {
                 task = get[0];
@@ -505,7 +516,7 @@ exports.submitExam = async (req, res, next) => {
             goal.save();
             examInfo.save();
             const state = await examState.deleteOne({ examID, userID });
-            console.log(state);
+          
             delete req.session.examID;
             res.json({
               status: "success",
@@ -595,11 +606,11 @@ exports.submitExam = async (req, res, next) => {
                 wrongQuestion += 1;
               }
             }),
-            console.log(correctQuestion, wrongQuestion, totalQuestion);
-              topics.push({
-                topicName: task.title,
-                accuracy: (correctQuestion / totalQuestion) * 100,
-              });
+              console.log(correctQuestion, wrongQuestion, totalQuestion);
+            topics.push({
+              topicName: task.title,
+              accuracy: (correctQuestion / totalQuestion) * 100,
+            });
           });
 
           get[0].topics = topics;

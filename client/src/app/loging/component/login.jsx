@@ -71,7 +71,7 @@ function Login({controlNotification}) {
                 >
                   <Stack direction="column" spacing="10px">
                     <h1>Login</h1>
-                 
+                 <p  >Create an account and <span style ={{color:'blue'}} onClick={()=>navigator('/signup')} > sign up </span> </p>
                   </Stack>
                   <Stack direction="column" spacing="10px">
                     <label htmlFor="">Email</label>

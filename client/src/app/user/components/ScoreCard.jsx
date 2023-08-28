@@ -134,6 +134,9 @@ function ScoreCardItem({ examName , examId, score, totalMarks , date }) {
         </Stack>
         <Button
           variant="contained"
+          onClick={() => {
+            navigator(`/exam/result?=${examId}`);
+          }}
           sx={{
             textTransform: "none",
             backgroundColor:
@@ -149,9 +152,7 @@ function ScoreCardItem({ examName , examId, score, totalMarks , date }) {
             },
             zIndex: "1",
           }}
-          onClick={() =>{
-            navigator(`/exam/result?=${examId}`)
-          }}
+       
         >
           View Result
         </Button>

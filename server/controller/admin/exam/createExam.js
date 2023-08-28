@@ -170,6 +170,7 @@ exports.createPracticesExam = async (req, res, next) => {
     const user = await User.findOne({ _id: id });
     if (user) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
+     
       if (course) {
         const check = [];
         const collectSelectTopic = [];
@@ -178,57 +179,85 @@ exports.createPracticesExam = async (req, res, next) => {
         selectGoal.topic.map((task) => {
           if (task.isSelect == true) {
             check.push(task.id.valueOf());
-
-            questionID.push({
-              title: task.title,
-              id: task.id,
-              bankID: task.bankID,
-              type: task.type,
-              easy: [],
-              medium: [],
-              hard: [],
-              requireEasy: 0,
-              requireMedium: 0,
-              requireHard: 0,
-            });
-            finalQuestion.push({
-              title: task.title,
-              id: task.id,
-              bankID: task.bankID,
-              type: task.type,
-              questions: [],
-            });
+       
+            // questionID.push({
+            //   title: task.title,
+            //   id: task.id,
+            //   bankID: task.bankID,
+            //   type: task.type,
+            //   easy: [],
+            //   medium: [],
+            //   hard: [],
+            //   requireEasy: 0,
+            //   requireMedium: 0,
+            //   requireHard: 0,
+            // });
+            // finalQuestion.push({
+            //   title: task.title,
+            //   id: task.id,
+            //   bankID: task.bankID,
+            //   type: task.type,
+            //   questions: [],
+            // });
           }
         });
-        course.collections.map((task) =>
-          task.topic.map((task) => {
-            if (check.indexOf(task.id.valueOf()) !== -1)
-              collectSelectTopic.push(task);
-          })
+
+        let countGroup = 0
+        const countLenth =[]
+        course.collections.map((task) =>{
+      
+         
+            if (check.indexOf(task._id.valueOf()) !== -1)
+             { collectSelectTopic.push(task);
+               if(task.type == 'group') countGroup++
+              task.topic.map(task1 =>{
+                countLenth.push(task)
+              questionID.push({
+                title: task.type == 'group' ? task.title : task1.title,
+                bankID: task1.id,
+                type: task.type,
+                easy: [],
+                medium: [],
+                hard: [],
+                requireEasy: 0,
+                requireMedium: 0,
+                requireHard: 0,
+              });
+              finalQuestion.push({
+                title: task.type == 'group' ? task.title : task1.title,
+                bankID: task1.id,
+                type: task.type,
+                questions: [],
+                index: countGroup -1
+              });
+            })}
+          }
         );
 
-        if (value.value % check.length == 0) {
-          for (let i = 0; i < check.length; i++) {
+     
+
+        if (value.value % countLenth.length == 0) {
+          for (let i = 0; i < countLenth.length ; i++) {
             if (value.selectLevel == "easy")
-              questionID[i].requireEasy = value.value / check.length;
+              questionID[i].requireEasy = value.value / countLenth.length ;
             if (value.selectLevel == "medium")
-              questionID[i].requireMedium = value.value / check.length;
+              questionID[i].requireMedium = value.value / countLenth.length 
             if (value.selectLevel == "hard")
-              questionID[i].requireHard = value.value / check.length;
+              questionID[i].requireHard = value.value / countLenth.length 
           }
         } else {
-          const actualValue = value.value % check.length;
+          const actualValue = value.value % countLenth.length;
 
-          for (let i = 0; i < check.length; i++) {
+          for (let i = 0; i < countLenth.length ; i++) {
             if (value.selectLevel == "easy")
               questionID[i].requireEasy =
-                (value.value - actualValue) / check.length;
+                (value.value - actualValue) / countLenth.length ;
             if (value.selectLevel == "medium")
               questionID[i].requireMedium =
-                (value.value - actualValue) / check.length;
+                (value.value - actualValue) / countLenth.length ;
             if (value.selectLevel == "hard")
               questionID[i].requireHard =
-                (value.value - actualValue) / check.length;
+                (value.value - actualValue) / countLenth.length ;
           }
           for (let j = 0; j < actualValue; j++) {
             if (value.selectLevel == "easy")
@@ -239,9 +268,9 @@ exports.createPracticesExam = async (req, res, next) => {
               questionID[j].requireHard = 1 + questionID[j].requireMedium;
           }
         }
+ 
         /// get questions
         const getBankID = [];
-
         questionID.map((task) => getBankID.push(task.bankID.valueOf()));
 
         const questions = await createPracticeExamQues(
@@ -249,10 +278,45 @@ exports.createPracticesExam = async (req, res, next) => {
           questionID,
           finalQuestion
         );
-        console.log(questions);
-        const questionCategory = [];
+        const questionGroup = [];
+        const questionGroupCollectionArray = [];
+        const questionGroupCollection = [];
+        for (let i = 0; i < countGroup; i++) {
+          questionGroupCollectionArray.push([]);
+        }
+        questions.filter((task) => {
+          if (task.type == "group") {
+            questionGroup.push(task);
+          }
+        });
+        questionGroup.map((task) => {
+      
+          questionGroupCollectionArray[task.index].push(task);
+        });
+        questionGroupCollectionArray.map((task, index) => {
+          task.map((task1, index1) => {
+            if (index1 == 0) {
+              questionGroupCollection.push(task1);
+            } else {
+              questionGroupCollection[index].questions = [
+                ...questionGroupCollection[index].questions,
+                ...task1.questions,
+              ];
+            }
+          });
+        });
+ 
+      
 
-        questions.map((task, index) => {
+        questions.filter((task) => {
+          if (task.type == "topic") {
+            questionGroupCollection.push(task);
+          }
+
+        });
+        const questionCategory =[]
+        questionGroupCollection.map((task, index) => {
+         
           const questionList = [];
           task.questions.map((task) => questionList.push({ id: task.id }));
           questionCategory.push({
@@ -261,9 +325,16 @@ exports.createPracticesExam = async (req, res, next) => {
             questionList,
           });
         });
+
+      console.log(questionCategory)
+        
         const countPractice = goal.examHistory.filter(
           (task) => task.type == "practice"
         );
+
+
+
+
         const durationPerQuestion = 90; //seconds;
         //examDuration = "00:00:00"
         const questionCount = value.value;
@@ -325,8 +396,7 @@ exports.createMockExam = async (req, res, next) => {
         const collectSelectTopic = [];
         const questionID = [];
         const finalQuestion = [];
-        const indexValue = [];
-        const questionType = [];
+     
         let countGroup = 0;
         course.collections.map((task,index) => {
           
@@ -355,43 +425,14 @@ exports.createMockExam = async (req, res, next) => {
               index: countGroup -1,
             });
             check.push(task1.id.valueOf());
-            indexValue.push(task1.id.valueOf());
+         
           });
 
-          //const collect = [];
-          // task.topic.map((task1) => {
-
-          //   collect.push({
-          //     requireEasy: task1.level.easy,
-          //     requireMedium: task1.level.medium,
-          //     requireHard: task1.level.hard,
-          //     easy: [],
-          //     medium: [],
-          //     hard: [],
-          //   })
-          //   check.push(task1.id.valueOf());
-          //   }
-          // );
-
-          // questionID.push({
-          //   title: task.type == "group" ? task.title : task.topic[0].title,
-          //   id: task.id,
-          //   collect,
-          //   type: task.type,
-
-          // });
-          // finalQuestion.push({
-          //   title: task.type == "group" ? task.title : task.topic[0].title,
-          //   id: task.id,
-          //   bankID: task.bankID,
-          //   type: task.type,
-          //   questions: [],
-          // });
         });
 
         const getBankID = [];
 
-        //   questionID.map((task) => getBankID.push(task.bankID.valueOf()));
+       
 
         const questions = await createMockExamQues(
           check,
@@ -410,7 +451,7 @@ exports.createMockExam = async (req, res, next) => {
           }
         });
         questionGroup.map((task) => {
-          console.log(task.index);
+      
           questionGroupCollectionArray[task.index].push(task);
         });
         questionGroupCollectionArray.map((task, index) => {
@@ -497,5 +538,3 @@ exports.createMockExam = async (req, res, next) => {
     console.log(error);
   }
 };
-
-
