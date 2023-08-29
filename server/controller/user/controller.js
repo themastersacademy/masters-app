@@ -122,11 +122,14 @@ exports.chooseGoal = async (req, res, next) => {
           if( task.type == "group")  getID.push(task1.id)     
         }
         );
-        collectTopic.push({
-          type: task.type,
-          topicName: task.type == "group" ? task.title : task.topic[0].title,
-          topicId: task.type == "group" ? getID : [task.topic[0].id],
-        })
+        collectTopic.push(
+          {
+            type: task.type,
+            topicName: task.type == "group" ? task.title : task.topic[0].title,
+            topicID: task.topicID,
+            bankID: task.type == "group" ? getID : [task.topic[0].id]
+          }
+        )
       });
       
       const createGoal = Goal({
@@ -208,21 +211,75 @@ exports.getUserData = async (req, res, next) => {
         totalMArk: "",
       };
       user.goal.map((task) => check.push(task.valueOf()));
-
+     // get Goal
       const getUserGoal = goal.filter(
         (task) => check.indexOf(task._id.valueOf()) !== -1
       );
       check = [];
       const send = [];
       const studentsPerformance = [];
+      const getCourseID = [getUserGoal[0].courseId.valueOf()]
+
+      //get Course 
+      const get = course.filter(
+        (task) => getCourseID.indexOf(task._id.valueOf()) !== -1
+      )
+  const getTopicID =[]
+  const createTopic = []
+
+  // get course collection topicID
+      get[0].collections.map(task => getTopicID.push(task.topicID))
+
       getUserGoal.map((task, index) => {
-        console.log(task);
+        
+        task.topics.map(task => {
+      if(getTopicID.indexOf(task.topicID) !== -1)
+       {   
+        createTopic.push(task.topicID)
+        }
+       
+      })
+    })
+
+    //create new topic in goal
+    const getCheck = []
+    get[0].collections.map(task => {
+       if(createTopic.indexOf(task.topicID) == -1 && getCheck.indexOf(task.topicID) == -1)
+       {
+        const getID = [];
+        
+          task.topic.map((task) => getID.push(task.id));
+          getUserGoal[0].topics.push({
+            type: task.type,
+            topicName: task.type == "group" ? task.title : task.topic[0].title,
+            topicID: task.topicID,
+            bankID:getID
+          });
+          getCheck.push(task.topicID)
+        
+       }
+    })
+   
+
+
+   
+
+      getUserGoal.map((task, index) => {
+        
         const topicName = []
         const topicAnalysis = []
+     
         task.topics.map(task => {
+          if(getTopicID.indexOf(task.topicID) !== -1)
+       {   
+        createTopic.push(task.topicID)
           topicName.push(task.topicName)
           topicAnalysis.push(task.accuracy)
+        }
+        
+
         })
+        
         if (index == 0) studentsPerformance.push(
         {  
           score:task.examHistory,
@@ -240,10 +297,9 @@ exports.getUserData = async (req, res, next) => {
           courseId: task.courseId,
         });
       });
-      const get = course.filter(
-        (task) => check.indexOf(task._id.valueOf()) !== -1
-      );
 
+ 
+      
       if (get.length > 0) {
         topic.courseId = get[0]._id;
         topic.courseName = get[0].title;
@@ -309,6 +365,7 @@ exports.getUserData = async (req, res, next) => {
           (topic.totalMArk = get[0].mark * calcTolalQues);
       }
 
+      getUserGoal[0].save()
       res.json({
         status: "ok",
         message: user,
@@ -319,6 +376,7 @@ exports.getUserData = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.json({ staus: "error", message: "something wrong" });
   }
 };
@@ -376,7 +434,7 @@ console.log('goal call');
           collectTopic.push({
             type: task.type,
             topicName: task.type == "group" ? task.title : task.topic[0].title,
-            topicId: getID,
+            topicID: task.topicID,bankID:getID
           });
         });
        
