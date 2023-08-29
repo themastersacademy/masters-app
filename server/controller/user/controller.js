@@ -208,18 +208,19 @@ exports.getUserData = async (req, res, next) => {
         totalMArk: "",
       };
       user.goal.map((task) => check.push(task.valueOf()));
-
       const getUserGoal = goal.filter(
         (task) => check.indexOf(task._id.valueOf()) !== -1
-      );
+      ) 
       check = [];
       const send = [];
       const studentsPerformance = [];
+
       getUserGoal.map((task, index) => {
-        console.log(task);
+       
         const topicName = []
         const topicAnalysis = []
         task.topics.map(task => {
+          
           topicName.push(task.topicName)
           topicAnalysis.push(task.accuracy)
         })
@@ -233,6 +234,7 @@ exports.getUserData = async (req, res, next) => {
         }
 
           );
+          
         check.push(task.courseId.valueOf());
         send.push({
           courseName: task.courseName,
@@ -377,8 +379,8 @@ console.log('goal call');
             type: task.type,
             topicName: task.type == "group" ? task.title : task.topic[0].title,
             topicId: getID,
-          });
-        });
+          })
+        })
        
         const createGoal = await Goal({
           courseName: task.title,
