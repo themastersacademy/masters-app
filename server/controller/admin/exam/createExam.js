@@ -179,26 +179,7 @@ exports.createPracticesExam = async (req, res, next) => {
         selectGoal.topic.map((task) => {
           if (task.isSelect == true) {
             check.push(task.id.valueOf());
-       
-            // questionID.push({
-            //   title: task.title,
-            //   id: task.id,
-            //   bankID: task.bankID,
-            //   type: task.type,
-            //   easy: [],
-            //   medium: [],
-            //   hard: [],
-            //   requireEasy: 0,
-            //   requireMedium: 0,
-            //   requireHard: 0,
-            // });
-            // finalQuestion.push({
-            //   title: task.title,
-            //   id: task.id,
-            //   bankID: task.bankID,
-            //   type: task.type,
-            //   questions: [],
-            // });
+
           }
         });
 
@@ -326,7 +307,8 @@ exports.createPracticesExam = async (req, res, next) => {
           });
         });
 
-      console.log(questionCategory)
+        
+     
         
         const countPractice = goal.examHistory.filter(
           (task) => task.type == "practice"
@@ -359,8 +341,8 @@ exports.createPracticesExam = async (req, res, next) => {
               : date.getMonth()
           }/${date.getFullYear()}`,
           examDuration,
-          mark: 4,
-          negativeMark: 1,
+          mark: course.mark,
+          negativeMark: course.negativeMark,
         });
      
          createExam.save();
@@ -389,7 +371,7 @@ exports.createMockExam = async (req, res, next) => {
 
     if (user) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
-      const collection = await questionCollection.find();
+    
 
       if (course) {
         const check = [];
@@ -430,7 +412,7 @@ exports.createMockExam = async (req, res, next) => {
 
         });
 
-        const getBankID = [];
+   
 
        
 
@@ -475,16 +457,7 @@ exports.createMockExam = async (req, res, next) => {
        });
       
 
-        //  questionGroup.filter ((task) => {
-        //  if(questionGroup.indexOf(task.index) !== -1) {
-        //   const index = questionGroup.indexOf(task.index);
-
-        
-        //  }
-
-        // })
-
-        // console.log(questionGroup);  
+    
         
 
           const questionCategory = [];
@@ -499,7 +472,7 @@ exports.createMockExam = async (req, res, next) => {
             questionList,
           });
         });
-        console.log(questionCategory);
+       
         const countMock = goal.examHistory.filter(
           (task) => task.type == "mock"
         );

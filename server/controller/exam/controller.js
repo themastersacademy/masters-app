@@ -36,7 +36,7 @@ exports.startExam = async function (req, res) {
   const State = await examState({ examID, userID });
    //   State.save();
   try {
-    const getQuestionCollection = await questionCollection.find();
+    
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
       return res.status(404).send("exam not found");
@@ -68,16 +68,31 @@ exports.startExam = async function (req, res) {
           const getQuestionID = [];
           examInfo.questionCategory.map((task) =>
             task.questionList.map(async (task) => {
-              getQuestionID.push(task.id.valueOf());
+              getQuestionID.push(task.id);
             })
           );
-          getQuestionCollection.map((task, index) => {
-            if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-              task.options.map((option, index) => {
-                if (option.isCorrect) actualAnswerList.push(index);
-              });
-            }
-          });
+      //generate Actual Answer
+          const getQuesAnswer = async (task) =>{
+            const getQues = await questionCollection.findOne({_id:task})
+            let  answer = ''
+            getQues.options.map((option, index1) => {
+              if (option.isCorrect == true) {
+                
+               
+                answer = index1 
+                }
+  
+            })
+            return answer
+          } 
+          for(let i=0 ;i<getQuestionID.length;i++)
+          {
+          
+            const get =  await getQuesAnswer(getQuestionID[i])
+            
+            actualAnswerList.push(get)
+          }
+
           examInfo.totalQuestion = totalQuestion;
           examInfo.actualAnswerList = actualAnswerList;
           examInfo.studentsPerformance.push({
@@ -137,16 +152,33 @@ exports.startExam = async function (req, res) {
         const getQuestionID = [];
         examInfo.questionCategory.map((task) =>
           task.questionList.map(async (task) => {
-            getQuestionID.push(task.id.valueOf());
+            getQuestionID.push(task.id);
           })
         );
-        getQuestionCollection.map((task, index) => {
-          if (getQuestionID.indexOf(task._id.valueOf()) !== -1) {
-            task.options.map((option, index) => {
-              if (option.isCorrect) actualAnswerList.push(index);
-            });
-          }
-        });
+     
+
+          //generate Actual Answer
+        const getQuesAnswer = async (task) =>{
+          const getQues = await questionCollection.findOne({_id:task})
+          let  answer = ''
+          getQues.options.map((option, index1) => {
+            if (option.isCorrect == true) {
+              
+             
+              answer = index1 
+              }
+
+          })
+          return answer
+        } 
+        for(let i=0 ;i<getQuestionID.length;i++)
+        { 
+          const get =  await getQuesAnswer(getQuestionID[i])    
+          actualAnswerList.push(get)
+        }
+
+
+
         examInfo.actualAnswerList = actualAnswerList;
         examInfo.studentsPerformance.push({
           id: userID,
@@ -169,6 +201,7 @@ exports.startExam = async function (req, res) {
       }
     }
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -216,6 +249,7 @@ exports.getExamState = async function (req, res) {
         })
       );
 
+     // generate  questions 
      
       async function getQuestion(task) {
         const collectQues = await questionCollection.findOne({ _id: task });
@@ -235,7 +269,7 @@ exports.getExamState = async function (req, res) {
         const ques = await getQuestion(getQuestionID[i]);
         questionCollections.push(ques);
       }
-console.log(questionCollections);
+console.log(questionCollections)
      
       let examDate = getExam.examDate.split("/");
       examDate = `${

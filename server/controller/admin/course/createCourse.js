@@ -1,8 +1,9 @@
 const Course = require("../../../models/course.js");
-
+const crypto = require("crypto");
 exports.createCourse = async (req, res, next) => {
   const alreadyExist = await Course.findOne({ title: req.body.title });
   if (!alreadyExist) {
+    
     const create = await Course({
       title: req.body.title,
     });
@@ -24,8 +25,10 @@ exports.createCourse = async (req, res, next) => {
 exports.createCourseTopic = async (req, res, next) => {
   const edit = await Course.findOne({ _id: req.body.id });
   if (edit) {
+    const topicID = crypto.randomBytes(5).toString("hex");
     edit.collections.push({
       type: "topic",
+      topicID,
       topic: [
         {
           title: req.body.data.title,
@@ -46,8 +49,10 @@ exports.createCourseTopic = async (req, res, next) => {
 exports.createCourseGroup = async (req, res, next) => {
   const edit = await Course.findOne({ _id: req.body.id });
   if (edit) {
+    const topicID = crypto.randomBytes(5).toString("hex");
     edit.collections.push({
       type: "group",
+      topicID,
       title: req.body.groupName,
     });
     edit.save();

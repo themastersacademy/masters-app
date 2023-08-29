@@ -30,7 +30,7 @@ exports.createPracticeExamQues = async (
       }
     });
 
-    console.log(collectQuestion)
+    
   
     collectQuestion.map((task, quesIndex) => {
       if (task.easy.length > 0 || task.requireEasy > 0) {
@@ -46,8 +46,6 @@ exports.createPracticeExamQues = async (
             finalQuestion[quesIndex].questions.push({ id: task.easy[random] });
             index.push(random);
             i++;
-          } else {
-            console.log("match easy", random);
           }
         }
       }
@@ -62,14 +60,14 @@ exports.createPracticeExamQues = async (
           const random = getRandomInt(0, task.requireMedium);
           console.log(random);
           if (index.indexOf(random) == -1) {
-            console.log("not match ", random);
+          
             finalQuestion[quesIndex].questions.push({
               id: task.medium[random],
             });
             index.push(random);
             i++;
           } else {
-            console.log("match Medium", random);
+           
           }
         }
       }
@@ -84,12 +82,10 @@ exports.createPracticeExamQues = async (
           const random = getRandomInt(0, task.requireHard );
           console.log(random);
           if (index.indexOf(random) == -1) {
-            console.log("not match ", random);
+           
             finalQuestion[quesIndex].questions.push({ id: task.hard[random] });
             index.push(random);
             i++;
-          } else {
-            console.log("match Hard", random);
           }
         }
       }
@@ -133,13 +129,11 @@ exports.createMockExamQues = async (bankID, collectQuestion, finalQuestion) => {
           const random = getRandomInt(0, task.requireEasy );
 
           if (index.indexOf(random) == -1) {
-            console.log("not match ", random);
+          
             finalQuestion[quesIndex].questions.push({ id: task.easy[random] });
             index.push(random);
             i++;
-          } else {
-            console.log("match easy", random);
-          }
+          } 
         }
       }
       if (task.medium.length > 0 || task.requireMedium > 0) {
@@ -157,9 +151,7 @@ exports.createMockExamQues = async (bankID, collectQuestion, finalQuestion) => {
             });
             index.push(random);
             i++;
-          } else {
-            console.log("match Medium", random);
-          }
+          } 
         }
       }
       if (task.hard.length > 0 || task.requireHard > 0) {
@@ -175,8 +167,6 @@ exports.createMockExamQues = async (bankID, collectQuestion, finalQuestion) => {
             finalQuestion[quesIndex].questions.push({ id: task.hard[random] });
             index.push(random);
             i++;
-          } else {
-            console.log("match Hard", random);
           }
         }
       }
