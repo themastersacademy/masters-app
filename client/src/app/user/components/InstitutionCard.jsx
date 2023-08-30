@@ -7,10 +7,11 @@ import {
   Stack,
   Autocomplete,
   TextField,
+  SvgIcon,
   
 } from "@mui/material";
-
-
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+import ScheduleTestCard from "./ScheduleTestCard";
 import { useEffect, useState, } from "react";
 
 export default function InstitutionCard({
@@ -18,7 +19,8 @@ export default function InstitutionCard({
   institute,
   setDetails,
   details,
-  Notificate
+  Notificate,
+  instituteDetails
 }) {
   const [expanded, setExpanded] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
@@ -86,17 +88,25 @@ export default function InstitutionCard({
   },[details]);
   return (
     <Paper
-      elevation={MD ? 0 : 3}
+      elevation={MD ? 0 : 1}
       sx={{
         borderRadius: "20px",
         overflow: "hidden",
+        cursor:'default'
       }}
     >
-      <Accordion expanded={MD ? true : expanded}>
+      <Accordion sx={{ '& .MuiAccordionSummary-root:hover,.MuiButtonBase-root:hover': {
+          cursor: 'default',
+        }}} expanded={MD ? true : expanded}>
+        {instituteDetails.name == undefined ?  
         <AccordionSummary
           sx={{
             borderRadius: "20px 20px 0 0",
             padding: "10px 20px",
+            '& .MuiAccordionSummary-root:hover,.MuiButtonBase-root:hover': {
+              cursor: 'default',
+            }
+
           }}
         >
           <Stack
@@ -105,6 +115,7 @@ export default function InstitutionCard({
             alignItems="center"
             justifyContent="space-between"
             width="100%"
+            cursor='default'
           >
             <h2
               style={{
@@ -139,11 +150,82 @@ export default function InstitutionCard({
               top: "0",
               right: "0",
               zIndex: "0",
+          
             }}
             src={Avater.cardBg}
             alt=""
           />
         </AccordionSummary>
+        : <AccordionSummary
+        sx={{
+          borderRadius: "20px 20px 0 0",
+          padding: "10px 20px",
+          height:'80px',
+          "& .muiexpansionpanelsummary-root:hover": {
+            cursor: "default"
+          }
+        
+        }}
+      >
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          height='80px'
+          position='relative'
+        
+        >
+          <Stack  alignItems='center' spacing='10px' direction='row'>
+          <img src={instituteDetails.avatar} alt="" />
+          <h2
+            style={{
+              fontSize: MD ? "18px" : "20px",
+              fontWeight: "500",
+            }}
+          >
+            {instituteDetails.name}
+          </h2>
+         
+          </Stack>
+          {MD ? null : <div>
+
+            <Button
+              variant="contained"
+              onClick={handleClick}
+              sx={{
+                textTransform: "none",
+                backgroundColor: !expanded ? "#187163" : "red",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: !expanded ? "#187163" : "red",
+                  color: "#fff",
+                },
+                zIndex: "1",
+              }}
+            >
+              {!expanded ? "Tap to View" : "Close"}
+            </Button>
+             <SvgIcon sx={{position:'absolute' ,top:'0' ,left:'10px',bottom:'0'}} >< AnnouncementIcon /></SvgIcon>
+             </div>
+          }
+        </Stack>
+        <img
+          style={{
+            position: "absolute",
+            top: "0",
+            right: "0",
+            zIndex: "0",
+           
+          }}
+          src={Avater.cardBg}
+          alt=""
+        />
+      </AccordionSummary> }
+       {
+        instituteDetails.name == undefined ?
+       
         <Stack padding={3}>
           <Autocomplete
             disablePortal
@@ -274,7 +356,11 @@ export default function InstitutionCard({
             </Button>
           </Stack>
         </Stack>
+        : <ScheduleTestCard batch={instituteDetails.collectBatch} />}
       </Accordion>
     </Paper>
   );
 }
+
+
+

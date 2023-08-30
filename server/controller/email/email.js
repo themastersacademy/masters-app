@@ -1,4 +1,7 @@
 var nodemailer = require("nodemailer");
+const ejs = require("ejs");
+const fs = require("fs");
+const path = require("path");
 
 exports.SendEmail = (email, OTP) => {
   var transporter = nodemailer.createTransport({
@@ -12,11 +15,20 @@ exports.SendEmail = (email, OTP) => {
     },
   });
 
+  const emailTemplatePath = path.join(
+    __dirname,
+    "./otb.ejs"
+  );
+
+
+  const emailTemplate = fs.readFileSync(emailTemplatePath, "utf-8");
+  const renderedTemplate = ejs.render(emailTemplate, {OTP})
   var mailOptions = {
     from: process.env.USER,
     to: email,
-    subject: "Sending Email using Node.js",
-    text: OTP,
+    // subject: "Sending Email using Node.js",
+    // text: OTP,
+    html: renderedTemplate
   };
 
   transporter.sendMail(mailOptions, function (error, info) {

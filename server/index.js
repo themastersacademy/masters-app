@@ -18,6 +18,7 @@ const {
 const connectDB = require("./util/connectDB.js");
 const app = express();
 
+app.set('view engine', 'ejs');
 //Initlization
 require("dotenv").config();
 
@@ -35,7 +36,7 @@ sessionManagement(app);
 
 //Server Route
 app.use("/api", route);
-
+app.use(cors())
 //Application Route
 
 app.get("/isLogin", (req, res) => {

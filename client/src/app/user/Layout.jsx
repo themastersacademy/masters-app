@@ -26,6 +26,7 @@ export default function Layout() {
   const [isChange, setChange] = useState(false);
   const [selectGoal, setSelectGoal] = useState("");
   const [analysis,setAnalysis] = useState('')
+  const [instituteDetails,setInstituteDetails] = useState([])
   const [studentsPerformance,setStudentsPerformance] = useState([])
   const [details, setDetails] = useState({
     userID: id,
@@ -48,7 +49,7 @@ export default function Layout() {
     fetch("/api/admin/getInstitute")
       .then((res) => res.json())
       .then((data) => {
-        if (data.status == "ok") setInstitue(data.message);
+        if (data.status == "ok") setInstitue(data.message)
       });
   };
   const getUserDetails = () => {
@@ -63,6 +64,7 @@ export default function Layout() {
       .then((data) => {
         if (data.status == "ok") {
          console.log(data)
+         setInstituteDetails(data.instuteDetails)
          setStudentsPerformance(data.studentsPerformance.score)
          setAnalysis(data.studentsPerformance.Analysis)
           setUser(data.message);
@@ -170,6 +172,7 @@ export default function Layout() {
           Notificate={Notifications}
           studentsPerformance={studentsPerformance}
           createMockExam={createMockExam}
+          instituteDetails={instituteDetails}
         />
       ) : (
         <MoView
@@ -189,6 +192,7 @@ export default function Layout() {
           setDetails={setDetails}
           studentsPerformance={studentsPerformance}
           Notificate={Notifications}
+          instituteDetails={instituteDetails}
         />
       )}
 
@@ -218,7 +222,8 @@ function DTView({
   createPracticesExam,
   createMockExam,
   studentsPerformance,
-  analysis
+  analysis,
+  instituteDetails
 }) {
   return (
     <Stack
@@ -275,6 +280,7 @@ function DTView({
               setDetails={setDetails}
               details={details}
               Notificate={Notificate}
+              instituteDetails={instituteDetails}
             />
 
           { studentsPerformance.length !== 0 &&<ScoreCard  studentsPerformance={studentsPerformance}/> }              
@@ -329,7 +335,8 @@ function MoView({
   createPracticesExam,
   setGoalId,
   studentsPerformance,
-  analysis
+  analysis,
+  instituteDetails
 }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -422,8 +429,10 @@ function MoView({
           setDetails={setDetails}
           details={details}
           Notificate={Notificate}
+          instituteDetails={instituteDetails}
         />
       </CustomTabPanel>
+
       <CustomTabPanel value={value} index={4}>
         o
       </CustomTabPanel>

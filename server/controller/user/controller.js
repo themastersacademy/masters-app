@@ -9,6 +9,7 @@ const Exam = require("../../models/exam.js");
 const examState = require("../../models/examState.js");
 const sessions = require("../../models/session.js");
 const Course = require("../../models/course.js");
+const {getInstitutionDetails} = require('../../util/getInstitutionDetails.js')
 exports.login = async (req, res, next) => {
   const password = req.body.password;
   const secret = "This is a company secret ";
@@ -145,8 +146,7 @@ exports.chooseGoal = async (req, res, next) => {
 };
 
 exports.request = async (req, res, next) => {
-  const { instituteName, userID, instituteID, rollNumber, Dept, batchCode } =
-    req.body.data;
+  const { userID, instituteID, rollNumber, Dept, batchCode } = req.body.data;
   try {
     const user = await User.findOne({ _id: userID });
     if (user) {
@@ -205,6 +205,17 @@ exports.getUserData = async (req, res, next) => {
         noOfQuestion: "",
         totalMArk: "",
       };
+      let instuteDetails = {}
+      // const instuteDetails ={
+      //  instituteID:'',
+      //  instituteAvatar:'',
+      //  batch:[]
+      // }
+      if (user.institutionID !== undefined) {
+       
+         instuteDetails = await getInstitutionDetails(user.institutionID,user.batchID)
+      }
+      
       user.goal.map((task) => check.push(task.valueOf()));
       // get Goal
       const getUserGoal = goal.filter(
@@ -351,6 +362,7 @@ exports.getUserData = async (req, res, next) => {
         goal: getUserGoal,
         data: send,
         topic: topic,
+        instuteDetails,
         studentsPerformance: studentsPerformance[0],
       });
     }

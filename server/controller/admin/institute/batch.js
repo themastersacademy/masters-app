@@ -13,7 +13,7 @@ exports.createBatch = async (req, res, next) => {
   if (institute) {
     const check = []
     if( institute.batch.length > 0)   institute.batch.map(task => check.push(task.name))
-  console.log(check)
+  
     if (check.indexOf(batchName) == -1) {
       
       const batchCode = crypto.randomBytes(5).toString("hex");
@@ -98,6 +98,7 @@ exports.getRequestAccess = async(req,res,next) =>{
      })
      batch.save()
   user.batchID.push(batch._id)
+  user.institutionID = batch.institutionID
   user.save()
  
      res.json({status:'success',message:'resquest accept successfully'})
@@ -109,16 +110,22 @@ exports.getRequestAccess = async(req,res,next) =>{
     res.json({status:'success',message:'Cancle request successfully'})
   }
   else if(status == 'remove' ){
-    const get = batch.studendList.filter((task)=> task.userID.valueOf() !== data.userID.valueOf())
+  
+    const get = batch.studentList.filter((task)=> task.userID.valueOf() !== data.userID.valueOf())
+    
     batch.studentList = get
     batch.save()
     const getBatchID =  user.batchID.filter(task => task.valueOf() !== batch._id.valueOf())
     user.batchID = getBatchID
+    // user.institutionID = ""
+    user.institutionID = undefined
+ 
     user.save()
     res.json({status:'success',message:'Remaove student successfully'})
   }
     }
   } catch (error) {
+    console.log(error)
     res.json({status:'error',message:'something wrong'})
   }
  
