@@ -49,7 +49,7 @@ exports.startExam = async function (req, res) {
       if (get.length === 0) {
         let totalQuestion = 0;
         const isValidExam = await isValidExamStart(examInfo);
-        console.log(isValidExam);
+      
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
@@ -102,7 +102,7 @@ exports.startExam = async function (req, res) {
             studentAnswerList,
             bookmarkedQuestionList,
             score: 0,
-            mark: 5,
+            mark: examInfo.mark,
             status: "started",
           });
           await examInfo.save();
@@ -284,7 +284,7 @@ console.log(questionCollections)
 
        getExam.save();
     
-      if (studentPerform[0].status == "started") {
+      if (studentPerform[0].status == "started" ) {
         const examInfoData = {
           examTitle: getExam.title,
           examDate: getExam.examDate ? getExam.examDate : examDate,

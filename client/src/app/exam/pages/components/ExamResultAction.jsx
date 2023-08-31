@@ -1,6 +1,7 @@
 import { Paper, Stack, Button } from "@mui/material";
-
-export default function ExamResultAction() {
+import { useNavigate } from "react-router-dom";
+export default function ExamResultAction({examID}) {
+  const navigate = useNavigate()
   return (
     <Paper sx={{
         borderRadius: "20px",
@@ -39,6 +40,7 @@ export default function ExamResultAction() {
             },
             border: "2px solid #187163",
           }}
+          onClick={() => {navigate(`/exam/solution?=${examID}`)}}
         >
           View Solutions
         </Button>
@@ -46,3 +48,4 @@ export default function ExamResultAction() {
     </Paper>
   );
 }
+

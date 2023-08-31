@@ -3,6 +3,7 @@ import ExamState from "./pages/ExamState";
 import ExamResult from "./pages/ExamResult";
 import { useState, useEffect } from "react";
 import { Stack } from "@mui/material";
+import ResultSolution from "./pages/components/ResultSolution";
 
 export default function Exam() {
   const path = window.location.pathname;
@@ -43,6 +44,7 @@ export default function Exam() {
         {path === "/exam/state" && <ExamState />}
         {/* {examInfo == null ? null : path === "/exam/state" && <ExamState exam={examInfo}/>} */}
         {path === "/exam/result" && <ExamResult />}
+        {path === "/exam/solution" && <ResultSolution />}
       </Stack>
     </Stack>
   );

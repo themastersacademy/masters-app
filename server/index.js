@@ -3,7 +3,7 @@ const express = require("express");
 const route = require("./router/route.js");
 const path = require("path");
 const cors = require("cors");
-const User = require("./models/user.js");
+
 
 const {
   sessionManagement,
@@ -32,7 +32,7 @@ connectDB();
 //Auth Session Management
 sessionManagement(app);
 
-// Static Files
+
 
 //Server Route
 app.use("/api", route);
@@ -132,8 +132,10 @@ app.get("/exam/result", (req, res) => {
 
 
 
-/// static file
+// Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
+
+
 //Server
 app.listen(3001, () => {
   console.log(`Server start at port : ${process.env.PORT}`);

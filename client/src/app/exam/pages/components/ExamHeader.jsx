@@ -1,7 +1,33 @@
 import { Paper, Stack, Avatar, Button } from "@mui/material";
 import Avater from "../../../../util/Avater";
-
+import {
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 export default function ExamHeader({ isMobileView }) {
+  const navigete = useNavigate()
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+   
+    setAnchorEl(null);
+  };
+  const handleLogout = () =>{
+    fetch('/logout')
+    .then( res => res.json())
+    .then(data =>{
+      if(data.status == 'logout') navigete('/login')
+    })
+  }
+
+  const handleHome = () =>{
+    navigete('/login')
+  }
   return (
     <Paper
       elevation={2}
@@ -40,7 +66,34 @@ export default function ExamHeader({ isMobileView }) {
             height: "50px",
           }}
         >
-          <img src={Avater.student} alt="" />
+           <Button
+            d="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            sx={{
+              borderRadius: "50%",
+              padding: "0px",
+              minWidth: "0px",
+            }}
+          >
+            <Avatar
+              sx={{
+                width: "40px",
+                height: "40px",
+              }}
+              src=''
+            />
+          </Button>
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+            <MenuItem onClick={handleHome}>
+              {/* <Avatar src='' /> */}
+                   Home
+            </MenuItem>
+            
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
         </Avatar>
       </Stack>
     </Paper>

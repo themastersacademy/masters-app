@@ -16,6 +16,7 @@ function App() {
           <Route path="/exam/info" element={<ExamLayout />} />
           <Route path="/exam/state" element={<ExamLayout />} />
           <Route path="/exam/result" element={<ExamLayout />} />
+          <Route path="/exam/solution" element={<ExamLayout />} />
           <Route path="/signup" element={<Login />} />
    
        

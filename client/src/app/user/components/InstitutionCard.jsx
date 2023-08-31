@@ -24,6 +24,7 @@ export default function InstitutionCard({
 }) {
   const [expanded, setExpanded] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
+  const [isOpen,isClose] = useState(false)
   const handleClick = () => {
     setExpanded(!expanded);
   };
@@ -44,6 +45,7 @@ export default function InstitutionCard({
       return getValue;
     });
   };
+  
   const handleDept = (e) => {
     setDetails((preValue) => {
       const getValue = { ...preValue };
@@ -61,6 +63,10 @@ export default function InstitutionCard({
     });
   };
 
+  useEffect(()=>{
+    if(instituteDetails.name !== undefined)
+    instituteDetails.collectBatch.map(task =>{ if(task.scheduleTest.length > 0) isClose(true) })
+  },[instituteDetails])
   const handleSubmit = () =>{
     console.log(details)
     fetch('/api/user/request',{
@@ -174,10 +180,10 @@ export default function InstitutionCard({
           justifyContent="space-between"
           width="100%"
           height='80px'
-          position='relative'
+       
         
         >
-          <Stack  alignItems='center' spacing='10px' direction='row'>
+          <Stack  alignItems='center'  height='80px'  position='relative' spacing='10px' direction='row'>
           <img src={instituteDetails.avatar} alt="" />
           <h2
             style={{
@@ -187,7 +193,7 @@ export default function InstitutionCard({
           >
             {instituteDetails.name}
           </h2>
-         
+       {  isOpen == false ? null : <SvgIcon sx={{position:'absolute',left:'30px',bottom:'10px'}} >< AnnouncementIcon sx={{color:'red'}} /></SvgIcon>}
           </Stack>
           {MD ? null : <div>
 
@@ -207,7 +213,7 @@ export default function InstitutionCard({
             >
               {!expanded ? "Tap to View" : "Close"}
             </Button>
-             <SvgIcon sx={{position:'absolute' ,top:'0' ,left:'10px',bottom:'0'}} >< AnnouncementIcon /></SvgIcon>
+             
              </div>
           }
         </Stack>

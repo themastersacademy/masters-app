@@ -1,6 +1,5 @@
 var nodemailer = require("nodemailer");
 
-
 exports.SendEmail = (email, OTP) => {
   var transporter = nodemailer.createTransport({
     host: process.env.HOST,

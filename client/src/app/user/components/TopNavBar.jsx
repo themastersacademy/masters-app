@@ -101,7 +101,7 @@ export default function TopNavBar({user}) {
               <Avatar src={user.avatar} />
                    {user.name}
             </MenuItem>
-            <MenuItem onClick={handleClose} >My account</MenuItem>
+            
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Stack>

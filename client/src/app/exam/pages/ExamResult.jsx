@@ -96,22 +96,24 @@ export default function ExamResult() {
         <DtView
           examResult={examResult}
           leaderBoardList={leaderBoardList}
+          examID={examID}
         />
       ) : (
         <MobileView
           examResult={examResult}
           leaderBoardList={leaderBoardList}
+          examID={examID}
         />
       )}
     </Stack>
   );
 }
 
-const DtView = ({ leaderBoardList, examResult }) => {
+const DtView = ({ leaderBoardList, examResult,examID }) => {
   return (
     <Stack direction="column" spacing={2} width={"100%"}>
-      <ExamHeader />
-      <ExamResultAction />
+      <ExamHeader  />
+      <ExamResultAction examID={examID} />
       <Paper
         sx={{
           borderRadius: "20px",
@@ -140,11 +142,11 @@ const DtView = ({ leaderBoardList, examResult }) => {
   );
 };
 
-const MobileView = ({ leaderBoardList, examResult }) => {
+const MobileView = ({ leaderBoardList, examResult,examID }) => {
   return (
     <Stack direction="column" spacing={2}>
-      <ExamHeader isMobileView={true} />
-      <ExamResultAction />
+      <ExamHeader isMobileView={true}   />
+      <ExamResultAction examID={examID} />
       <Paper
         sx={{
           borderRadius: "20px",
