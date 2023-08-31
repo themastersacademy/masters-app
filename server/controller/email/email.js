@@ -26,9 +26,34 @@ exports.SendEmail = (email, OTP) => {
   var mailOptions = {
     from: process.env.USER,
     to: email,
-    // subject: "Sending Email using Node.js",
-    // text: OTP,
-    html: renderedTemplate
+    subject: "[The Master Academy] Please verify your account",
+  
+    html: `<div class="container">
+            <div class="header">
+                <div class="logo"  style="display:flex; justify-content: center;gap:10px" >
+                    <img style="width:50px;height: 50px;" src="https://upload.incrix.com/search?url=/file/MasterAcademy/image/file-1693418599867.svg" alt="Company Logo">
+                    <p>The Masters Academy</p>
+                </div>
+            </div>
+            <div class="content">
+              
+                <p>Your One-Time Password (OTP) is:</p>
+                <div style="display:flex; justify-content: center">
+                <div style="display:flex; justify-content: center";gap:10px>
+                    <div class="otp-block">${ OTP[0] }</div>
+                    <div class="otp-block">${ OTP[1] }</div>
+                    <div class="otp-block">${ OTP[2] }</div>
+                    <div class="otp-block">${ OTP[3] }</div>
+                </div>
+            </div>
+                <p>Please use this OTP to complete your verification process.</p>
+              
+            </div>
+            <div class="footer">
+                <p style="color: #187163;">Best regards,<br>The Masters Academy</p>
+            </div>
+        </div>
+    `
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -39,3 +64,4 @@ exports.SendEmail = (email, OTP) => {
     }
   });
 };
+
