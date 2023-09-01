@@ -5,7 +5,6 @@ exports.solution = async (req,res,next) =>{
 try {   
 const path = req.path;
 const userID = req.session.userID;
-
 const examID = path.split("/")[2];
 const examInfo = await Exam.findOne({_id:examID})
 if(examInfo) {
@@ -31,6 +30,7 @@ if(examInfo) {
     console.log(error)
 }
 }
+
 async function getQuestion(task) {
     const collectQues = await questionCollection.findOne({ _id: task });
     const options = [];
@@ -42,6 +42,7 @@ async function getQuestion(task) {
       imageUrl: collectQues.imageUrl,
       expalanationImage:collectQues.explanatinImageUrl,
       type: collectQues.type,
+      explanation:collectQues.explanation,
       options
     };
   }

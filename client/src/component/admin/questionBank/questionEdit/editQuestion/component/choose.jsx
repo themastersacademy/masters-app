@@ -37,24 +37,6 @@ function Choose({
         index={index}
         setCorrectOption={setCorrectOption}
       />
-
-      {/* <TextField
-        id="filled-multiline-flexible"
-        label=""
-        multiline
-        maxRows={4}
-        variant="filled"
-        onChange={(e) => {
-          editOptionList(index, e.target.value);
-        }}
-        style={style.textField}
-        value={actValue.option}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            sendAnswer();
-          }
-        }}
-      /> */}
       <TextField
         label=""
         multiline

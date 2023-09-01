@@ -20,7 +20,7 @@ export default function  ScheduleTestCard ({batch})  {
       }} >
           {batch.map((task,index) => <Stack key={index}>
             <p style={{fontWeight:'700'}}>{task.batchName}</p>
-           { task.scheduleTest.length !== 0 ?  <div> {task.scheduleTest.map((task) =><SheduleTest name={task.name} examID={task.examID} key={index} />) }</div> : null}
+           { task.scheduleTest.length !== 0 ?  <div> {task.scheduleTest.map((task) =><SheduleTest name={task.name} examID={task.examID} key={index} />) }</div> : <div style={{display:'flex' ,alignItems:'center',justifyContent:'center',fontSize:'18px' ,fontWeight:'400',color:'gray' }}>No Active Test</div>}
           </Stack>)
           
           }        

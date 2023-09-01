@@ -6,7 +6,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import useWindowDimensions from "../../../../util/useWindowDimensions";
 export default function ExamHeader({ isMobileView }) {
+  const {width} =useWindowDimensions()
   const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -33,7 +35,7 @@ export default function ExamHeader({ isMobileView }) {
       elevation={2}
       sx={{
         width: "100%",
-        height: "70px",
+        height:  width < 500 ? '60px' : "70px" ,
         borderRadius: "20px",
       }}
     >
@@ -42,7 +44,8 @@ export default function ExamHeader({ isMobileView }) {
         alignItems="center"
         justifyContent="space-between"
         sx={{
-          padding: isMobileView ? "10px 15px" :"10px 30px",
+          //padding: isMobileView ? "10px 15px" :"10px 30px",
+          padding :  width < 500 ? '10px' : "15px" 
         }}
       >
         <Stack direction="row" gap={isMobileView ? 1 : 2} alignItems="center">
@@ -54,7 +57,7 @@ export default function ExamHeader({ isMobileView }) {
           <h1
             style={{
               fontWeight: "500",
-              fontSize: !isMobileView ? "20px" : "14px",
+              fontSize: width < 500 ? "15px" : "14px",
             }}
           >
             The <font color="#FEA800">Masters Academy</font>
@@ -62,8 +65,8 @@ export default function ExamHeader({ isMobileView }) {
         </Stack>
         <Avatar
           sx={{
-            width: "50px",
-            height: "50px",
+            width: width < 500 ? '40px' : "50px" ,
+            height:  width < 500 ? '40px' : "50px" ,
           }}
         >
            <Button

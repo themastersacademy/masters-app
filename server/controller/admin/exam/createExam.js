@@ -389,6 +389,7 @@ exports.createMockExam = async (req, res, next) => {
             questions: [],
           });
           task.topic.map((task1) => {
+            
             questionID.push({
               title: task.type == "group" ? task.title : task.topic[0].title,
               requireEasy: eval(task1.level.easy),
@@ -413,14 +414,12 @@ exports.createMockExam = async (req, res, next) => {
         });
 
    
-
-       
-
         const questions = await createMockExamQues(
           check,
           questionID,
           finalQuestion
         );
+        console.log(questions)
         const questionGroup = [];
         const questionGroupCollectionArray = [];
         const questionGroupCollection = [];
@@ -454,23 +453,19 @@ exports.createMockExam = async (req, res, next) => {
 
        topic.map((task) => {
         questionGroupCollection.push(task)
-       });
-      
-
-    
-        
-
+       })
           const questionCategory = [];
 
         questionGroupCollection.map((task, index) => {
          
           const questionList = [];
           task.questions.map((task) => questionList.push({ id: task.id }));
-          questionCategory.push({
+          if(questionList.length > 0) 
+        {  questionCategory.push({
             title: task.title,
             id: task.id,
             questionList,
-          });
+          }) }
         });
        
         const countMock = goal.examHistory.filter(

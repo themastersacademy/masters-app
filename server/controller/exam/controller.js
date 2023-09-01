@@ -515,13 +515,12 @@ exports.submitExam = async (req, res, next) => {
             });
             const examTopic = [];
             topics.map((task) => {
+            
               examTopic.push({
                 topicName: task.topicName,
                 accuracy: task.accuracy,
               });
               goal.topics.map((task1) => {
-             
-               
                 if (task.topicName == task1.topicName) {
                   
                   task1.questionAttempted +=
