@@ -19,7 +19,6 @@ export default function ExamResult() {
       .then((res) => res.json())
       .then((data) => {
         setExamResult(data.examResult);
-
         setUser(data.userdetails);
       });
     fetch(`/api/exam/rank/${examID}`)
@@ -29,42 +28,9 @@ export default function ExamResult() {
           rankList: data.rankList,
           userID: data.userID,
         });
-        console.log(data);
       });
-  }, [examID]);
+  },[examID]);
 
-  // const leaderBoardList = [
-  //   {
-  //     name: "Rahul",
-  //     avater: "MaleAvatar1",
-  //     score: "100",
-  //     rank: "1",
-  //   },
-  //   {
-  //     name: "Hari",
-  //     avater: "MaleAvatar4",
-  //     score: "98",
-  //     rank: "2",
-  //   },
-  //   {
-  //     name: "Mari",
-  //     avater: "MaleAvatar1",
-  //     score: "98",
-  //     rank: "3",
-  //   },
-  //   {
-  //     name: "Kishore",
-  //     avater: "MaleAvatar4",
-  //     score: "94",
-  //     rank: "4",
-  //   },
-  //   {
-  //     name: "Priya",
-  //     avater: "FemaleAvatar2",
-  //     score: "93",
-  //     rank: "5",
-  //   },
-  // ];
   return (
     <Stack
       sx={{

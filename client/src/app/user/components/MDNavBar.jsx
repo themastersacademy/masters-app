@@ -1,18 +1,32 @@
-import { Stack, Avatar, Button, SwipeableDrawer, Divider } from "@mui/material";
+import { Stack, Avatar, Button, SwipeableDrawer, Divider, Menu, MenuItem } from "@mui/material";
 import Avater from "../../../util/Avater";
 import PlanChip from "./PlanChip";
 import { useEffect, useState } from "react";
 import { ExpandMore } from "@mui/icons-material";
 import AddGoal from "./AddGoal";
-
+import { useNavigate } from "react-router-dom";
 export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,addGoal,setGoalId,id}) {
   const [open, setOpen] = useState(false);
+  const navigete = useNavigate()
   const toggleDrawer = (open) => (event) => {
     setOpen(open);
   };
-useEffect(()=>{
- 
-},[selectGoal])
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openNav = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+   
+    setAnchorEl(null);
+  };
+  const handleLogout = () =>{
+    fetch('/logout')
+    .then( res => res.json())
+    .then(data =>{
+      if(data.status == 'logout') navigete('/login')
+    })
+  }
   return (
     <Stack
       direction="row"
@@ -51,11 +65,39 @@ useEffect(()=>{
           <ExpandMore sx={{ marginLeft: "10px" }} />
         </Stack>
       </Button>
-      <Avatar
+      {/* <Avatar
         alt="Remy Sharp"
         src={user.avatar}
         sx={{ width: 40, height: 40 }}
-      />
+      /> */}
+         <Button
+            d="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            sx={{
+              borderRadius: "50%",
+              padding: "0px",
+              minWidth: "0px",
+            }}
+          >
+            <Avatar
+              sx={{
+                width: "40px",
+                height: "40px",
+              }}
+              src={user.avatar}
+            />
+          </Button>
+          <Menu anchorEl={anchorEl} open={openNav} onClose={handleClose}>
+            <MenuItem onClick={handleClose}>
+              <Avatar src={user.avatar} />
+                   {user.name}
+            </MenuItem>
+            
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
       <SwipeableDrawer
         anchor={"bottom"}
         open={open}

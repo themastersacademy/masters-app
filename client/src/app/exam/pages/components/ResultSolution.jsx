@@ -99,14 +99,16 @@ const Solution = ({
           <p style={{ fontWeight: "700", fontSize: "16px" }}>
             Question Image :
           </p>
-          <img
-            style={{
-              width: width < 500 ? "200px" : "400px",
-              height: width < 500 ? "100px" : "200px",
-            }}
-            src={imageUrl}
-            alt=""
-          />
+          <center>
+            <img
+              style={{
+                width: width < 500 ? "300px" : "400px",
+                height: width < 500 ? "250px" : "200px",
+              }}
+              src={imageUrl}
+              alt=""
+            />
+          </center>
         </div>
       ) : null}
 

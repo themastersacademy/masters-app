@@ -64,8 +64,8 @@ export default function PracticeTest({
       if(task.isSelect == true) calcTopicLength +=task.topicLength
      })
    
-     const num = 5 * (calcTopicLength-1);
-      //  const num = 5 * (calLength.length-1);
+    //  const num = 5 * (calcTopicLength-1);
+      const num = 5 * (calLength.length-1);
     {  for (let i = 1 ,j=5; i < 7 +1 ; i++,j+=5) {
         const max = num + j   
           if(max < 76) count.push(max)

@@ -68,7 +68,7 @@ const LeaderBoardItem = ({ name, mark, rank, avatar}) => {
     >
       <Stack direction="row" alignItems="center" sx={{ width: "100%" }} gap={2}>
         <Stack position="relative" width={"60px"} height={"60px"}>
-          {/*  {rank == 1 || rank == 2 || rank == 3 ? (
+           {rank == 1 || rank == 2 || rank == 3 ? (
             <img
               src={
                 rank == 1
@@ -80,8 +80,8 @@ const LeaderBoardItem = ({ name, mark, rank, avatar}) => {
               alt=""
             />
           ) : null} 
-          */}
-          <img
+         
+          {/* <img
             width={"40px"}
             style={{
               position: "absolute",
@@ -91,7 +91,7 @@ const LeaderBoardItem = ({ name, mark, rank, avatar}) => {
             }}
             src={avatar}
             alt=""
-          />
+          /> */}
         </Stack>
         <Stack width="100%" gap={0.4}>
           <h1

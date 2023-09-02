@@ -12,7 +12,7 @@ const {
   getViewGoal
  
 } = require("../../controller/user/controller.js");
-
+const {routerControl} = require('../../auth/auth.js')
 const { isExam } = require("../../util/checkLogin.js")
 //get
 
@@ -33,14 +33,14 @@ router.post("/createDetails", createDetails);
 router.post("/chooseGoal", chooseGoal);
 
 //request
-router.post("/request", request);
+router.post("/request",routerControl,request);
 // getUserData
-router.post("/getUserData", getUserData);
+router.post("/getUserData",routerControl,getUserData);
 //getGoal
-router.post("/getGoal", getGoal);
+router.post("/getGoal",routerControl,getGoal);
 //addGoal
-router.post("/addGoal", addGoal);
+router.post("/addGoal",routerControl,addGoal);
 //getViewGoal
-router.post('/getViewGoal',getViewGoal)
+router.post('/getViewGoal',routerControl,getViewGoal)
 
 module.exports = router;
