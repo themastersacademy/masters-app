@@ -65,11 +65,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
           <ExpandMore sx={{ marginLeft: "10px" }} />
         </Stack>
       </Button>
-      {/* <Avatar
-        alt="Remy Sharp"
-        src={user.avatar}
-        sx={{ width: 40, height: 40 }}
-      /> */}
+  
          <Button
             d="basic-button"
             aria-controls={open ? "basic-menu" : undefined}
