@@ -43,15 +43,11 @@ export default  function Choose({
 
 
 function ColorRadioButtons({studentAns, actualAns,index,opIndex}) {
-console.log(actualAns[index] , index);
-  const handleChange = (event) => {
-   
-  }
+
+
 
   const controlProps = (studentAns, actualAns, index ,opIndex) => ({
     checked: actualAns[index]  == opIndex ||  studentAns[index] == opIndex   ? true : false ,
-  
-    onChange: handleChange,
     value: actualAns[index] == opIndex ? true : false,
   });
 

@@ -11,78 +11,60 @@ export default function ExamResult() {
   const { search } = useLocation();
   const examID = search.split("=")[1];
   const { width } = useWindowDimensions();
+  const [user, setUser] = useState([]);
+  const [leaderBoardList, setLeaderBoardList] = useState([]);
   const [examResult, setExamResult] = useState([]);
   useEffect(() => {
     fetch(`/api/exam/get-exam-result/${examID}`)
       .then((res) => res.json())
       .then((data) => {
-        setExamResult(data);
+        setExamResult(data.examResult);
+
+        setUser(data.userdetails);
+      });
+    fetch(`/api/exam/rank/${examID}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setLeaderBoardList({
+          rankList: data.rankList,
+          userID: data.userID,
+        });
         console.log(data);
       });
   }, [examID]);
 
-  const analyticsList = [
-    {
-      title: "Accuracy",
-      value: 80,
-    },
-    {
-      title: "Speed",
-      value: 40,
-    },
-    {
-      title: "Time Spent",
-      value: 75,
-    },
-    {
-      title: "Accuracy",
-      value: 69,
-    },
-    {
-      title: "Speed",
-      value: 92,
-    },
-    {
-      title: "Time Spent",
-      value: 94,
-    },
-    {
-      title: "Accuracy",
-      value: 35,
-    },
-  ];
-  const leaderBoardList = [
-    {
-      name: "Rahul",
-      avater: "MaleAvatar1",
-      score: "100",
-      rank: "1",
-    },
-    {
-      name: "Hari",
-      avater: "MaleAvatar4",
-      score: "98",
-      rank: "2",
-    },
-    {
-      name: "Mari",
-      avater: "MaleAvatar1",
-      score: "98",
-      rank: "3",
-    },
-    {
-      name: "Kishore",
-      avater: "MaleAvatar4",
-      score: "94",
-      rank: "4",
-    },
-    {
-      name: "Priya",
-      avater: "FemaleAvatar2",
-      score: "93",
-      rank: "5",
-    },
-  ];
+  // const leaderBoardList = [
+  //   {
+  //     name: "Rahul",
+  //     avater: "MaleAvatar1",
+  //     score: "100",
+  //     rank: "1",
+  //   },
+  //   {
+  //     name: "Hari",
+  //     avater: "MaleAvatar4",
+  //     score: "98",
+  //     rank: "2",
+  //   },
+  //   {
+  //     name: "Mari",
+  //     avater: "MaleAvatar1",
+  //     score: "98",
+  //     rank: "3",
+  //   },
+  //   {
+  //     name: "Kishore",
+  //     avater: "MaleAvatar4",
+  //     score: "94",
+  //     rank: "4",
+  //   },
+  //   {
+  //     name: "Priya",
+  //     avater: "FemaleAvatar2",
+  //     score: "93",
+  //     rank: "5",
+  //   },
+  // ];
   return (
     <Stack
       sx={{
@@ -97,22 +79,24 @@ export default function ExamResult() {
           examResult={examResult}
           leaderBoardList={leaderBoardList}
           examID={examID}
+          user={user}
         />
       ) : (
         <MobileView
           examResult={examResult}
           leaderBoardList={leaderBoardList}
           examID={examID}
+          user={user}
         />
       )}
     </Stack>
   );
 }
 
-const DtView = ({ leaderBoardList, examResult,examID }) => {
+const DtView = ({ leaderBoardList, examResult, examID, user }) => {
   return (
     <Stack direction="column" spacing={2} width={"100%"}>
-      <ExamHeader  />
+      <ExamHeader user={user} />
       <ExamResultAction examID={examID} />
       <Paper
         sx={{
@@ -135,17 +119,17 @@ const DtView = ({ leaderBoardList, examResult,examID }) => {
               <ExamResultAnalytics analyticsList={examResult.topics} />
             )}
           </Stack>
-          <LeaderBoard leaderBoardList={leaderBoardList} />
+        {leaderBoardList.rankList && <LeaderBoard leaderBoardList={leaderBoardList} />}
         </Stack>
       </Paper>
     </Stack>
   );
 };
 
-const MobileView = ({ leaderBoardList, examResult,examID }) => {
+const MobileView = ({ leaderBoardList, examResult, examID, user }) => {
   return (
     <Stack direction="column" spacing={2}>
-      <ExamHeader isMobileView={true}   />
+      <ExamHeader isMobileView={true} user={user} />
       <ExamResultAction examID={examID} />
       <Paper
         sx={{
@@ -161,7 +145,7 @@ const MobileView = ({ leaderBoardList, examResult,examID }) => {
           unAttempted={examResult.questionUnAttempted}
         />
       </Paper>
-      <LeaderBoard leaderBoardList={leaderBoardList} isMobileView={true} />
+     { leaderBoardList.rankList && <LeaderBoard leaderBoardList={leaderBoardList} isMobileView={true} />}
       <Paper
         sx={{
           borderRadius: "20px",

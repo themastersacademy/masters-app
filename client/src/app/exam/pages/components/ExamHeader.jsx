@@ -7,7 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useWindowDimensions from "../../../../util/useWindowDimensions";
-export default function ExamHeader({ isMobileView }) {
+export default function ExamHeader({ isMobileView ,user}) {
   const {width} =useWindowDimensions()
   const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
@@ -57,7 +57,7 @@ export default function ExamHeader({ isMobileView }) {
           <h1
             style={{
               fontWeight: "500",
-              fontSize: width < 500 ? "15px" : "14px",
+              fontSize: width < 500 ? "15px" : "20px",
             }}
           >
             The <font color="#FEA800">Masters Academy</font>
@@ -68,6 +68,7 @@ export default function ExamHeader({ isMobileView }) {
             width: width < 500 ? '40px' : "50px" ,
             height:  width < 500 ? '40px' : "50px" ,
           }}
+          
         >
            <Button
             d="basic-button"
@@ -81,13 +82,13 @@ export default function ExamHeader({ isMobileView }) {
               minWidth: "0px",
             }}
           >
-            <Avatar
-              sx={{
-                width: "40px",
-                height: "40px",
-              }}
-              src=''
-            />
+          {user && <Avatar
+                 sx={{
+                  width: width < 500 ? '40px' : "50px" ,
+                  height:  width < 500 ? '40px' : "50px" ,
+                }}
+              src={user.avatar}
+            />}
           </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem onClick={handleHome}>

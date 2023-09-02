@@ -3,7 +3,7 @@ import Avater from "../../../../util/Avater";
 
 export default function LeaderBoard({ leaderBoardList, isMobileView }) {
   return (
-    <Paper
+   <Paper
       sx={{
         borderRadius: "20px",
         width: isMobileView ? "100%" : "70%",
@@ -21,12 +21,12 @@ export default function LeaderBoard({ leaderBoardList, isMobileView }) {
         >
           You
         </h1>
-        <LeaderBoardItem
-          name="Harini"
-          score="72"
-          rank="24"
-          avater="FemaleAvatar1"
-        />
+        {leaderBoardList.rankList.map((item, index) => 
+            {
+              if(item.userID == leaderBoardList.userID ) 
+             return <LeaderBoardItem key={index} {...item} />
+          }
+          )}
       </Stack>
       <Stack direction="column" gap={1}>
         <h1
@@ -48,7 +48,7 @@ export default function LeaderBoard({ leaderBoardList, isMobileView }) {
           overflow="scroll"
           height={!isMobileView ? "calc(100vh - 490px)" : "auto"}
         >
-          {leaderBoardList.map((item, index) => (
+          {leaderBoardList.rankList.map((item, index) => (
             <LeaderBoardItem key={index} {...item} />
           ))}
         </Stack>
@@ -57,7 +57,7 @@ export default function LeaderBoard({ leaderBoardList, isMobileView }) {
   );
 }
 
-const LeaderBoardItem = ({ name, score, rank, avater }) => {
+const LeaderBoardItem = ({ name, mark, rank, avatar}) => {
   return (
     <Paper
       sx={{
@@ -68,18 +68,19 @@ const LeaderBoardItem = ({ name, score, rank, avater }) => {
     >
       <Stack direction="row" alignItems="center" sx={{ width: "100%" }} gap={2}>
         <Stack position="relative" width={"60px"} height={"60px"}>
-          {rank == 1 || rank == 2 || rank == 3 ? (
+          {/*  {rank == 1 || rank == 2 || rank == 3 ? (
             <img
               src={
                 rank == 1
-                  ? Avater.badge1
+                  ? avatar
                   : rank == 2
-                  ? Avater.badge2
-                  : Avater.badge3
+                  ? avatar
+                  : avatar
               }
               alt=""
             />
-          ) : null}
+          ) : null} 
+          */}
           <img
             width={"40px"}
             style={{
@@ -88,7 +89,7 @@ const LeaderBoardItem = ({ name, score, rank, avater }) => {
               left: "50%",
               transform: "translate(-50%, -50%)",
             }}
-            src={Avater[avater]}
+            src={avatar}
             alt=""
           />
         </Stack>
@@ -125,7 +126,7 @@ const LeaderBoardItem = ({ name, score, rank, avater }) => {
                 width: "100px",
               }}
             >
-              Mark : <font color="#187163">{score}</font>
+              Mark : <font color="#187163">{mark}</font>
             </h1>
           </Stack>
         </Stack>

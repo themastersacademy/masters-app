@@ -4,7 +4,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 
 export default function ExamResultAnalytics({analyticsList, isMobileView}) {
-  console.log(analyticsList);
+ 
   return (
     <Stack direction="column" sx={{ width: "100%" }} spacing={2}>
       <h1
