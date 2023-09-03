@@ -7,7 +7,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import useWindowDimensions from "../../util/useWindowDimensions";
-
+import '../../App.css'
 export default function SideNavBar() {
   const { width } = useWindowDimensions();
   const navicate = useNavigate();
@@ -63,13 +63,16 @@ export default function SideNavBar() {
     },
   };
   return (
-    <div style={width > 1150 ? style.Aside : style.asideTD}>
-      <div style={style.option}>
+    <div style={width > 1150 ? style.Aside : style.asideTD} 
+    
+    >
+      <div style={style.option}  >
         <div
           style={{
             display: "flex",
             alignItems: "center",
             gap: "8px",
+            
           }}
         >
           <img src={Image.LOGO} alt="" />
@@ -82,7 +85,7 @@ export default function SideNavBar() {
             <font color="#187163">The</font> Masters Academy
           </h1>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}   >
           <div
             style={style.optionChild}
             className="sideNavHover"

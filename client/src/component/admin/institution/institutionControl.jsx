@@ -8,7 +8,7 @@ function InstitutionControl({changeRoll,isChange}) {
       height: "34px",
       borderRadius: "4px",
       background: "#187163",
-      color: "white",
+      color: "white"
     },
   };
 
