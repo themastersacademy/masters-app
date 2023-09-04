@@ -53,11 +53,13 @@ alignRank(rank);
       }
     } 
     else if (examInfo.type == "schedule") {
+      console.log('rank')
+     console.log(examInfo)
         const rank = await examRank.find({
-            batchID: examInfo.batchID,
+          batchID: examInfo.batchID,
             type: examInfo.type,
           });
-         
+         console.log(rank)
           if (user) {
          
     function alignRank(ar) {
@@ -91,7 +93,7 @@ alignRank(rank);
                 avatar
               });
             }
-           
+           console.log(rankList)
          res.json({rankList,userID})
           }
     }

@@ -669,7 +669,7 @@ exports.submitExam = async (req, res, next) => {
 
           const rank = await examRank.findOne({
             userID,
-            courseID: examInfo.courseId,
+            batchID: examInfo.batchID,
             type: "schedule",
           });
           if (rank) {
@@ -683,7 +683,7 @@ exports.submitExam = async (req, res, next) => {
 
             const rank = await examRank({
               userID,
-              courseID: examInfo.courseId,
+              batchID: examInfo.batchID,
               type: "schedule",
               mark,
             })
