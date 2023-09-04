@@ -10,8 +10,7 @@ export default function SetQuestion({
   avalibleIndex,
   deleteBatchTopic,
 }) {
-  console.log(task);
-  console.log(avalible);
+
   const [limit, setLimit] = useState({
     easy: false,
     medium: false,

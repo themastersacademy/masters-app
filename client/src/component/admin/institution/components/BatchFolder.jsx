@@ -63,6 +63,7 @@ export default function BatchFolder({}) {
   const [batch,setBatch] = useState([])
   const [value, setValue] = useState(0);
   const [isChange, setChange] = useState(false);
+  const [isCall,setCall] = useState(false)
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
 
@@ -112,7 +113,7 @@ fetch('/api/admin/getRequestAccess',{
 
   useEffect(() => {
     getHistory();
-  },[]);
+  },[isCall]);
 
   const Notificate = (status, message) => {
     setSeverity(status);
@@ -124,7 +125,8 @@ fetch('/api/admin/getRequestAccess',{
     <Paper
       sx={{
         width: "100%",
-        height: "calc(100vh - 110px)",
+        // height: "calc(100vh - 110px)",
+        height:"100vh",
         padding: "0 20px",
         margin: "20px 0",
 
@@ -155,7 +157,7 @@ fetch('/api/admin/getRequestAccess',{
         {batch.length !== 0 ? <Batch batch={batch} getRequestAccess={getRequestAccess} /> : null }
        
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      <CustomTabPanel value={value} index={1} sx={{height:'100vh'}}  >
         <ScheduleTest
           question={question}
           setChange={setChange}
@@ -165,6 +167,8 @@ fetch('/api/admin/getRequestAccess',{
           details={details}
           setDetails={setDetails}
           Notificate={Notificate}
+          setCall={setCall}
+          isCall={isCall}
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>

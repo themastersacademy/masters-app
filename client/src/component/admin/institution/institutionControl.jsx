@@ -36,9 +36,7 @@ function InstitutionControl({changeRoll,isChange}) {
             }}
             placeholder="Search"
           />
-
-<AddNew changeRoll={changeRoll} isChange={isChange} />
-          {/* <Button style={style.AddBtn}>Add new</Button> */}
+          <AddNew changeRoll={changeRoll} isChange={isChange} />    
         </div>
       </Paper>
     </div>

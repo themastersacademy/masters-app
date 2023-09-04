@@ -20,6 +20,8 @@ export default function ScheduleTest({
   setChange,
   isChange,
   Notificate,
+  isCall,
+  setCall
 }) {
 
   const [task, setTask] = useState([]);
@@ -85,7 +87,24 @@ export default function ScheduleTest({
               })
                 .then((res) => res.json())
                 .then((data) => {
-                  if (data.status == "success") Notificate(data.status, data.message);
+                  if (data.status == "success"){
+                    setCall(!isCall)
+                    setQuestion({
+                      avalibleQues: [],
+                      batchQues: [],
+                    })
+                    setDetails({
+                      setDate: new Date(),
+                      setTimeFrom: "0:0",
+                      setTimeTo: "0:0",
+                      setMark: "",
+                      setNegativeMark: "0",
+                      setExamTitle: "",
+                      examDuration: "0",
+                    
+                    })
+                    Notificate(data.status, data.message);
+                  }
                 });
             }
           } else Notificate("info", "Please check from time and to time");
@@ -126,7 +145,7 @@ export default function ScheduleTest({
   }, [isChange]);
 
   return (
-    <div>
+    <div >
       <Stack direction="row" sx={{ marginTop: "10px" }}>
         <Button
           sx={{
@@ -154,7 +173,7 @@ export default function ScheduleTest({
       </div>
       <div
         className="scrollHide"
-        style={{ height: "60vh", overflowY: "scroll" }}
+        style={{ height: "40vh", overflowY: "scroll" }}
       >
         {question.batchQues.length !== 0 ? (
           question.batchQues.map((task, index) => {
