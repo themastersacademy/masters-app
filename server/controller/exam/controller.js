@@ -546,7 +546,6 @@ exports.submitExam = async (req, res, next) => {
                 }
               });
             });
-
             get[0].topics = examTopic;
 
             examInfo.studentsPerformance.map((task) => {
