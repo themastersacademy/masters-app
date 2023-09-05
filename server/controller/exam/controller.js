@@ -3,6 +3,7 @@ const user = require("../../models/user.js");
 const questionCollection = require("../../models/questionCollection.js");
 const examState = require("../../models/examState.js");
 const Goal = require("../../models/goal.js");
+const Batch = require('../../models/batch.js')
 const examRank = require("../../models/examRank.js");
 exports.getExamInfo = async function (req, res) {
   try {
@@ -13,7 +14,15 @@ exports.getExamInfo = async function (req, res) {
     if (!examInfo) {
       return res.status(404).send("exam not found");
     }
+   const NoOfquestion = []
+   examInfo.questionCategory.map(task => task.questionList.map(task =>{
+    NoOfquestion.push(task)
+   }))
+
+
     res.status(200).json({
+      totalMark :NoOfquestion.length * examInfo.mark,
+      NoOfquestion:NoOfquestion.length,
       title: examInfo.title,
       examDate: examInfo.examDate,
       examDuration: examInfo.examDuration,
@@ -34,7 +43,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
-  //   State.save();
+     State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -106,10 +115,26 @@ exports.startExam = async function (req, res) {
             .status(200)
             .json({ message: "exam started", status: "success" });
         } else {
+         
+           const  check = await isValidExamEnd(examInfo)
+           if(check) {
+            delete req.session.examID;
+            const batch = await Batch.findOne({_id:examInfo.batchID})
+            batch.scheduleTest.map(task =>{
+              if(task.examID.valueOf() == examInfo._id.valueOf() && task.status == 'pending') {
+                
+                task.status = 'complete'
+              }
+            })
+             batch.save()
+          
+            return res.status(400).json({status:'info', message: "exam was completed"})
+          }
           return res.status(400).json({ message: "exam not started yet" });
         }
       } else {
-        return res.status(400).json({ message: "exam already started" });
+        delete req.session.examID;
+        return res.status(400).json({status:'info',message: "you attended the exam" });
       }
     }
     if (examInfo.type === "practice" || examInfo.type === "mock") {
@@ -193,6 +218,15 @@ exports.startExam = async function (req, res) {
   }
 };
 
+
+const isValidExamEnd = async function (examInfo) {
+  const currentTime = new Date();
+  let examDate = examInfo.examDate.split("/");
+  examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+  return (
+    currentTime > new Date(examDate + " " + examInfo.examEndTime)
+  );
+};
 const isValidExamStart = async function (examInfo) {
   const currentTime = new Date();
   let examDate = examInfo.examDate.split("/");

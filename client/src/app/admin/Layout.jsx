@@ -22,6 +22,7 @@ import BatchFolder from "../../component/admin/institution/components/BatchFolde
 import { useNavigate } from "react-router-dom";
 import  '../../App.css'
 import InstitutePage from "../../component/admin/institution/components/institutePage";
+import AsaidMenu from "../../component/admin/AsaidMenu";
 function Dashboard() {
   const navigator = useNavigate();
   const pathName = window.location.pathname;
@@ -182,12 +183,13 @@ function Dashboard() {
           // width: "calc(100% - 280px)",
           width: "calc(100%)",
           height: "calc(100vh - 70px)",
-          padding: "0 30px",
+          // padding: "0 30px",
         }}
       >
         <div style={styles.navbar}>
          
         <Asaid />
+
         <div style={{display:'flex', alignItems:'center',gap:'20px'}} >
           {pathName === "/admin/dashboard" ? (
             <CreateCourses createBank={createCourse} />

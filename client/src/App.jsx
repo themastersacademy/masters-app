@@ -3,7 +3,7 @@ import Login from "./app/loging/Page";
 import Layout from "./app/admin/Layout";
 import UserLayout from "./app/user/Layout";
 import ExamLayout from "./app/exam/Layout";
-
+import AsaidMenu from "./component/admin/AsaidMenu";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -32,7 +32,21 @@ function App() {
           <Route path="/admin/manage" element={<Layout />} />
           <Route path="/admin/bank/collection" element={<Layout />} />
           <Route path="/admin/dashboard/course" element={<Layout />} />
-          <Route path="/admin/institution/page/batch" element={<Layout />} />
+          <Route path="/admin/institution/page/batch" element={<Layout />} /> 
+
+               {/* <Route path="/login" element={<Login />} />
+          <Route path="/login/verify" element={<Login />} />
+          <Route path="/login/create" element={<Login />} />
+          <Route path="/login/goal" element={<Login />} />
+          <Route path="/admin/dashboard" element={<AsaidMenu />} />
+          <Route path="/admin/bank" element={<AsaidMenu />} />
+          <Route path="/admin/analytics" element={<AsaidMenu />} />
+          <Route path="/admin/institution" element={<AsaidMenu />} />
+          <Route path="/admin/institution/page" element={<AsaidMenu />} />
+          <Route path="/admin/manage" element={<AsaidMenu />} />
+          <Route path="/admin/bank/collection" element={<AsaidMenu />} />
+          <Route path="/admin/dashboard/course" element={<AsaidMenu />} />
+          <Route path="/admin/institution/page/batch" element={<AsaidMenu />} /> */}
         </Routes>
       </Router>
     </div>

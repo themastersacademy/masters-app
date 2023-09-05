@@ -369,6 +369,7 @@ exports.isSignIn = (req, res, next) => {
 exports.routerControl = async(req,res,next) =>{
   try {
     if(req.session.isAuth) next()
+    else res.status(500).send('text')
   } catch (error) {
     console.log(error);
   }

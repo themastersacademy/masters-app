@@ -37,7 +37,6 @@ connectDB();
 sessionManagement(app);
 
 
-
 //Server Route
 app.use("/api",route);
 app.use(cors())
@@ -144,6 +143,24 @@ app.get("/exam/solution",isSignIn,(req, res) => {
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 
+
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  const status = err.status || 500;
+  const message = "Something went wrong";
+  const data = err.data || null;
+  res.status(status).json({
+    statue: 500,
+    type: "error",
+    message,
+    data,
+});
+});
+
+app.use((req, res, next) => {
+  res.status(404).send("Sorry can't find that!")
+})
 
 //Server
 app.listen(3001, () => {

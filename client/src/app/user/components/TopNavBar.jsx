@@ -97,7 +97,7 @@ export default function TopNavBar({user}) {
             />
           </Button>
           <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleClose} sx={{display:'flex',gap:'10px'}}>
               <Avatar src={user.avatar} />
                    {user.name}
             </MenuItem>

@@ -24,7 +24,7 @@ export default function ExamState() {
   const [studentAnswers, setStudentAnswers] = useState([]);
   const [isBookmarked, setIsBookmarked] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [user,setuser] = useState([])
   const calculateRemainingTime = () => {
     let examTime = examInfo.examEndTime.split(":");
     let examDate = examInfo.examDate.split("/");
@@ -83,6 +83,9 @@ export default function ExamState() {
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
         setCurrentQuestionIndex(eval(data.studentsPerformance[0].currentIndex));
       });
+      fetch('/api/admin/getUserDetails')
+      .then(res => res.json())
+      .then(data => setuser(data))
   }, []);
 
   useEffect(() => {
@@ -198,6 +201,7 @@ export default function ExamState() {
         isDialogOpen={isDialogOpen}
         handleDialogClose={handleDialogClose}
         handleDialogOpen={handleDialogOpen}
+        user={user}
       />
     ) : (
       <MobileView
@@ -216,6 +220,7 @@ export default function ExamState() {
         isDialogOpen={isDialogOpen}
         handleDialogClose={handleDialogClose}
         handleDialogOpen={handleDialogOpen}
+        user={user}
       />
     ))
   );
@@ -237,6 +242,7 @@ const DtView = ({
   isDialogOpen,
   handleDialogClose,
   handleDialogOpen,
+  user
 }) => {
   return (
     <Stack
@@ -250,7 +256,7 @@ const DtView = ({
       gap={2}
     >
       <Stack direction="column" width="130%" gap={2}>
-        <ExamHeader />
+        <ExamHeader user={user} />
         <Stack
           direction="column"
           height={"100%"}
@@ -324,6 +330,7 @@ const MobileView = ({
   isDialogOpen,
   handleDialogClose,
   handleDialogOpen,
+  user
 }) => {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => (event) => {

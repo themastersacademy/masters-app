@@ -2,23 +2,29 @@ import { Paper, Stack, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExamHeader from "./components/ExamHeader";
-
+import ExamComplete from "./components/ExamComplete"
 export default function ExamInfo() {
   const { search } = useLocation();
   const examId = search.split("=")[1];
   const [examInfo, setExamInfo] = useState(null);
   const [isScheduled, setIsScheduled] = useState(false);
-
+  const [user,setuser] = useState([])
+  const [message,setMessage] =useState('')
+  const [examState,setExamComplete] = useState(false)
   useEffect(() => {
     fetch(`/api/exam/get-exam-info/${examId}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data)
         setExamInfo(data);
         setIsScheduled(() => {
           return data.type === "schedule" ? true : false;
         });
         console.log(data);
       });
+      fetch('/api/admin/getUserDetails')
+      .then(res => res.json())
+      .then(data => setuser(data))
   }, []);
 
   return (
@@ -31,13 +37,19 @@ export default function ExamInfo() {
           maxWidth: "1240px",
         }}
       >
-        <ExamHeader />
+        <ExamHeader user={user} />
+        <ExamComplete examState={examState} message={message} />
         <ExamInfoBody
           isScheduled={isScheduled}
           examName={examInfo.title}
           scheduledTime={`${examInfo.examStartTime}:00`}
           scheduledDate={examInfo.examDate}
           examId={examId}
+          duration={examInfo.examDuration}
+          totalMark={examInfo.totalMark}
+          NoOfquestion={examInfo.NoOfquestion}
+          setExamComplete={setExamComplete}
+          setMessage={setMessage}
         />
       </Stack>
     )
@@ -50,6 +62,11 @@ const ExamInfoBody = ({
   scheduledTime,
   scheduledDate,
   examId,
+  setExamComplete,
+  NoOfquestion,
+  duration,
+  totalMark,
+  setMessage
 }) => {
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00:00");
@@ -116,7 +133,7 @@ const ExamInfoBody = ({
     getRemainingTime();
   }, 1000);
 
-  const getExamState = () => {};
+  
 
   return (
     <Paper
@@ -161,11 +178,11 @@ const ExamInfoBody = ({
             color: "#3F3F3F",
           }}
         >
-          <li>This Test booklet consists of 30 questions.</li>
+          <li>This Test booklet consists of {NoOfquestion} questions.</li>
           <li>There is no time limit for each questions.</li>
           <li>All the questions were given as multiple choice questions.</li>
-          <li>The total duration is 45 minutes.</li>
-          <li>The maximum mark can be attempted in this test is 120.</li>
+          <li>The total duration is {duration} hour.</li>
+          <li>The maximum mark can be attempted in this test is {totalMark}.</li>
         </ol>
         {isScheduled ? (
           <>
@@ -204,6 +221,12 @@ const ExamInfoBody = ({
             fetch(`/api/exam/start-exam/${examId}`)
               .then((res) => res.json())
               .then((data) => {
+                console.log(data)
+                if(data.status == 'info')  { 
+                  setMessage(data.message)
+                  setExamComplete(true)
+               
+              }
                 if (data.status === "success")
                   navigate(`/exam/state?=${examId}`);
               });
