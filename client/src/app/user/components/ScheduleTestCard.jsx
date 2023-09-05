@@ -7,8 +7,8 @@ export default function ScheduleTestCard({ batch }) {
     <Paper
       sx={{
         width: "100%",
-        height: "100px",
-        maxHeight: "250px",
+        height: "200px",
+        // maxHeight: "200px",
         overflowY: "scroll",
         "::-webkit-scrollbar": {
           display: "none",
@@ -40,6 +40,7 @@ export default function ScheduleTestCard({ batch }) {
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: "18px",
+                height:'150px',
                 fontWeight: "400",
                 color: "gray",
               }}
