@@ -63,7 +63,7 @@ export default function Layout() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "ok") {
-         console.log(data)
+        
          setInstituteDetails(data.instuteDetails)
          setStudentsPerformance(data.studentsPerformance.score)
          setAnalysis(data.studentsPerformance.Analysis)

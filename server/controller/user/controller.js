@@ -305,6 +305,7 @@ exports.getUserData = async (req, res, next) => {
         topic.courseName = get[0].title;
         get[0].collections.map((collection, index) => {
           if (collection.type == "topic") {
+
             collection.topic.map((task) => {
               if (
                 eval(task.level.easy >= 0) &&
@@ -348,7 +349,7 @@ exports.getUserData = async (req, res, next) => {
           retry.push(task);
         }
       });
-
+      
       topic.topic = retry;
       if (get.length > 0) {
         get[0].collections.map((task, index) => {

@@ -593,7 +593,12 @@ exports.submitExam = async (req, res, next) => {
             examInfo.save();
 
             // delete Exam State
-            examState.deleteOne({ examID, userID });
+          
+            examState.deleteOne({ examID, userID }).then(function(){
+              console.log("Data deleted"); // Success
+          }).catch(function(error){
+              console.log(error); // Failure
+          })
             // delete session ID
             delete req.session.examID;
             res.json({
@@ -725,8 +730,12 @@ exports.submitExam = async (req, res, next) => {
           examInfo.save();
 
           // delate Exam State
-
-          await examState.deleteOne({ examID, userID });
+          examState.deleteOne({ examID, userID }).then(function(){
+            console.log("Data deleted"); // Success
+        }).catch(function(error){
+            console.log(error); // Failure
+        })
+       
 
           // delete session
 
