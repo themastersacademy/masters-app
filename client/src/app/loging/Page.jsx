@@ -16,7 +16,7 @@ function Page() {
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
   const [notificate, setNotification] = useState(false);
-
+  const [state,setState] = useState(false)
 
   const controlNotification = (status, message) => {
     setMessage(message);
@@ -25,6 +25,14 @@ function Page() {
   };
 
 
+  useEffect(()=>{
+    fetch("/isCheck")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        if (data.status == "isLogout") setState(true) 
+      });
+  },[])
 
   return (
     <div style={{ background: " #187163" }}>
@@ -103,7 +111,6 @@ function Page() {
                 />
               ) : null}
                   {pathName == "/login" ? (
-                 
                 <Login
                   controlNotification={controlNotification}
                   

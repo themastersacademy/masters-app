@@ -226,7 +226,7 @@ exports.isUser = (req, res, next) => {
 exports.userVerify = (req, res, next) => {
   if (req.session.isAuth) {
     if (req.session.userRoll == "student") next();
-    if (req.session.userRoll == "teacher" || req.session.userRoll == "admin")
+    if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" ||  req.session.userRoll == " institution")
       res.redirect(`/admin/dashboard?=${req.session.userID}`);
   } else {
     res.redirect("/login");
@@ -245,9 +245,12 @@ exports.isLogin = (req, res, next) => {
     if (req.session.examID) res.redirect(`/exam/state?=${req.session.examID}`);
     else if (
       req.session.userRoll == "teacher" ||
-      req.session.userRoll == "admin"
+      req.session.userRoll == "admin" ||
+      req.session.userRoll == " institution"
     )
-     return res.redirect(`/admin/dashboard?=${req.session.userID}`);
+     {
+      console.log('call institute');
+      return res.redirect(`/admin/dashboard?=${req.session.userID}`);}
     else return res.redirect(`/?=${req.session.userID}`);
   } else {
     next();
@@ -263,7 +266,7 @@ exports.isSignIn = (req, res, next) => {
 exports.isRoll = async (req, res, next) => {
   try {
     if (req.session.isAuth) {
-      if (req.session.userRoll == "teacher" || req.session.userRoll == "admin")
+      if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" || req.session.userRoll == " institution" )
         next();
       else res.redirect(`/?=${req.session.userID}`);
     } else {

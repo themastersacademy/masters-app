@@ -42,13 +42,27 @@ app.use("/api",route);
 app.use(cors())
 //Application Route
 
+app.get("/isCheck", (req, res) => {
+  if (req.session.isAuth)
+   { 
+    return res.json({ status: "isLogin" });
+  }
+  else return res.json({ status: "isLogout" });
+});
 app.get("/isLogin", (req, res) => {
   if (req.session.isLogin)
    { 
     if(req.session.examID){
       res.json({ status: "isExam", message:'go to exam'});
     }
-    else return res.json({ status: "isLogin", id: req.session.userID });
+    else{ 
+      if(req.session.userRoll == 'student')  return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID });
+      else if (     req.session.userRoll == "teacher" ||
+      req.session.userRoll == "admin" ||
+      req.session.userRoll == "institution")
+      return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID });
+     
+    } 
   }
   else return res.json({ status: "isLogout" });
 });

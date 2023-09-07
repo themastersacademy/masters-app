@@ -147,7 +147,16 @@ export default function Layout() {
         if (data.status == "isLogout") navigator("/login");
         if (data.status == "isExam" ) navigator("/exam/state");
         if (id == undefined) navigator("/login");
+        if (data.status == "isLogin" && data.roll == "student")
+        navigator(`/?=${data.id}`);
+      if (
+        (data.status == "isLogin" && data.roll == "admin") ||
+        (data.status == "isLogin" && data.roll == "teacher") ||
+        (data.status == "isLogin" && data.roll == "institution")
+      )
+        navigator(`/admin/dashboard?=${data.id}`);
       });
+  
     getInstitute();
     getUserDetails();
   }, [isChange]);

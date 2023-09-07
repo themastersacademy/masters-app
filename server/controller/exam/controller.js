@@ -117,6 +117,7 @@ exports.startExam = async function (req, res) {
         } else {
          
            const  check = await isValidExamEnd(examInfo)
+           console.log(check)
            if(check) {
             delete req.session.examID;
             const batch = await Batch.findOne({_id:examInfo.batchID})
@@ -127,7 +128,11 @@ exports.startExam = async function (req, res) {
               }
             })
              batch.save()
-          
+             examState.deleteOne({ examID, userID }).then(function(){
+              console.log("Data deleted")  //  Success
+          }).catch(function(error){
+              console.log(error)  // Failure
+          })
             return res.status(400).json({status:'info', message: "exam was completed"})
           }
           return res.status(400).json({ message: "exam not started yet" });
@@ -244,12 +249,12 @@ const isValidExamStart = async function (examInfo) {
 
 exports.getExamState = async function (req, res) {
   const userID = req.session.userID;
+ 
   const userName = req.session.userName;
   const examId = req.session.examID;
 
   try {
     const getExam = await exam.findOne({ _id: examId });
-
     const User = await user.findOne({ _id: userID });
     if (getExam && User) {
       const questionCategoryList = [];
@@ -284,11 +289,12 @@ exports.getExamState = async function (req, res) {
         };
       }
       for (let i = 0; i < getQuestionID.length; i++) {
-        console.log(getQuestionID[i]);
+        
         const ques = await getQuestion(getQuestionID[i]);
         questionCollections.push(ques);
       }
-      console.log(questionCollections);
+
+ 
 
       let examDate = getExam.examDate.split("/");
       examDate = `${
@@ -300,9 +306,10 @@ exports.getExamState = async function (req, res) {
       const studentPerform = getExam.studentsPerformance.filter(
         (task) => task.id.valueOf() == User._id.valueOf()
       );
-
+    
       getExam.save();
 
+      if(studentPerform.length > 0)
       if (studentPerform[0].status == "started") {
         const examInfoData = {
           examTitle: getExam.title,
@@ -354,6 +361,10 @@ exports.getExamState = async function (req, res) {
           return res.json({ status: "error", message: "exam terminated" });
         if (studentPerform[0].status == "notStarted")
           return res.json({ status: "error", message: "exam not started yet" });
+        return res.json({ status: "error", message: "something went wrong" });
+      }
+      else {
+
         return res.json({ status: "error", message: "something went wrong" });
       }
     }
@@ -599,6 +610,7 @@ exports.submitExam = async (req, res, next) => {
           }).catch(function(error){
               console.log(error); // Failure
           })
+
             // delete session ID
             delete req.session.examID;
             res.json({
