@@ -11,19 +11,29 @@ function App() {
     <div style={{ fontFamily: "DM Sans" }}>
       <Router>
         <Routes>
+          {
+            // user and exam page
+          }
           <Route path="/" element={<UserLayout />} />
           <Route path="/exam" element={<ExamLayout />} />
           <Route path="/exam/info" element={<ExamLayout />} />
           <Route path="/exam/state" element={<ExamLayout />} />
           <Route path="/exam/result" element={<ExamLayout />} />
           <Route path="/exam/solution" element={<ExamLayout />} />
+          {
+            //user Login page
+          }
+          
+          <Route path="/forgotPass" element={<Login />} />
           <Route path="/signup" element={<Login />} />
-   
-       
           <Route path="/login" element={<Login />} />
           <Route path="/login/verify" element={<Login />} />
           <Route path="/login/create" element={<Login />} />
           <Route path="/login/goal" element={<Login />} />
+
+          {
+            // admin and institute page
+          }
           <Route path="/admin/dashboard" element={<Layout />} />
           <Route path="/admin/bank" element={<Layout />} />
           <Route path="/admin/analytics" element={<Layout />} />

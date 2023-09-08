@@ -9,16 +9,20 @@ const {
   getUserData,
   getGoal,
   addGoal,
-  getViewGoal
+  getViewGoal,
+  resendOtp,
+  forgotPass
  
 } = require("../../controller/user/controller.js");
 const {routerControl} = require('../../auth/auth.js')
 const { isExam } = require("../../util/checkLogin.js")
 //get
-
+router.get('/resendOtp',resendOtp)
 //post
 // login
 router.post("/login",login);
+//forgetPass
+router.post('/forgotPass',forgotPass)
 // create account
 
 router.post("/create", create);

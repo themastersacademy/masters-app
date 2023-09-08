@@ -9,6 +9,7 @@ import useWindowDimensions from "../../util/useWindowDimensions";
 import ChooseGoal from "./component/ChooseGoal";
 import Notification from "../../util/Alert";
 import { useState } from "react";
+import ForgotPass from './component/ForgotPass'
 import Login from "./component/login";
 function Page() {
   const pathName = window.location.pathname;
@@ -62,6 +63,7 @@ function Page() {
               direction="row"
               spacing="60px"
               width="80%"
+             
               justifyContent="center"
               padding="20px"
             >
@@ -110,7 +112,12 @@ function Page() {
                   
                 />
               ) : null}
+
+{pathName == "/forgotPass" ? (
+          <ForgotPass controlNotification={controlNotification} />
+        ) : null }
                   {pathName == "/login" ? (
+
                 <Login
                   controlNotification={controlNotification}
                   
@@ -120,7 +127,7 @@ function Page() {
           </Stack>
         </Paper>
 
-        :  
+        :        
         pathName == "/login" ? (
                  
           <Login
@@ -135,8 +142,14 @@ function Page() {
           />
         ) : 
         pathName == "/signup" ? (
+         
           <FirstPage controlNotification={controlNotification} />
+      
         ) : 
+        pathName == "/forgotPass" ? (
+          <ForgotPass controlNotification={controlNotification} />
+        )      
+        :
         pathName == "/login/verify" ? (
           <Verify controlNotification={controlNotification} />
         ) :

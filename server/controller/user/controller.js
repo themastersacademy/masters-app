@@ -9,10 +9,10 @@ const Exam = require("../../models/exam.js");
 const examState = require("../../models/examState.js");
 const sessions = require("../../models/session.js");
 const Course = require("../../models/course.js");
+
 const {
   getInstitutionDetails,
 } = require("../../util/getInstitutionDetails.js");
-const { userDetails } = require("../../auth/auth.js");
 
 exports.login = async (req, res, next) => {
   const password = req.body.password;
@@ -23,7 +23,6 @@ exports.login = async (req, res, next) => {
   if (check) {
     let get = await sessions.find();
     const getVerify = await isLogin(get, check.email);
-
     if (getVerify.length == 0) {
       req.session.isAuth = true;
       req.session.isLogin = true;
@@ -75,9 +74,7 @@ exports.create = async (req, res, next) => {
     req.session.isCreate = true;
     const password = req.body.password;
     const secret = "This is a company secret ";
-
     const sha256Hasher = crypto.createHmac("sha256", secret);
-
     const hash = sha256Hasher.update(password).digest("hex");
 
     req.session.isAuth = true;
@@ -93,16 +90,73 @@ exports.create = async (req, res, next) => {
   }
 };
 
+exports.resendOtp = (req, res, next) => {
+  try {
+    const otp = generateOtp();
+    req.session.Otp = otp;
+    if (req.session.email !== undefined) {
+      SendEmail(req.session.email, otp);
+      res.json({ status: "success", message: "Resend OTP successfully" });
+    } else if(req.session.changeEmail) 
+    {
+      SendEmail(req.session.changeEmail, otp);
+      res.json({ status: "success", message: "Resend OTP successfully" });
+    }
+    else
+    res.json({ status: "error", message: "somthing wrong" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.forgotPass = async (req, res, next) => {
+  try {
+    const password = req.body.password
+    const email = req.body.email;
+    const user = await User.findOne({ email });
+    if (user) {
+      const secret = "This is a company secret ";
+      const sha256Hasher = crypto.createHmac("sha256", secret);
+      const hash = sha256Hasher.update(password).digest("hex");
+      req.session.changeEmail = email
+       req.session.changePassword = hash
+      const otp = generateOtp();
+      req.session.Otp = otp;
+      SendEmail(email, otp);
+      res.json({ status: "success", message: '"Verify your account"' });
+    } else res.json({ status: "error", message: "Email does not exist yet" });
+  } catch (error) {
+    console.log(error);
+  }
+};
 exports.checkOtp = async (req, res, next) => {
-  if (req.session.Otp == req.body.otp) {
-    const createAccount = await User({
-      email: req.session.email,
-      password: req.session.password,
-    });
-    req.session.userID = createAccount._id;
-    createAccount.save();
-    res.json({ status: "success", message: "Account create successfully" });
-  } else res.json({ status: "error", message: "The otp is not match" });
+  if (!req.session.changeEmail && !req.session.changePassword) {
+    if (req.session.Otp == req.body.otp) {
+      const createAccount = await User({
+        email: req.session.email,
+        password: req.session.password,
+      });
+      req.session.userID = createAccount._id;
+      createAccount.save();
+      res.json({ status: "success", change : false, message: "Account create successfully" });
+    } else res.json({ status: "error", message: "The otp is not match" });
+  } else if (req.session.changeEmail && req.session.changePassword) {
+    if (req.session.Otp == req.body.otp) {
+      const user = await User.findOne({ email: req.session.changeEmail });
+     
+      if (user) { 
+         user.password = req.session.changePassword   
+         user.save()
+
+        res.json({
+          change:true,
+          status: "success",
+          message: "Change password successfully",
+        });
+      } 
+      else res.json({ status: "error",message: "Something wrong" });
+    }
+    else res.json({ status: "error", message: "The otp is not match" });
+  }
 };
 
 exports.createDetails = async (req, res, next) => {
@@ -305,7 +359,6 @@ exports.getUserData = async (req, res, next) => {
         topic.courseName = get[0].title;
         get[0].collections.map((collection, index) => {
           if (collection.type == "topic") {
-
             collection.topic.map((task) => {
               if (
                 eval(task.level.easy >= 0) &&
@@ -349,7 +402,7 @@ exports.getUserData = async (req, res, next) => {
           retry.push(task);
         }
       });
-      
+
       topic.topic = retry;
       if (get.length > 0) {
         get[0].collections.map((task, index) => {
@@ -547,5 +600,3 @@ exports.getViewGoal = async (req, res, next) => {
     console.log(error);
   }
 };
-
-

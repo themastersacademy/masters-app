@@ -4,9 +4,9 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-
 import useWindowDimensions from "../../../util/useWindowDimensions";
-function Login({ controlNotification }) {
+
+function Login ({ controlNotification }) {
   const { width } = useWindowDimensions();
   const [getDetails, setDetails] = useState({ email: "", password: "" });
   const navigator = useNavigate();
@@ -67,13 +67,13 @@ function Login({ controlNotification }) {
         background: "#FFF",
         boxShadow: "0px 4px 14px 0px rgba(0, 0, 0, 0.15)",
         width: "423px",
-        height: "443px",
+        height: "480px",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         ...(width < 1000 && {
           width: "80%",
-          height: "443px",
+          height: "480px",
         }),
       }}
     >
@@ -120,12 +120,14 @@ function Login({ controlNotification }) {
               })
             }
           />
+          <div style={{cursor : 'pointer' , color:'blue'}} onClick={() => navigator('/forgotPass')}>forgot password</div>
         </Stack>
         <Button
           style={{
             borderRadius: "4px",
             width: "100%",
             color: "white",
+           
             background: "#187163",
           }}
           onClick={signup}

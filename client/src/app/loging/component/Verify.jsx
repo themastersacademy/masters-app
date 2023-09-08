@@ -12,7 +12,7 @@ function Verify({controlNotification}) {
  
   const Verify = () =>{
     if(otp !== ''){  
-        console.log(otp)
+        
         fetch('/api/user/checkOtp',{
           method:"POST",
           headers:{
@@ -23,18 +23,29 @@ function Verify({controlNotification}) {
         .then(res => res.json())
         .then((data) => {
           controlNotification(data.status,data.message)
-          if(data.status == 'success')  navigator("/login/create");
+          if(data.status == 'success' && data.change == undefined)  navigator("/login/create");
+          if(data.status == 'success' && data.change !== undefined)  navigator("/login");
         })
       
       }
       else controlNotification('info','Please enter the otp')
    
   }
+ 
+  const resendOtp = () =>{
+  fetch('/api/user/resendOtp')
+  .then(res => res.json())
+  .then(data => {
+    controlNotification(data.status,data.message)
+  })
+  }
+
   const style = {
     otp: {
       color: "#187163",
       fontFamily: " DM Sans",
       fontSize: " 12px",
+      cursor :'pointer',
       fontStyle: "normal",
       fontWeight: "500",
       lineHeight: " normal",
@@ -69,7 +80,7 @@ function Verify({controlNotification}) {
             variant="outlined"
             onChange={(e) => setOtp(e.target.value)}
           />
-          <p style={style.otp}>Resend OTP</p>
+          <div style={style.otp} onClick={resendOtp}  >Resend OTP</div>
         </Stack>
       
         <Button

@@ -5,13 +5,15 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
+import PasswordChecklist from "react-password-checklist"
 import useWindowDimensions from '../../../util/useWindowDimensions';
 function FirstPage({controlNotification}) {
   const { width } = useWindowDimensions();
+  const [passValidation,setpassValidation] = useState(false)
   const [getDetails,setDetails] = useState({email:'',password:''})
     const navigator = useNavigate()
     const signup = () =>{
-      if(getDetails.email !== '' && getDetails.password !== ''){ 
+      if(getDetails.email !== '' && getDetails.password !== '' && passValidation == true){ 
       if (validator.isEmail(getDetails.email)) {
      
       fetch('/api/user/create',{
@@ -34,6 +36,13 @@ else {
   }
   else controlNotification('info','Please fill the details')
     }
+const style = {
+  styleMobile:{
+    height:'100px',
+    overflowY:'scroll'
+  }
+}
+
   return (
         <Paper
                 sx={{
@@ -41,13 +50,13 @@ else {
                   background: "#FFF",
                   boxShadow: "0px 4px 14px 0px rgba(0, 0, 0, 0.15)",
                   width: "423px",
-                  height: "443px",
-                  display: "flex",
+                   height: "500px",
+                  display: "flex", 
                   justifyContent: "center",
                   alignItems: "center",
                    ...(width < 1000 && {
           width: "80%",
-          height: "443px",
+          height: "600px",
        
         })
                 }}
@@ -56,7 +65,8 @@ else {
                   direction="column"
                   width="80%"
                   spacing="15px"
-                  height="75%"
+                  height="100%"
+                  marginTop='20px'
                 >
                   <Stack direction="column" spacing="10px">
                     <h1>Sign Up</h1>
@@ -81,12 +91,27 @@ else {
                       id="outlined-basic"
                       label="Enter your password"
                       variant="outlined"
+                      type='password'
                       onChange={(e)=> setDetails((preValue)=> {
                         const getValue = {...preValue}
                         getValue.password= e.target.value
                         return getValue
                       })}
                     />
+                         
+                    <PasswordChecklist
+                  
+				rules={["minLength","specialChar","number","capital"]}
+				minLength={5}
+				value={getDetails.password}
+				// valueAgain={passwordAgain}
+    
+       
+				onChange={(isValid) => {
+          setpassValidation(isValid)
+        }}
+			/>
+        
                   </Stack>
                   <Button
                     style={{
