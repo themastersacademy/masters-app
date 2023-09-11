@@ -34,7 +34,7 @@ function Login ({ controlNotification }) {
           console.log(data);
           if (data.status == "goal") navigator(`/login/goal`);
           if (data.status == "userDetails") navigator(`/login/create`);
-          if (data.status == "isExam") navigator(`/exam/state`);
+          if (data.status == "isExam") navigator(`/exam/state?=${data.examID}`);
           if (data.status == "success" && data.roll == "student") {
             navigator(`/?=${data.id}`);
           }
@@ -56,7 +56,7 @@ function Login ({ controlNotification }) {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.status == "isExam") navigator(`/exam/state`);
+        if (data.status == "isExam") navigator(`/exam/state?=${data.examID}`);
         if (data.status == "isLogin" && data.roll == "student")
           navigator(`/?=${data.id}`);
         if (

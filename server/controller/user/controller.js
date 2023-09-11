@@ -31,15 +31,18 @@ exports.login = async (req, res, next) => {
       req.session.userName = check.name;
       req.session.email = check.email;
       const State = await examState.findOne({ userID: check._id });
+    console.log(State)
+    console.log('call again')
       if (State) {
+       
         req.session.examID = State.examID;
-
-        res.json({ status: "isExam" });
+       return res.json({ status: "isExam",examID:State.examID });
       } else {
         if (check.avatar == undefined || check.name == undefined) {
           req.session.isCreate = true;
           return res.json({ status: "userDetails" });
         }
+        
         if (check.goal.length == 0) {
           req.session.isCreate = true;
           return res.json({ status: "goal" });
@@ -50,12 +53,18 @@ exports.login = async (req, res, next) => {
       const isDelete = await sessions.deleteMany({
         expires: getVerify[0].expires,
       });
+      const State = await examState.findOne({ userID: check._id });
       req.session.isAuth = true;
       req.session.isLogin = true;
       req.session.userID = check._id;
       req.session.userRoll = check.type;
       req.session.userName = check.name;
       req.session.email = check.email;
+      if (State) {
+   
+        req.session.examID = State.examID;
+       return res.json({ status: "isExam" ,examID:State.examID });
+      }
       res.json({ status: "success", id: check._id, roll: check.type });
     }
   } else {
