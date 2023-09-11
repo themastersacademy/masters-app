@@ -36,7 +36,7 @@ exports.login = async (req, res, next) => {
 
         res.json({ status: "isExam" });
       } else {
-        if (check.avatar == "" || check.name == "") {
+        if (check.avatar == undefined || check.name == undefined) {
           req.session.isCreate = true;
           return res.json({ status: "userDetails" });
         }
@@ -71,7 +71,12 @@ exports.create = async (req, res, next) => {
   console.log(req.body);
   const check = await User.findOne({ email: req.body.email });
   if (!check) {
+    if (req.session.changeEmail && req.session.changePassword) {
+     delete req.session.changeEmail
+     delete req.session.changePassword
+    }
     req.session.isCreate = true;
+
     const password = req.body.password;
     const secret = "This is a company secret ";
     const sha256Hasher = crypto.createHmac("sha256", secret);
@@ -137,7 +142,7 @@ exports.checkOtp = async (req, res, next) => {
       });
       req.session.userID = createAccount._id;
       createAccount.save();
-      res.json({ status: "success", change : false, message: "Account create successfully" });
+      res.json({ status: "success", change : 'create' , message: "Account create successfully" });
     } else res.json({ status: "error", message: "The otp is not match" });
   } else if (req.session.changeEmail && req.session.changePassword) {
     if (req.session.Otp == req.body.otp) {
@@ -148,7 +153,7 @@ exports.checkOtp = async (req, res, next) => {
          user.save()
 
         res.json({
-          change:true,
+          change:'edit',
           status: "success",
           message: "Change password successfully",
         });
@@ -168,7 +173,8 @@ exports.createDetails = async (req, res, next) => {
     user.gender = req.body.gender;
     user.avatar = req.body.avatar;
     user.save();
-    res.json({ status: "success", message: "Save the details successfully" });
+    if(user.goal.length == 0) return res.json({ status: "success" , change:'create', message: "Save the details successfully" });
+    else res.json({ status: "success", change:'edit', message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });
 };
 

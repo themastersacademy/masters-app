@@ -9,6 +9,7 @@ import { useState } from "react";
 import useWindowDimensions from "../../../../util/useWindowDimensions";
 export default function ExamHeader({ isMobileView ,user}) {
   const {width} =useWindowDimensions()
+  const path = window.location.pathname;
   const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -63,6 +64,16 @@ export default function ExamHeader({ isMobileView ,user}) {
             The <font color="#FEA800">Masters Academy</font>
           </h1>
         </Stack>
+        {
+  path == '/exam/state' ?  user && <Avatar
+    sx={{
+     width: width < 500 ? '40px' : "50px" ,
+     height:  width < 500 ? '40px' : "50px" ,
+   }}
+ src={user.avatar}
+/>
+:
+        
         <Avatar
           sx={{
             width: width < 500 ? '40px' : "50px" ,
@@ -99,6 +110,7 @@ export default function ExamHeader({ isMobileView ,user}) {
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Avatar>
+}
       </Stack>
     </Paper>
   );

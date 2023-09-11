@@ -2,6 +2,7 @@ import { Paper, Stack, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExamHeader from "./components/ExamHeader";
+import LoadingButton from "@mui/lab/LoadingButton";
 import ExamComplete from "./components/ExamComplete"
 export default function ExamInfo() {
   const { search } = useLocation();
@@ -70,6 +71,7 @@ const ExamInfoBody = ({
 }) => {
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00:00");
+  const [load,setLoad] = useState(false)
   const [currentDate, setCurrentDate] = useState("00/00/0000");
   const [remainingTime, setRemainingTime] = useState("0d 0h 0m 0s");
   const navigate = useNavigate();
@@ -205,7 +207,12 @@ const ExamInfoBody = ({
             </h1>
           </>
         ) : null}
+
+{
+  load == false ? 
+
         <Button
+        loading
           variant="contained"
           disabled={!isTimeOver && isScheduled}
           sx={{
@@ -218,11 +225,14 @@ const ExamInfoBody = ({
             },
           }}
           onClick={() => {
+            setLoad(true)
             fetch(`/api/exam/start-exam/${examId}`)
               .then((res) => res.json())
               .then((data) => {
-                console.log(data)
+               
+               
                 if(data.status == 'info')  { 
+               
                   setMessage(data.message)
                   setExamComplete(true)
                
@@ -234,6 +244,11 @@ const ExamInfoBody = ({
         >
           Start Test
         </Button>
+        :
+        <LoadingButton loading  sx={{ "& .MuiCircularProgress-root": { color: "#187163" } }} >
+          
+        </LoadingButton>
+}
       </Stack>
     </Paper>
   );

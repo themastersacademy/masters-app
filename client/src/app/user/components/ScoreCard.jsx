@@ -4,33 +4,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { useNavigate } from "react-router-dom";
 export default function ScoreCard({
-  studentsPerformance,
-  scorecard = [
-    {
-      name: "Practice Test 2",
-      score: 140,
-      maxScore: 160,
-      dateTime: "05:43PM 30 Jul 2023",
-    },
-    {
-      name: "Mock Test 1",
-      score: 50,
-      maxScore: 100,
-      dateTime: "05:43PM 30 Jul 2023",
-    },
-    {
-      name: "Practice Test 1",
-      score: 45,
-      maxScore: 120,
-      dateTime: "05:43PM 30 Jul 2023",
-    },
-    {
-      name: "Practice Test 1",
-      score: 45,
-      maxScore: 120,
-      dateTime: "05:43PM 30 Jul 2023",
-    },
-  ], MD
+  studentsPerformance, MD
 }) 
 
 {
@@ -68,7 +42,7 @@ export default function ScoreCard({
         className="scrollHide"
       >
         {studentsPerformance.map((item, index) => (
-          <ScoreCardItem key={index} {...item} />
+          <ScoreCardItem key={index} {...studentsPerformance[(studentsPerformance.length-1)-index]} />
         ))}
       </Stack>
     </Paper>

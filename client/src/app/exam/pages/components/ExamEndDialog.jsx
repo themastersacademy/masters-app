@@ -8,8 +8,8 @@ import {
   Slide,
   Stack,
 } from "@mui/material";
-import { forwardRef } from "react";
-
+import { forwardRef, useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,6 +21,7 @@ export default function ExamEndDialog({
   studentAnswers,
 }) {
  
+  const [load,setLoad] = useState(false)
  
   return (
     <Dialog
@@ -70,14 +71,23 @@ export default function ExamEndDialog({
         >
           Cancel
         </Button>
+      {
+      load == false ?   
         <Button
           sx={{
             color: "#187163",
           }}
-          onClick={()=>handleDialogClose(true)}
+          onClick={()=>{
+            handleDialogClose(true)
+            setLoad(true)
+          }}
         >
           Submit
         </Button>
+        :
+        <LoadingButton loading  sx={{ "& .MuiCircularProgress-root": { color: "#187163" } }} >
+          
+          </LoadingButton>}
       </DialogActions>
     </Dialog>
   );

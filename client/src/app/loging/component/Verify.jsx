@@ -12,7 +12,6 @@ function Verify({controlNotification}) {
  
   const Verify = () =>{
     if(otp !== ''){  
-        
         fetch('/api/user/checkOtp',{
           method:"POST",
           headers:{
@@ -23,8 +22,8 @@ function Verify({controlNotification}) {
         .then(res => res.json())
         .then((data) => {
           controlNotification(data.status,data.message)
-          if(data.status == 'success' && data.change == undefined)  navigator("/login/create");
-          if(data.status == 'success' && data.change !== undefined)  navigator("/login");
+          if(data.status == 'success' && data.change == 'create')  navigator("/login/create");
+          if(data.status == 'success' && data.change == 'edit')  navigator("/login");
         })
       
       }

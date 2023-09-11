@@ -6,6 +6,13 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import InputAdornment from '@mui/material/InputAdornment';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Input from '@mui/material/Input';
+import { SvgIcon } from "@mui/material";
+
 function Login ({ controlNotification }) {
   const { width } = useWindowDimensions();
   const [getDetails, setDetails] = useState({ email: "", password: "" });
@@ -60,6 +67,21 @@ function Login ({ controlNotification }) {
           navigator(`/admin/dashboard?=${data.id}`);
       });
   }, []);
+  const [values, setValues] = useState({
+    password: "",
+    showPassword: false,
+});
+
+const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+};
+
+const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+};
+
+
+
   return (
     <Paper
       sx={{
@@ -93,33 +115,44 @@ function Login ({ controlNotification }) {
         </Stack>
         <Stack direction="column" spacing="10px">
           <label htmlFor="">Email</label>
-          <TextField
-            id="outlined-basic"
-            label="Enter your Email"
-            variant="outlined"
-            onChange={(e) =>
-              setDetails((preValue) => {
-                const getValue = { ...preValue };
-                getValue.email = e.target.value;
-                return getValue;
-              })
-            }
-          />
+          <Input
+              type="text"
+                placeholder="Enter your email"
+                onChange={(e) =>
+                  setDetails((preValue) => {
+                    const getValue = { ...preValue };
+                    getValue.email = e.target.value;
+                    return getValue;
+                  })
+                }
+                value={getDetails.email}
+                
+            />
         </Stack>
         <Stack direction="column" spacing="10px">
           <label htmlFor=""> password</label>
-          <TextField
-            id="outlined-basic"
-            label="password"
-            variant="outlined"
-            onChange={(e) =>
-              setDetails((preValue) => {
-                const getValue = { ...preValue };
-                getValue.password = e.target.value;
-                return getValue;
-              })
-            }
-          />
+            <Input
+              placeholder="Enter your password"
+                type={values.showPassword ? "text" : "password"}
+                onChange={(e) =>
+                  setDetails((preValue) => {
+                    const getValue = { ...preValue };
+                    getValue.password = e.target.value;
+                    return getValue;
+                  })
+                }
+                value={getDetails.password}
+                endAdornment={
+                    <InputAdornment position="end">
+                        <SvgIcon
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                        >
+                            {values.showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </SvgIcon>
+                    </InputAdornment>
+                }
+            />
           <div style={{cursor : 'pointer' , color:'blue'}} onClick={() => navigator('/forgotPass')}>forgot password</div>
         </Stack>
         <Button

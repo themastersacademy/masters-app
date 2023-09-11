@@ -7,6 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import PasswordChecklist from "react-password-checklist"
 import useWindowDimensions from '../../../util/useWindowDimensions';
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import InputAdornment from '@mui/material/InputAdornment';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Input from '@mui/material/Input';
+import { SvgIcon } from "@mui/material";
 function FirstPage({controlNotification}) {
   const { width } = useWindowDimensions();
   const [passValidation,setpassValidation] = useState(false)
@@ -42,6 +48,18 @@ const style = {
     overflowY:'scroll'
   }
 }
+const [values, setValues] = useState({
+  password: "",
+  showPassword: false,
+});
+
+const handleClickShowPassword = () => {
+  setValues({ ...values, showPassword: !values.showPassword });
+};
+
+const handleMouseDownPassword = (event) => {
+  event.preventDefault();
+};
 
   return (
         <Paper
@@ -65,7 +83,7 @@ const style = {
                   direction="column"
                   width="80%"
                   spacing="15px"
-                  height="100%"
+                  height="90%"
                   marginTop='20px'
                 >
                   <Stack direction="column" spacing="10px">
@@ -74,30 +92,44 @@ const style = {
                   </Stack>
                   <Stack direction="column" spacing="10px">
                     <label htmlFor="">Email</label>
-                    <TextField
-                      id="outlined-basic"
-                      label="Enter your Email"
-                      variant="outlined"
-                      onChange={(e)=> setDetails((preValue)=> {
-                        const getValue = {...preValue}
-                        getValue.email= e.target.value
-                        return getValue
-                      })}
-                    />
+                    <Input
+                type="text"
+                placeholder="Enter your email"
+                onChange={(e) =>
+                  setDetails((preValue) => {
+                    const getValue = { ...preValue };
+                    getValue.email = e.target.value;
+                    return getValue;
+                  })
+                }
+                value={getDetails.email}
+                
+            />
                   </Stack>
                   <Stack direction="column" spacing="10px">
                     <label htmlFor="">Create password</label>
-                    <TextField
-                      id="outlined-basic"
-                      label="Enter your password"
-                      variant="outlined"
-                      type='password'
-                      onChange={(e)=> setDetails((preValue)=> {
-                        const getValue = {...preValue}
-                        getValue.password= e.target.value
-                        return getValue
-                      })}
-                    />
+                    <Input
+              placeholder="Enter your password"
+                type={values.showPassword ? "text" : "password"}
+                onChange={(e) =>
+                  setDetails((preValue) => {
+                    const getValue = { ...preValue };
+                    getValue.password = e.target.value;
+                    return getValue;
+                  })
+                }
+                value={getDetails.password}
+                endAdornment={
+                    <InputAdornment position="end">
+                        <SvgIcon
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                        >
+                            {values.showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </SvgIcon>
+                    </InputAdornment>
+                }
+            />
                          
                     <PasswordChecklist
                   

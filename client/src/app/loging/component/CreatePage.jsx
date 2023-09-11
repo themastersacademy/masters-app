@@ -64,8 +64,10 @@ export default function CreatePage({ controlNotification }) {
       })
       .then(res => res.json())
       .then((data)=> {
+      
         controlNotification(data.status,data.message)
-        if(data.status == 'success')  navigator("/login/goal");
+        if(data.status == 'success' && data.change == 'create')  navigator("/login/goal")
+        if(data.status == 'success' && data.change == 'edit')  navigator("/login");
       })
 
     }

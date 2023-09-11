@@ -16,7 +16,8 @@ const {
   isValueExam,
   isSignIn,
   checkExamInfo,
-  sessionDistroy
+  sessionDistroy,
+  verifyGoal
 
 } = require("./auth/auth.js");
 const connectDB = require("./util/connectDB.js");
@@ -90,7 +91,7 @@ app.get("/login/create", userCreate, (req, res) => {
 app.get("/login/verify", userCreate, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
-app.get("/login/goal", userCreate, (req, res) => {
+app.get("/login/goal", userCreate,verifyGoal, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
@@ -156,8 +157,6 @@ app.get("/exam/solution",isSignIn,(req, res) => {
 
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
-
-
 
 app.use((err, req, res, next) => {
   console.log(err);
