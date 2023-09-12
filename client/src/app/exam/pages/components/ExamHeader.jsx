@@ -29,7 +29,7 @@ export default function ExamHeader({ isMobileView ,user}) {
   }
 
   const handleHome = () =>{
-    navigete('/login')
+    navigete(`/?=${user.id}`)
   }
   return (
     <Paper

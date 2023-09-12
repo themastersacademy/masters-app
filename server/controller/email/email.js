@@ -12,15 +12,12 @@ exports.SendEmail = (email, OTP) => {
     },
   });
 
-
-
   var mailOptions = {
     from: process.env.USER,
     to: email,
     subject: "[The Master Academy] Please verify your account",
-  
-    html: textHtml(OTP)
 
+    html: textHtml(OTP),
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -32,106 +29,139 @@ exports.SendEmail = (email, OTP) => {
   });
 };
 
-
-const textHtml = (OTP) =>{
-  return`<!DOCTYPE html>
+const textHtml = (OTP) => {
+  return `<!DOCTYPE html>
   <html>
-  <head>
+    <head>
       <title>OTP Email</title>
       <style>
-          body {
-              font-family: Arial, sans-serif;
-          }
-          .container {
-              max-width: 600px;
-              margin: 0 auto;
-              padding: 20px;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-          }
-          .header {
-             
-              
-              padding: 10px;
-              border-radius: 5px 5px 0 0;
-          }
-          .logo {
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             gap: '10px';
-             
-  
-          }
-          .content {
-              padding: 20px;
-          }
-          .otp-container {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-top: 20px;
-              gap: 20px;
-          }
-          .otp-block {
-              width: 50px;
-              height: 50px;
-              border: 2px solid #187163;
-              border-radius: 5px;
-              font-size: 24px;
-              margin-right: 10px;
-              margin-left: 10px;
-              text-align: center;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-          }
-          .footer {
-              background-color: #f4f4f4;
-              padding: 10px;
-              text-align: center;
-              border-radius: 0 0 5px 5px;
-          }
-          .otp-align{
-              display: flex;
-              align-items: center;
-              width: 100%;
-              height:300px;
-              justify-content: center;
-          }
+        * {
+          padding: 0;
+          box-sizing: border-box;
+          margin: 0;
+        }
+        body {
+          font-family: Arial, sans-serif;
+        }
+        .container{
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+        .header {
+          padding: 10px;
+          border-radius: 5px 5px 0 0;
+        }
+        .logo {
+          display: flex;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+        }
+        .content {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          gap: 20px;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+        }
+        .otp-container {
+          display: flex;
+          margin-top: 20px;
+          gap: 20px;
+        }
+        .otp-block {
+          width: 50px;
+          height: 50px;
+          border: 2px solid #187163;
+          border-radius: 5px;
+          padding: 0;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .footer {
+          background-color: #f4f4f4;
+          padding: 10px;
+          text-align: center;
+          border-radius: 0 0 5px 5px;
+        }
+        .otp-align {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 300px;
+          justify-content: center;
+        }
       </style>
-  </head>
-  <body>
+    </head>
+    <body>
       <div class="container">
-          <div class="header">
-              <div class="logo"  >
-                  <img style="width:50px;height: 50px; margin-right:10px" src='https://upload.incrix.com/search?url=/file/MasterAcademy/image/file-1693460630628.png' alt="Company Logo">
-                  <p style="
-                  font-family: DM Sans;
-                  font-size: 18px;
-                  font-style: normal;
-                  font-weight: 500;
-                  line-height: normal" > The <font  color="#FEA800"  >Masters Academy </font> </p>
+        <div class="header">
+          <center  > 
+              <div style="display: flex; width: 50%; ">
+                  <img
+                  style="height: 50px; margin-right: 10px "
+                  src="https://upload.incrix.com/search?url=/file/MasterAcademy/image/file-1694522100334.png"
+                  alt="Company Logo"
+                />
+              
+                <p
+                  style="    
+                    font-family: DM Sans;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                   display: inline-block;
+                    height: 50px;
+                margin-left: 10px;
+                 margin-bottom: auto;
+                 margin-top: 10px;
+                  "
+                >
+                  The <font color="#FEA800">Masters Academy </font>
+                </p>
               </div>
-          </div>
-          <div  class="content">
-            
-              <p>Your One-Time Password (OTP) is:</p>
-              <div style="display:flex; justify-content: center">
-              <div class="otp-container">
-                  <div class="otp-block">${ OTP[0] }</div>
-                  <div class="otp-block">${ OTP[1] }</div>
-                  <div class="otp-block">${ OTP[2] }</div>
-                  <div class="otp-block">${ OTP[3] }</div>
-              </div>
-          </div>
-              <p>Please use this OTP to complete your verification process.</p>
-            
-          </div>
-          <div class="footer">
-              <p style="color: #187163;">Best regards,<br>The Masters Academy</p>
-          </div>
+           
+       
+         
+        </div>
+        <center  >
+          <p style="margin-bottom: 20px;">Your One-Time Password (OTP) is:</p>
+         
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px; border-radius: 5px; margin-left: 10px; margin-right: 10px; height: 50px; text-align: center;  line-height: 50px; ">
+                ${OTP[0]}
+              </p>
+  
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px;  border-radius: 5px;  margin-left: 10px; margin-right: 10px; height: 50px; text-align: center;  line-height: 50px; ">
+              ${OTP[1]}
+              </p>
+  
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px;  border-radius: 5px; margin-left: 10px; margin-right: 10px; height: 50px; text-align: center;  line-height: 50px; ">
+              ${OTP[2]}
+              </p>
+  
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px ;  border-radius: 5px; height: 50px;  margin-left: 10px; margin-right: 10px; text-align: center;  line-height: 50px; ">
+              ${OTP[3]}
+              </p>
+  
+      
+          <p style="margin-top: 20px;margin-bottom: 10px;">Please use this OTP to complete your verification process.</p>
+        </center>
+        <div class="footer">
+          <p style="color: #187163">Best regards,<br />The Masters Academy</p>
+        </div>
       </div>
-  </body>
-  </html>`
-}
+    </body>
+  </html>
+  
+  
+  `;
+};

@@ -3,7 +3,7 @@ const user = require("../../models/user.js");
 const questionCollection = require("../../models/questionCollection.js");
 const examState = require("../../models/examState.js");
 const Goal = require("../../models/goal.js");
-const Batch = require('../../models/batch.js')
+const Batch = require("../../models/batch.js");
 const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
 exports.getExamInfo = async function (req, res) {
@@ -15,15 +15,16 @@ exports.getExamInfo = async function (req, res) {
     if (!examInfo) {
       return res.status(404).send("exam not found");
     }
-   const NoOfquestion = []
-   examInfo.questionCategory.map(task => task.questionList.map(task =>{
-    NoOfquestion.push(task)
-   }))
-
+    const NoOfquestion = [];
+    examInfo.questionCategory.map((task) =>
+      task.questionList.map((task) => {
+        NoOfquestion.push(task);
+      })
+    );
 
     res.status(200).json({
-      totalMark :NoOfquestion.length * examInfo.mark,
-      NoOfquestion:NoOfquestion.length,
+      totalMark: NoOfquestion.length * examInfo.mark,
+      NoOfquestion: NoOfquestion.length,
       title: examInfo.title,
       examDate: examInfo.examDate,
       examDuration: examInfo.examDuration,
@@ -44,7 +45,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
-     //State.save();
+  State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -54,11 +55,13 @@ exports.startExam = async function (req, res) {
       const get = examInfo.studentsPerformance.filter(
         (task) => task.id.valueOf() == userID.valueOf()
       );
-
+      const time = DateTime.local()
+        .setZone("Asia/Kolkata")
+        .toFormat("HH:mm:ss");
       if (get.length === 0) {
         let totalQuestion = 0;
         const isValidExam = await isValidExamStart(examInfo);
-
+        console.log(isValidExam);
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
@@ -102,7 +105,8 @@ exports.startExam = async function (req, res) {
           examInfo.studentsPerformance.push({
             id: userID,
             name: userName,
-            startTime: Date.now(),
+
+            startTime: time,
             studentAnswerList,
             bookmarkedQuestionList,
             score: 0,
@@ -116,78 +120,68 @@ exports.startExam = async function (req, res) {
             .status(200)
             .json({ message: "exam started", status: "success" });
         } else {
-         
-           const  check = await isValidExamEnd(examInfo)
-           console.log(check)
-           if(check) {
+          const check = await isValidExamEnd(examInfo);
+          console.log(check);
+          if (check) {
             delete req.session.examID;
-            const batch = await Batch.findOne({_id:examInfo.batchID})
-            batch.scheduleTest.map(task =>{
-              if(task.examID.valueOf() == examInfo._id.valueOf() && task.status == 'pending') {
-                
-                task.status = 'complete'
+            const batch = await Batch.findOne({ _id: examInfo.batchID });
+            batch.scheduleTest.map((task) => {
+              if (
+                task.examID.valueOf() == examInfo._id.valueOf() &&
+                task.status == "pending"
+              ) {
+                task.status = "complete";
               }
-            })
-             batch.save()
-             examState.deleteOne({ examID, userID }).then(function(){
-              console.log("Data deleted")  //  Success
-          }).catch(function(error){
-              console.log(error)  // Failure
-          })
-            return res.status(400).json({status:'info', message: "exam was completed"})
+            });
+            batch.save();
+            examState
+              .deleteOne({ examID, userID })
+              .then(function () {
+                console.log("Data deleted"); //  Success
+              })
+              .catch(function (error) {
+                console.log(error); // Failure
+              });
+            return res
+              .status(400)
+              .json({ status: "info", message: "exam was completed" });
           }
           return res.status(400).json({ message: "exam not started yet" });
         }
       } else {
         delete req.session.examID;
-        return res.status(400).json({status:'info',message: "you attended the exam" });
+        return res
+          .status(400)
+          .json({ status: "info", message: "you attended the exam" });
       }
     }
     if (examInfo.type === "practice" || examInfo.type === "mock") {
+      let time = DateTime.local().setZone("Asia/Kolkata").toFormat("HH:mm:ss");
+      const getSecond = DateTime.now().setZone("Asia/Kolkata");
 
-
-  
-       let time = DateTime.local().setZone("Asia/Kolkata").toFormat("HH:mm:ss");
-       const date2 = DateTime.now().setZone("Asia/Kolkata");
-       const timestamp = date2.toMillis();
+      const timestamp = getSecond.toMillis();
 
       examInfo.examStartTime = time;
       const duration = examInfo.examDuration;
       const durationArray = duration.split(":");
-  
+
       const durationSeconds =
         eval(durationArray[0]) * 3600 +
         eval(durationArray[1]) * 60 +
         eval(durationArray[2]);
-       
-        console.log(DateTime.now(timestamp+durationSeconds * 1000).setZone("Asia/Kolkata"));
-        let date3 = new Date(timestamp+durationSeconds * 1000);
-        let indianTime = date3.toLocaleString("en-IN", {timeZone: "Asia/Kolkata",hour12: false})
-        console.log(indianTime)
-        const getTime = indianTime.split(',')[1]
-        console.log(getTime)
-      // const examEndTime = new Date(timestamp+durationSeconds * 1000);
-      // console.log(examEndTime)
-      examInfo.examEndTime = getTime
-      // examInfo.examEndTime = `${examEndTime.getHours()}:${examEndTime.getMinutes()}:${examEndTime.getSeconds()}`;
+
+      let date3 = new Date(timestamp + durationSeconds * 1000);
+      let indianTime = date3.toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+        hour12: false,
+      });
+      const getTime = indianTime.split(",")[1];
+
+      examInfo.examEndTime = getTime;
+
       const get = examInfo.studentsPerformance.filter(
         (task) => task.id.valueOf() == userID.valueOf()
       );
-
-      
-      // examInfo.examStartTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-      // const duration = examInfo.examDuration;
-      // const durationArray = duration.split(":");
-      // const durationSeconds =
-      //   eval(durationArray[0]) * 3600 +
-      //   eval(durationArray[1]) * 60 +
-      //   eval(durationArray[2]);
-      // const examEndTime = new Date(date.getTime() + durationSeconds * 1000);
-      // examInfo.examEndTime = `${examEndTime.getHours()}:${examEndTime.getMinutes()}:${examEndTime.getSeconds()}`;
-      // const get = examInfo.studentsPerformance.filter(
-      //   (task) => task.id.valueOf() == userID.valueOf()
-      // );
-
       if (get.length === 0) {
         const studentAnswerList = [];
         console.log(examInfo.questionCategory);
@@ -231,16 +225,16 @@ exports.startExam = async function (req, res) {
         examInfo.studentsPerformance.push({
           id: userID,
           name: userName,
-           //startTime: Date.now(),
-          startTime:time,
+          //startTime: Date.now(),
+          startTime: time,
           studentAnswerList,
           bookmarkedQuestionList,
           score: 0,
           mark: 5,
           status: "started",
         });
-       
-       await examInfo.save();
+
+        await examInfo.save();
         req.session.examID = examInfo._id;
         req.session.examName = examInfo.title;
         return res
@@ -256,33 +250,59 @@ exports.startExam = async function (req, res) {
   }
 };
 
-
 const isValidExamEnd = async function (examInfo) {
-  const currentTime = new Date();
+  let date = new Date();
+  let indianTime = date.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+
+  const currentTime = indianTime;
+
   let examDate = examInfo.examDate.split("/");
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
-  return (
-    currentTime > new Date(examDate + " " + examInfo.examEndTime)
-  );
+  let examEnd = new Date(examDate + " " + examInfo.examEndTime);
+  let indianTimeEnd = examEnd.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+  return currentTime > indianTimeEnd;
 };
 const isValidExamStart = async function (examInfo) {
-  const currentTime = new Date();
+  let date = new Date();
+  let indianTime = date.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+  const getTime = indianTime.split(",");
+  const getDate = getTime[0].split("/");
+  const currentTime = indianTime;
   let examDate = examInfo.examDate.split("/");
-  console.log(currentTime < new Date(examDate + " " + examInfo.examEndTime));
+
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+
+  let examStat = new Date(examDate + " " + examInfo.examStartTime);
+  let indianTimeStart = examStat.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+
+  const examEnd = new Date(examDate + " " + examInfo.examEndTime);
+  const indianTimeEnd = examEnd.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+
   return (
-    examInfo.examDate ===
-      `${currentTime.getDate()}/${
-        currentTime.getMonth() + 1
-      }/${currentTime.getFullYear()}` &&
-    currentTime > new Date(examDate + " " + examInfo.examStartTime) &&
-    currentTime < new Date(examDate + " " + examInfo.examEndTime)
+    examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
+    currentTime > indianTimeStart &&
+    currentTime < indianTimeEnd
   );
 };
 
 exports.getExamState = async function (req, res) {
   const userID = req.session.userID;
- 
+
   const userName = req.session.userName;
   const examId = req.session.examID;
 
@@ -322,12 +342,9 @@ exports.getExamState = async function (req, res) {
         };
       }
       for (let i = 0; i < getQuestionID.length; i++) {
-        
         const ques = await getQuestion(getQuestionID[i]);
         questionCollections.push(ques);
       }
-
- 
 
       let examDate = getExam.examDate.split("/");
       examDate = `${
@@ -339,65 +356,72 @@ exports.getExamState = async function (req, res) {
       const studentPerform = getExam.studentsPerformance.filter(
         (task) => task.id.valueOf() == User._id.valueOf()
       );
-    
+
       getExam.save();
 
-      if(studentPerform.length > 0)
-      if (studentPerform[0].status == "started") {
-        const examInfoData = {
-          examTitle: getExam.title,
-          examDate: getExam.examDate ? getExam.examDate : examDate,
-          examStartTime:
-            getExam.examStartTime.split(":").length == 3
-              ? getExam.examStartTime
-              : `${getExam.examStartTime}:00`,
-          examEndTime:
-            getExam.examEndTime.split(":").length == 3
-              ? getExam.examEndTime
-              : `${getExam.examEndTime}:00`,
-          examDuration:
-            getExam.examDuration.split(":").length == 3
-              ? getExam.examDuration
-              : `${getExam.examDuration}:00`,
-          mark: getExam.mark,
-          negativeMark: getExam.negativeMark,
-          currentTime: Date.now(),
-          questionCategoryList,
-          questionCollections,
-          studentsPerformance: [
-            {
-              id: userID,
-              name: userName,
-              startTime: `${getExam.examStartTime}:00`,
-              endTime: `${getExam.examEndTime}:00`,
-              studentAnswerList: studentPerform[0].studentAnswerList,
-              bookmarkedQuestionList: studentPerform[0].bookmarkedQuestionList,
-              mark: getExam.mark,
-              currentIndex: studentPerform[0].currentIndex,
-              negativeMark: getExam.negativeMark,
-              totalMark: getExam.totalMark,
-              status: getExam.status,
-              windowCloseWarning: getExam.windowCloseWarning,
-              windowResizedWarning: getExam.windowResizedWarning,
-            },
-          ],
-        };
+      if (studentPerform.length > 0)
+        if (studentPerform[0].status == "started") {
+          let time = DateTime.local()
+            .setZone("Asia/Kolkata")
+            .toFormat("HH:mm:ss");
+          const examInfoData = {
+            examTitle: getExam.title,
+            examDate: getExam.examDate ? getExam.examDate : examDate,
+            examStartTime:
+              getExam.examStartTime.split(":").length == 3
+                ? getExam.examStartTime
+                : `${getExam.examStartTime}:00`,
+            examEndTime:
+              getExam.examEndTime.split(":").length == 3
+                ? getExam.examEndTime
+                : `${getExam.examEndTime}:00`,
+            examDuration:
+              getExam.examDuration.split(":").length == 3
+                ? getExam.examDuration
+                : `${getExam.examDuration}:00`,
+            mark: getExam.mark,
+            negativeMark: getExam.negativeMark,
+            //currentTime: Date.now(),
+            currentTime: time,
+            questionCategoryList,
+            questionCollections,
+            studentsPerformance: [
+              {
+                id: userID,
+                name: userName,
+                startTime: `${getExam.examStartTime}:00`,
+                endTime: `${getExam.examEndTime}:00`,
+                studentAnswerList: studentPerform[0].studentAnswerList,
+                bookmarkedQuestionList:
+                  studentPerform[0].bookmarkedQuestionList,
+                mark: getExam.mark,
+                currentIndex: studentPerform[0].currentIndex,
+                negativeMark: getExam.negativeMark,
+                totalMark: getExam.totalMark,
+                status: getExam.status,
+                windowCloseWarning: getExam.windowCloseWarning,
+                windowResizedWarning: getExam.windowResizedWarning,
+              },
+            ],
+          };
 
-        return res.json(examInfoData);
-      } else {
-        if (studentPerform[0].status == "submitted")
-          return res.json({
-            status: "error",
-            message: "exam already submitted",
-          });
-        if (studentPerform[0].status == "terminated")
-          return res.json({ status: "error", message: "exam terminated" });
-        if (studentPerform[0].status == "notStarted")
-          return res.json({ status: "error", message: "exam not started yet" });
-        return res.json({ status: "error", message: "something went wrong" });
-      }
+          return res.json(examInfoData);
+        } else {
+          if (studentPerform[0].status == "submitted")
+            return res.json({
+              status: "error",
+              message: "exam already submitted",
+            });
+          if (studentPerform[0].status == "terminated")
+            return res.json({ status: "error", message: "exam terminated" });
+          if (studentPerform[0].status == "notStarted")
+            return res.json({
+              status: "error",
+              message: "exam not started yet",
+            });
+          return res.json({ status: "error", message: "something went wrong" });
+        }
       else {
-
         return res.json({ status: "error", message: "something went wrong" });
       }
     }
@@ -461,7 +485,14 @@ exports.submitExam = async (req, res, next) => {
   try {
     const userID = req.session.userID;
     const examID = req.session.examID;
-    const date = new Date();
+    // const date = new Date();
+    let date = new Date();
+    let indianTime = date.toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+    });
+    const getDate = indianTime.split(",")[0].split("/");
+
     if (examID) {
       const examInfo = await exam.findOne({ _id: examID });
 
@@ -481,7 +512,6 @@ exports.submitExam = async (req, res, next) => {
           let studentNegativeMark = 0;
           const negativeMark = examInfo.negativeMark;
           const totalMark = mark * totalQuestion;
-
           let actualCorrectAttend = 0;
           let actualWrongAttend = 0;
           let score = 0;
@@ -603,9 +633,10 @@ exports.submitExam = async (req, res, next) => {
               examName: examInfo.title,
               totalMarks: totalMark,
               score,
-              date: `${date.getDate()}/${
-                date.getMonth() + 1
-              }/${date.getFullYear()}`,
+              // date: `${date.getDate()}/${
+              //   date.getMonth() + 1
+              // }/${date.getFullYear()}`,
+              date: `${getDate[1]}/${getDate[0]}/${getDate[2]}`,
               topics,
             });
 
@@ -637,12 +668,15 @@ exports.submitExam = async (req, res, next) => {
             examInfo.save();
 
             // delete Exam State
-          
-            examState.deleteOne({ examID, userID }).then(function(){
-              console.log("Data deleted"); // Success
-          }).catch(function(error){
-              console.log(error); // Failure
-          })
+
+            examState
+              .deleteOne({ examID, userID })
+              .then(function () {
+                console.log("Data deleted"); // Success
+              })
+              .catch(function (error) {
+                console.log(error); // Failure
+              });
 
             // delete session ID
             delete req.session.examID;
@@ -769,18 +803,20 @@ exports.submitExam = async (req, res, next) => {
               batchID: examInfo.batchID,
               type: "schedule",
               mark,
-            })
+            });
             rank.save();
           }
           examInfo.save();
 
           // delate Exam State
-          examState.deleteOne({ examID, userID }).then(function(){
-            console.log("Data deleted"); // Success
-        }).catch(function(error){
-            console.log(error); // Failure
-        })
-       
+          examState
+            .deleteOne({ examID, userID })
+            .then(function () {
+              console.log("Data deleted"); // Success
+            })
+            .catch(function (error) {
+              console.log(error); // Failure
+            });
 
           // delete session
 
