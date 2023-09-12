@@ -44,7 +44,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
-     State.save();
+     //State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -160,14 +160,21 @@ exports.startExam = async function (req, res) {
         eval(durationArray[1]) * 60 +
         eval(durationArray[2]);
        
-
-
-      const examEndTime = new Date(timestamp+ durationSeconds * 1000);
-      examInfo.examEndTime = `${examEndTime.getHours()}:${examEndTime.getMinutes()}:${examEndTime.getSeconds()}`;
+        console.log(DateTime.now(timestamp+durationSeconds * 1000).setZone("Asia/Kolkata"));
+        let date3 = new Date(timestamp+durationSeconds * 1000);
+        let indianTime = date3.toLocaleString("en-IN", {timeZone: "Asia/Kolkata",hour12: false})
+        console.log(indianTime)
+        const getTime = indianTime.split(',')[1]
+        console.log(getTime)
+      // const examEndTime = new Date(timestamp+durationSeconds * 1000);
+      // console.log(examEndTime)
+      examInfo.examEndTime = getTime
+      // examInfo.examEndTime = `${examEndTime.getHours()}:${examEndTime.getMinutes()}:${examEndTime.getSeconds()}`;
       const get = examInfo.studentsPerformance.filter(
         (task) => task.id.valueOf() == userID.valueOf()
       );
 
+      
       // examInfo.examStartTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       // const duration = examInfo.examDuration;
       // const durationArray = duration.split(":");
@@ -232,7 +239,8 @@ exports.startExam = async function (req, res) {
           mark: 5,
           status: "started",
         });
-        await examInfo.save();
+       
+       await examInfo.save();
         req.session.examID = examInfo._id;
         req.session.examName = examInfo.title;
         return res
