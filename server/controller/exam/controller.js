@@ -4,6 +4,7 @@ const questionCollection = require("../../models/questionCollection.js");
 const examState = require("../../models/examState.js");
 const Goal = require("../../models/goal.js");
 const Batch = require('../../models/batch.js')
+const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
 exports.getExamInfo = async function (req, res) {
   try {
@@ -143,19 +144,42 @@ exports.startExam = async function (req, res) {
       }
     }
     if (examInfo.type === "practice" || examInfo.type === "mock") {
-      const date = new Date();
-      examInfo.examStartTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+
+  
+       let time = DateTime.local().setZone("Asia/Kolkata").toFormat("HH:mm:ss");
+       const date2 = DateTime.now().setZone("Asia/Kolkata");
+       const timestamp = date2.toMillis();
+
+      examInfo.examStartTime = time;
       const duration = examInfo.examDuration;
       const durationArray = duration.split(":");
+  
       const durationSeconds =
         eval(durationArray[0]) * 3600 +
         eval(durationArray[1]) * 60 +
         eval(durationArray[2]);
-      const examEndTime = new Date(date.getTime() + durationSeconds * 1000);
+       
+
+
+      const examEndTime = new Date(timestamp+ durationSeconds * 1000);
       examInfo.examEndTime = `${examEndTime.getHours()}:${examEndTime.getMinutes()}:${examEndTime.getSeconds()}`;
       const get = examInfo.studentsPerformance.filter(
         (task) => task.id.valueOf() == userID.valueOf()
       );
+
+      // examInfo.examStartTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+      // const duration = examInfo.examDuration;
+      // const durationArray = duration.split(":");
+      // const durationSeconds =
+      //   eval(durationArray[0]) * 3600 +
+      //   eval(durationArray[1]) * 60 +
+      //   eval(durationArray[2]);
+      // const examEndTime = new Date(date.getTime() + durationSeconds * 1000);
+      // examInfo.examEndTime = `${examEndTime.getHours()}:${examEndTime.getMinutes()}:${examEndTime.getSeconds()}`;
+      // const get = examInfo.studentsPerformance.filter(
+      //   (task) => task.id.valueOf() == userID.valueOf()
+      // );
 
       if (get.length === 0) {
         const studentAnswerList = [];
@@ -200,7 +224,8 @@ exports.startExam = async function (req, res) {
         examInfo.studentsPerformance.push({
           id: userID,
           name: userName,
-          startTime: Date.now(),
+           //startTime: Date.now(),
+          startTime:time,
           studentAnswerList,
           bookmarkedQuestionList,
           score: 0,

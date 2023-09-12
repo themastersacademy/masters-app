@@ -83,7 +83,7 @@ const examSchema = new Schema({
                 required: true
             },
             startTime:{
-                type: Date,
+                type: String,
                 required: true
             },
             endTime:{
