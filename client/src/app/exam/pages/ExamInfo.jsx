@@ -26,12 +26,13 @@ export default function ExamInfo() {
         let examHours = examTime[0];
         let examMinutes = examTime[1];
         let examSeconds = examTime[2];
-          let date = new Date(`${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds}`)
+          let date = new Date(`${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}`)
           let indianTime = date.toLocaleString("en-US", {
             timeZone: "Asia/Kolkata",
             hour12: false,
           });
-          let indianTime1 = date.toLocaleString("en-IN", {
+          let date1 = new Date()
+          let indianTime1 = date1.toLocaleString("en-US", {
             timeZone: "Asia/Kolkata",
             hour12: false,
           });
