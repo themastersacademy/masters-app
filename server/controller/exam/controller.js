@@ -45,7 +45,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
-  State.save();
+ // State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -61,7 +61,7 @@ exports.startExam = async function (req, res) {
       if (get.length === 0) {
         let totalQuestion = 0;
         const isValidExam = await isValidExamStart(examInfo);
-        console.log(isValidExam);
+        
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
@@ -261,14 +261,15 @@ const isValidExamEnd = async function (examInfo) {
 
   let examDate = examInfo.examDate.split("/");
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
-  let examEnd = new Date(examDate + " " + examInfo.examEndTime);
+  let examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
   let indianTimeEnd = examEnd.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
   return currentTime > indianTimeEnd;
 };
-const isValidExamStart = async function (examInfo) {
+const isValidExamStart =  function (examInfo) {
+
   let date = new Date();
   let indianTime = date.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
@@ -281,18 +282,20 @@ const isValidExamStart = async function (examInfo) {
 
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
 
-  let examStat = new Date(examDate + " " + examInfo.examStartTime);
-  let indianTimeStart = examStat.toLocaleString("en-US", {
+  const examStat = new Date(examDate + " " + `${examInfo.examStartTime}:00`);
+  const indianTimeStart = examStat.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
-
-  const examEnd = new Date(examDate + " " + examInfo.examEndTime);
+  const examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
   const indianTimeEnd = examEnd.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
-
+  console.log(currentTime,indianTimeEnd);
+  console.log( currentTime,indianTimeStart);
+  console.log( 'startTime',currentTime > indianTimeStart)
+console.log( 'endTime', currentTime < indianTimeEnd);
   return (
     examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
     currentTime > indianTimeStart &&

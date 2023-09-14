@@ -13,7 +13,7 @@ import SvgIcon from '@mui/material/SvgIcon'
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Requests from './Requests'
 import Batch from "./Batch";
-
+import { DateTime }  from "luxon"
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,8 +50,17 @@ export default function BatchFolder({}) {
     avalibleQues: [],
     batchQues: [],
   });
+ 
+  let date = new Date();
+  let indianTime = date.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+  
+
   const [details, setDetails] = useState({
-    setDate: new Date(),
+    // setDate: new Date(),
+    setDate:indianTime,
     setTimeFrom: "0:0",
     setTimeTo: "0:0",
     setMark: "",
