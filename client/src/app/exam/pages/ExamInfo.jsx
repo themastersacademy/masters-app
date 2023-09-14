@@ -31,7 +31,12 @@ export default function ExamInfo() {
             timeZone: "Asia/Kolkata",
             hour12: false,
           });
+          let indianTime1 = date.toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour12: false,
+          });
           console.log(indianTime);
+          console.log(indianTime1);
         setExamInfo(data);
         setIsScheduled(() => {
           return data.type === "schedule" ? true : false;
