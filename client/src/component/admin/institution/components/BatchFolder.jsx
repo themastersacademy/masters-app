@@ -97,8 +97,7 @@ export default function BatchFolder({}) {
       .then((data) => {
       
         if (data.status == "ok") {
-      
-        
+ 
           setHead(data.head);
    setBatch(data.message)
         }
@@ -134,11 +133,10 @@ fetch('/api/admin/getRequestAccess',{
     <Paper
       sx={{
         width: "100%",
-        // height: "calc(100vh - 110px)",
-        height:"100vh",
+         height: "calc(100vh - 120px)",
         padding: "0 20px",
         margin: "20px 0",
-
+        overflow:"scroll",
         "::-webkit-scrollbar": {
           display: "none",
         },

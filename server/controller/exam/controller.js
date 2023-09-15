@@ -105,7 +105,6 @@ exports.startExam = async function (req, res) {
           examInfo.studentsPerformance.push({
             id: userID,
             name: userName,
-
             startTime: time,
             studentAnswerList,
             bookmarkedQuestionList,
@@ -142,9 +141,11 @@ exports.startExam = async function (req, res) {
               .catch(function (error) {
                 console.log(error); // Failure
               });
+             
+
             return res
               .status(400)
-              .json({ status: "info", message: "exam was completed" });
+              .json({ status: "info", message: "exam was completed"  })
           }
           return res.status(400).json({ message: "exam not started yet" });
         }
@@ -252,7 +253,7 @@ exports.startExam = async function (req, res) {
 
 const isValidExamEnd = async function (examInfo) {
   let date = new Date();
-  let indianTime = date.toLocaleString("en-US", {
+  let indianTime = date.toLocaleString("en-US",{
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
@@ -282,16 +283,26 @@ const isValidExamStart =  function (examInfo) {
 
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
 
-  const examStat = new Date(examDate + " " + `${examInfo.examStartTime}:00`);
-  const indianTimeStart = examStat.toLocaleString("en-US", {
+  var examStat = new Date(examDate + " " + `${examInfo.examStartTime}:00`);
+ 
+  examStat.setHours(examStat.getHours()+2)
+  examStat.setMinutes(examStat.getMinutes()+30)
+          
+
+           
+  const indianTimeStart = examStat.toLocaleString("en-US",{
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
-  const examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
+  var examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
+  
+  examEnd.setHours(examEnd.getHours()+2)
+  examEnd.setMinutes(examEnd.getMinutes()+30)
   const indianTimeEnd = examEnd.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
+
   console.log(currentTime,indianTimeEnd);
   console.log( currentTime,indianTimeStart);
   console.log( 'startTime',currentTime > indianTimeStart)

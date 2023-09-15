@@ -9,10 +9,11 @@ import { Stack } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { SvgIcon } from '@mui/material';
+import '../../../../App.css'
 export default function Requests({ batch,getRequestAccess }) {
   const check = [];
   return (
-    <div>
+    <div className="scrollHide" style={{overflow:'scroll',height:'65vh' }} >
       {batch.studentList.length > 0
         ? batch.studentList.map((task, index) => {
             if (task.request == false) {

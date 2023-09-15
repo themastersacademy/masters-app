@@ -145,7 +145,7 @@ export default function ScheduleTest({
   }, [isChange]);
 
   return (
-    <div >
+    <div className="scrollHide" style={{overflow:'scroll', height:'70vh' }} >
       <Stack direction="row" sx={{ marginTop: "10px" }}>
         <Button
           sx={{
@@ -159,6 +159,7 @@ export default function ScheduleTest({
             "&:hover": {
               backgroundColor: "#185C52",
             },
+            
           }}
           onClick={saveChangeBatch}
         >

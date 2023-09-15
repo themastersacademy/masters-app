@@ -17,27 +17,7 @@ export default function ExamInfo() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data)
-        let examTime = data.examEndTime.split(":");
-        let examDate = data.examDate.split("/");
-    
-        let examDay = examDate[0];
-        let examMonth = examDate[1];
-        let examYear = examDate[2];
-        let examHours = examTime[0];
-        let examMinutes = examTime[1];
-        let examSeconds = examTime[2];
-          let date = new Date(`${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}`)
-          let indianTime = date.toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-            hour12: false,
-          });
-          let date1 = new Date()
-          let indianTime1 = date1.toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-            hour12: false,
-          });
-          console.log(indianTime);
-          console.log(indianTime1);
+      
         setExamInfo(data);
         setIsScheduled(() => {
           return data.type === "schedule" ? true : false;
@@ -46,10 +26,8 @@ export default function ExamInfo() {
       });
       fetch('/api/admin/getUserDetails')
       .then(res => res.json())
-      .then(data => setuser(data))
-
-   
-  }, []);
+      .then(data => setuser(data)) 
+  },[]);
 
   return (
     examInfo && (

@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import '../../../../App.css'
 import { Stack,Button,SvgIcon } from "@mui/material";
 
 
@@ -16,7 +17,7 @@ export default function Batch({ batch,getRequestAccess }) {
   
   const check = [];
   return (
-    <div>
+    <div className="scrollHide" style={{overflow:'scroll',height:'65vh' }} >
        {batch.studentList.length > 0
         ? batch.studentList.map((task, index) => {
             if (task.request == true) {
@@ -106,7 +107,7 @@ const handleCancel =(data) =>{
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody >
           {task.map((row, index) => 
           { 
             

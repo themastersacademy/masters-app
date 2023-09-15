@@ -165,7 +165,7 @@ function Dashboard() {
         width: "100%",
         height: "100vh",
         overflow: "hidden",
-
+       padding:'20px'
       }}
 
     >
