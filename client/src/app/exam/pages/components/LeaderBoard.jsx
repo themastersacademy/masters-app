@@ -1,5 +1,5 @@
 import { Paper, Stack } from "@mui/material";
-import Avater from "../../../../util/Avater";
+
 
 export default function LeaderBoard({ leaderBoardList, isMobileView }) {
   return (
@@ -48,9 +48,10 @@ export default function LeaderBoard({ leaderBoardList, isMobileView }) {
           overflow="scroll"
           height={!isMobileView ? "calc(100vh - 490px)" : "auto"}
         >
-          {leaderBoardList.rankList.map((item, index) => (
-            <LeaderBoardItem key={index} {...item} />
-          ))}
+          {leaderBoardList.rankList.map((item, index) => 
+            {
+          if(item.rank <= 3) return <LeaderBoardItem key={index} {...item} />
+          })}
         </Stack>
       </Stack>
     </Paper>
@@ -68,30 +69,14 @@ const LeaderBoardItem = ({ name, mark, rank, avatar}) => {
     >
       <Stack direction="row" alignItems="center" sx={{ width: "100%" }} gap={2}>
         <Stack position="relative" width={"60px"} height={"60px"}>
-           {rank == 1 || rank == 2 || rank == 3 ? (
+   
             <img
               src={
-                rank == 1
-                  ? avatar
-                  : rank == 2
-                  ? avatar
-                  : avatar
+               avatar
               }
               alt=""
             />
-          ) : null} 
-         
-          {/* <img
-            width={"40px"}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-            src={avatar}
-            alt=""
-          /> */}
+          
         </Stack>
         <Stack width="100%" gap={0.4}>
           <h1

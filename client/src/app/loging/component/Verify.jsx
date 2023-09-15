@@ -78,6 +78,9 @@ function Verify({controlNotification}) {
             label="Enter your OTP"
             variant="outlined"
             onChange={(e) => setOtp(e.target.value)}
+            onKeyDown={(e) => {
+              if(e.key == "Enter") Verify()
+            }}
           />
           <div style={style.otp} onClick={resendOtp}  >Resend OTP</div>
         </Stack>

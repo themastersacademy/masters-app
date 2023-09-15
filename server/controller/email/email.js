@@ -116,7 +116,7 @@ const textHtml = (OTP) => {
                 <p
                   style="    
                     font-family: DM Sans;
-                    font-size: 18px;
+                    font-size: 15px;
                     font-style: normal;
                     font-weight: 500;
                    display: inline-block;
@@ -125,6 +125,7 @@ const textHtml = (OTP) => {
                  margin-bottom: auto;
                  margin-top: 10px;
                   "
+               
                 >
                   The <font color="#FEA800">Masters Academy </font>
                 </p>
@@ -136,19 +137,19 @@ const textHtml = (OTP) => {
         <center  >
           <p style="margin-bottom: 20px;">Your One-Time Password (OTP) is:</p>
          
-              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px; border-radius: 5px; margin-left: 10px; margin-right: 10px; height: 50px; text-align: center;  line-height: 50px; ">
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px; border-radius: 5px; margin-left: 5px; margin-right: 5px; height: 50px; text-align: center;  line-height: 50px; ">
                 ${OTP[0]}
               </p>
   
-              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px;  border-radius: 5px;  margin-left: 10px; margin-right: 10px; height: 50px; text-align: center;  line-height: 50px; ">
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px;  border-radius: 5px; margin-left: 5px; margin-right: 5px; height: 50px; text-align: center;  line-height: 50px; ">
               ${OTP[1]}
               </p>
   
-              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px;  border-radius: 5px; margin-left: 10px; margin-right: 10px; height: 50px; text-align: center;  line-height: 50px; ">
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px;  border-radius: 5px; margin-left: 5px; margin-right: 5px; height: 50px; text-align: center;  line-height: 50px; ">
               ${OTP[2]}
               </p>
   
-              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px ;  border-radius: 5px; height: 50px;  margin-left: 10px; margin-right: 10px; text-align: center;  line-height: 50px; ">
+              <p style=" font-size: 24px; display: inline-block; border: 2px solid #187163; width: 50px ;  border-radius: 5px; height: 50px; margin-left: 5px; margin-right: 5px; text-align: center;  line-height: 50px; ">
               ${OTP[3]}
               </p>
   

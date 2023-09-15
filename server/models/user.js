@@ -62,6 +62,12 @@ const Schema = mongoose.Schema({
       }
     },
   },
+  userPlan:{
+    type:String,
+    required: true,
+    enum:["free","pro"],
+    default:"free"
+  },
   phoneNumber:{
     type:String
   },

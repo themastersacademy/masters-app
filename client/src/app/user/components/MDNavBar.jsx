@@ -127,7 +127,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
               
             }
             }>
-              <GoalListCard key={index} goal={item.courseName} plan={item.plan} />
+              <GoalListCard key={index} goal={item.courseName} plan={item.coursePlan} />
               <Divider />
             </div>
           ))}

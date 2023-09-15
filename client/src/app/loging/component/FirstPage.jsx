@@ -102,6 +102,9 @@ const handleMouseDownPassword = (event) => {
                     return getValue;
                   })
                 }
+                onKeyDown={(e) => {
+                  if(e.key == "Enter") signup()
+                }}
                 value={getDetails.email}
                 
             />
@@ -118,6 +121,9 @@ const handleMouseDownPassword = (event) => {
                     return getValue;
                   })
                 }
+                onKeyDown={(e) => {
+                  if(e.key == "Enter") signup()
+                }}
                 value={getDetails.password}
                 endAdornment={
                     <InputAdornment position="end">

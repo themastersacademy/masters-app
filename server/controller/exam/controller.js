@@ -45,7 +45,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
- // State.save();
+  State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -262,8 +262,11 @@ const isValidExamEnd = async function (examInfo) {
 
   let examDate = examInfo.examDate.split("/");
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+
   let examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
-  let indianTimeEnd = examEnd.toLocaleString("en-US", {
+  examEnd.setHours(examEnd.getHours()+2)
+  examEnd.setMinutes(examEnd.getMinutes()+30)
+  let indianTimeEnd = examEnd.toLocaleString("en-US",{
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
