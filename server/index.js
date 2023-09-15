@@ -52,16 +52,16 @@ const json2xls = require('json2xls');
 // const xls = json2xls(json);
 
 // fs.writeFileSync('exported.xlsx', xls, 'binary');
-const folderPath = __dirname;
-app.get('/download',(req,res)=>{
-  console.log('call');
+// const folderPath = __dirname;
+// app.get('/download',(req,res)=>{
+//   console.log('call');
 
-  res.download(folderPath +'/exported.xlsx' , function(err) {
-    if(err) {
-        console.log(err);
-    }
-})
-})
+//   res.download(folderPath +'/exported.xlsx' , function(err) {
+//     if(err) {
+//         console.log(err);
+//     }
+// })
+// })
 
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
