@@ -31,8 +31,7 @@ exports.login = async (req, res, next) => {
       req.session.userName = check.name;
       req.session.email = check.email;
       const State = await examState.findOne({ userID: check._id });
-    console.log(State)
-    console.log('call again')
+ 
       if (State) {
        
         req.session.examID = State.examID;

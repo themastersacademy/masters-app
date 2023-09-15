@@ -69,6 +69,15 @@ app.get("/isCheck", (req, res) => {
   }
   else return res.json({ status: "isLogout" });
 });
+
+app.get('/isValueExam',(req,res)=>{
+  if (req.session.examID)
+   { 
+    return res.json({ isValue: true });
+  }
+  else return res.json({ isValue: false,userID:req.session.userID });
+
+})
 app.get("/isLogin", (req, res) => {
   if (req.session.isLogin)
    { 

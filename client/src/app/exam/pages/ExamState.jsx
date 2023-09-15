@@ -92,6 +92,13 @@ export default function ExamState() {
       fetch('/api/admin/getUserDetails')
       .then(res => res.json())
       .then(data => setuser(data))
+      
+      fetch('/isValueExam')
+      .then(res => res.json())
+      .then(data =>{ 
+        if(data.isValue == false) 
+        navigate(`/?=${data.userID}`)
+      }  )
   }, []);
 
   useEffect(() => {
