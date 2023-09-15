@@ -176,8 +176,17 @@ exports.startExam = async function (req, res) {
         timeZone: "Asia/Kolkata",
         hour12: false,
       });
-      const getTime = indianTime.split(",")[1];
-
+      let indianTime1 = date3.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour12: false,
+      });
+      
+    
+      let getTime = indianTime.split(",")[1];
+     
+ 
+      if(getTime.split(':')[0] == 24) getTime = `00:${getTime.split(':')[1]}:${getTime.split(':')[2]}`
+ 
       examInfo.examEndTime = getTime;
 
       const get = examInfo.studentsPerformance.filter(

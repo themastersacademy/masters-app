@@ -247,9 +247,7 @@ function DTView({
         minHeight: "100vh",
       }}
     >
-        <form action="/download" method="get">
-        <button type="submit">Download Single File</button>
-    </form>
+      
       <Stack
         direction="column"
         alignItems="center"

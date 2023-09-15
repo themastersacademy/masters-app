@@ -25,7 +25,7 @@ export default function ScheduleTestCard({ batch }) {
           display: "none",
         },
         padding: "10px 20px",
-        "& .MuiAccordionSummary-root:hover, .MuiButtonBase-root:hover": {
+        "& .MuiPaper-root:hover, .MuiPaper-root:hover": {
           cursor: "default",
         },
       }}
@@ -34,7 +34,7 @@ export default function ScheduleTestCard({ batch }) {
         <Stack key={index}>
           <p style={style.name}>{task.batchName}</p>
           {task.scheduleTest.length !== 0 ? (
-            <div>
+            <div >
               {task.scheduleTest.map((task) => (
                 <SheduleTest
                   name={task.name}

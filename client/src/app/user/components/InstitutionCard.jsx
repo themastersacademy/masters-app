@@ -193,7 +193,7 @@ export default function InstitutionCard({
           >
             {instituteDetails.name}
           </h2>
-       {  isOpen == false ? null : <SvgIcon sx={{position:'absolute',left:'30px',bottom:'10px'}} >< AnnouncementIcon sx={{color:'red'}} /></SvgIcon>}
+       {  isOpen == false ? null : <SvgIcon sx={{position:'absolute',left:'30px',bottom:'10px', }} >< AnnouncementIcon sx={{color:'red'}} /></SvgIcon>}
           </Stack>
           {MD ? null : <div>
 
@@ -223,7 +223,8 @@ export default function InstitutionCard({
             top: "0",
             right: "0",
             zIndex: "0",
-           
+             height:'200px',
+            cursor:'default'
           }}
           src={Avater.cardBg}
           alt=""
@@ -362,7 +363,7 @@ export default function InstitutionCard({
             </Button>
           </Stack>
         </Stack>
-        : <ScheduleTestCard batch={instituteDetails.collectBatch} />}
+        : <ScheduleTestCard batch={instituteDetails.collectBatch} />  }
       </Accordion>
     </Paper>
   );

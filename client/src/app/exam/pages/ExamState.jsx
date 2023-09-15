@@ -26,19 +26,19 @@ export default function ExamState() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [user,setuser] = useState([])
   const calculateRemainingTime = () => {
+
     let examTime = examInfo.examEndTime.split(":");
     let examDate = examInfo.examDate.split("/");
-
     let examDay = examDate[0];
     let examMonth = examDate[1];
     let examYear = examDate[2];
     let examHours = examTime[0];
     let examMinutes = examTime[1];
     let examSeconds = examTime[2];
-  
+
 
     let examDateObject = new Date(
-      ` ${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds}`
+      `${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds} `
     );
 
     let currentDateObject = new Date()
