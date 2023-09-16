@@ -9,7 +9,7 @@ const Exam = require("../../models/exam.js");
 const examState = require("../../models/examState.js");
 const sessions = require("../../models/session.js");
 const Course = require("../../models/course.js");
-
+const {getGoalAnalysis} = require('./getGoalAnalysis.js')
 const {
   getInstitutionDetails,
 } = require("../../util/getInstitutionDetails.js");
@@ -60,7 +60,6 @@ exports.login = async (req, res, next) => {
       req.session.userName = check.name;
       req.session.email = check.email;
       if (State) {
-   
         req.session.examID = State.examID;
        return res.json({ status: "isExam" ,examID:State.examID });
       }
@@ -353,13 +352,14 @@ exports.getUserData = async (req, res, next) => {
         });
 
         if (index == 0)
-          studentsPerformance.push({
+       {   studentsPerformance.push({
             score: task.examHistory,
             Analysis: {
               topicName,
               topicAnalysis,
             },
-          });
+          });}
+
         check.push(task.courseId.valueOf());
         send.push({
           courseName: task.courseName,
@@ -514,11 +514,11 @@ exports.addGoal = async (req, res, next) => {
           topics: collectTopic,
         });
         console.log(createGoal);
-        // createGoal.save();
+         createGoal.save();
         user.goal.push(createGoal._id);
       });
-      // user.save();
-      // res.json({ status: "success", message: "Add goal successfully" });
+      user.save();
+      res.json({ status: "success", message: "Add goal successfully" });
     }
   } catch (error) {
     res.json({ status: "error", message: "something wrong" });
@@ -536,6 +536,9 @@ exports.getViewGoal = async (req, res, next) => {
     });
 
     if (course) {
+
+// getAnalysis
+const studentsPerformance = await getGoalAnalysis(getGoalId.courseId,userID)
       const send = [];
       let calcTolalQues = 0;
       const topic = {
@@ -608,7 +611,8 @@ exports.getViewGoal = async (req, res, next) => {
         (topic.noOfQuestion = calcTolalQues),
         (topic.totalMArk = course.mark * calcTolalQues);
 
-      res.json({ staus: "ok", topic: topic, goal: goal.examHistory });
+
+      res.json({ staus: "ok", topic: topic, goal: goal.examHistory,studentsPerformance});
     }
   } catch (error) {
     console.log(error);
