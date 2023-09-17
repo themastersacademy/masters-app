@@ -62,7 +62,7 @@ exports.createScheduleExam = async (req, res, next) => {
               max = Math.floor(max);
               return Math.floor(Math.random() * (max - min + 1)) + min;
             }
-            const random = getRandomInt(0, task.requireEasy - 1);
+            const random = getRandomInt(0, task.easy.length );
 
             if (index.indexOf(random) == -1) {
               console.log("not match ", random);
@@ -82,7 +82,7 @@ exports.createScheduleExam = async (req, res, next) => {
               max = Math.floor(max);
               return Math.floor(Math.random() * (max - min + 1)) + min;
             }
-            const random = getRandomInt(0, task.requireMedium - 1);
+            const random = getRandomInt(0, task.medium.length );
 
             if (index.indexOf(random) == -1) {
               console.log("not match ", random);
@@ -102,7 +102,7 @@ exports.createScheduleExam = async (req, res, next) => {
               max = Math.floor(max);
               return Math.floor(Math.random() * (max - min + 1)) + min;
             }
-            const random = getRandomInt(0, task.requireHard - 1);
+            const random = getRandomInt(0, task.hard.length );
 
             if (index.indexOf(random) == -1) {
               console.log("not match ", random);
@@ -166,30 +166,59 @@ exports.createPracticesExam = async (req, res, next) => {
       courseId: selectGoal.courseId,
       userId: id,
     });
-  
+    console.log('practices')
+  console.log(selectGoal)
     const user = await User.findOne({ _id: id });
     if (user) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
      
       if (course) {
         const check = [];
-        const collectSelectTopic = [];
         const questionID = [];
         const finalQuestion = [];
+
+        const countLenth =[]
         selectGoal.topic.map((task) => {
           if (task.isSelect == true) {
             check.push(task.id.valueOf());
-
           }
+          else if (task.isSelect == false && task.type == 'group' ){
+            task.ListTopic.map(task => {
+              if(task.isSelect == true)  {
+                countLenth.push(task)
+                questionID.push({
+                  title:  task.title ,
+                  bankID: task.id,
+                  type: 'topic',
+                  easy: [],
+                  medium: [],
+                  hard: [],
+                  requireEasy: 0,
+                  requireMedium: 0,
+                  requireHard: 0,
+                });
+                finalQuestion.push({
+                  title:  task.title ,
+                  bankID: task.id,
+                  type: 'topic',
+                  questions: [],
+               
+                });
+              }
+            })  
+            
+          }
+
         });
 
         let countGroup = 0
-        const countLenth =[]
+    
         course.collections.map((task) =>{
       
          
             if (check.indexOf(task._id.valueOf()) !== -1)
-             { collectSelectTopic.push(task);
+             {
+              
                if(task.type == 'group') countGroup++
               task.topic.map(task1 =>{
                 countLenth.push(task)
@@ -211,6 +240,9 @@ exports.createPracticesExam = async (req, res, next) => {
                 questions: [],
                 index: countGroup -1
               });
+
+            
+
             })}
           }
         );
@@ -293,7 +325,7 @@ exports.createPracticesExam = async (req, res, next) => {
           if (task.type == "topic") {
             questionGroupCollection.push(task);
           }
-
+console.log(questionGroupCollection);
         });
         const questionCategory =[]
         questionGroupCollection.map((task, index) => {
@@ -374,8 +406,8 @@ exports.createMockExam = async (req, res, next) => {
     
 
       if (course) {
+        
         const check = [];
-        const collectSelectTopic = [];
         const questionID = [];
         const finalQuestion = [];
      
@@ -383,11 +415,7 @@ exports.createMockExam = async (req, res, next) => {
         course.collections.map((task,index) => {
           
           if (task.type == "group") countGroup++;
-          collectSelectTopic.push({
-            title: task.type == "group" ? task.title : task.topic[0].title,
-            index: index,
-            questions: [],
-          });
+    
           task.topic.map((task1) => {
             
             questionID.push({

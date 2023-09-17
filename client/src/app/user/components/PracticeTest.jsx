@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 import { useEffect, useState } from "react";
-
+import PracticeGroup from './practiceGroup'
 export default function PracticeTest({
   MD,
   selectGoal,
@@ -32,17 +32,39 @@ export default function PracticeTest({
 
     if (MD !== true)
       selectGoal.topic.map((task) => {
+  
+    if(task.type == 'group')
+      {  task.ListTopic.map(task => {
+       
+          if (task.isSelect == true) {
+            console.log('calling')
+            calLength.push(task);
+            setSelect(true);
+          }
+  
+          if (task.isSelect == false || task.isSelect == undefined)
+           { 
+            check.push(task);
+       
+          }
+          if (selectGoal.topic.length == check.length) setSelect(false);
+        })
+      }
+      else {
         if (task.isSelect == true) {
           calLength.push(task);
        
           setSelect(true);
         }
+
         if (task.isSelect == false || task.isSelect == undefined)
          { 
           check.push(task);
      
         }
         if (selectGoal.topic.length == check.length) setSelect(false);
+      }
+       
       });
     else
       selectGoal.topic.map((task) => {
@@ -62,6 +84,11 @@ export default function PracticeTest({
     
      selectGoal.topic.map(task => {
       if(task.isSelect == true) calcTopicLength +=task.topicLength
+      else if(task.isSelect == false && task.type == 'group') {
+        task.ListTopic.map(task => {
+          if(task.isSelect == true ) calcTopicLength += 1
+        })
+      }
      })
    
     //  const num = 5 * (calcTopicLength-1);
@@ -92,6 +119,7 @@ export default function PracticeTest({
   const handleAttempt = () => {
     const isSelect = [];
     const check = [];
+    const isCheck = []
     if (value.value == "") {
       check.push(value);
        Notificate('info','Please select no of questions')
@@ -103,8 +131,20 @@ export default function PracticeTest({
     if (MD !== true)
       selectGoal.topic.map((task) => {
         if (task.isSelect == false || task.isSelect == undefined)
-          isSelect.push(task);
-        if (selectGoal.topic.length == isSelect.length) {
+         { isSelect.push(task);}
+       if (task.isSelect == false && task.type == 'group')
+      {
+          task.ListTopic.map(task => {
+        
+            if(task.isSelect == true) {
+              
+              isSelect.push(task)
+              isCheck.push(task)
+            }
+          })
+      }
+  
+        if (selectGoal.topic.length == isSelect.length && isCheck.length == 0) {
           check.push(task);
           Notificate('info','Please select question')
         }
@@ -150,15 +190,18 @@ export default function PracticeTest({
           Practice Test Series
         </h3>
         <FormControlLabel
-          onChange={(e) => {
-           
-          }}
+       
           control={
             <Checkbox
               onChange={(e, value) => {
                 setSelectGoal((PreValue) => {
                   const getValue = { ...PreValue };
-                  getValue.topic.map((task) => (task.isSelect = value));
+                  getValue.topic.map((task) => {
+                    task.isSelect = value
+                    if(task.type == 'group')
+                    task.ListTopic.map(task => task.isSelect = value)
+                  });
+
                   return getValue;
                 });
               }}
@@ -285,7 +328,7 @@ export default function PracticeTest({
 }
 
 function TopicList({ setSelectGoal, selectGoal, MD }) {
- 
+ console.log(selectGoal.topic)
   return (
     <FormGroup>
       <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
@@ -294,11 +337,13 @@ function TopicList({ setSelectGoal, selectGoal, MD }) {
               return (
                 <TopicListCard
                   key={index}
+                  type={topic.type}
                   topic={topic.title}
                   selectGoal={selectGoal}
                   setSelectGoal={setSelectGoal}
                   isSelect={topic.isSelect}
                   index={index}
+                  ListTopic={topic.type == 'group' ? topic.ListTopic : ''}
                   MD={MD}
                 />
               );
@@ -307,11 +352,13 @@ function TopicList({ setSelectGoal, selectGoal, MD }) {
               return (
                 <TopicListCard
                   key={index}
+                  type={topic.type}
                   topic={topic.title}
                   selectGoal={selectGoal}
                   setSelectGoal={setSelectGoal}
                   isSelect={topic.isSelect}
                   index={index}
+                  ListTopic={topic.type == 'group' ? topic.ListTopic : ''}
                   MD={MD}
                 />
               );
@@ -327,13 +374,26 @@ function TopicListCard({
   index,
   isSelect,
   MD,
+  ListTopic,
+  type
 }) {
   
   return (
+    
+      type == 'group'  ? <PracticeGroup  
+      topic ={topic}
+      setSelectGoal = {setSelectGoal}
+      index ={index}
+      isSelect = {isSelect}
+      type ={isSelect}
+      MD ={MD}
+      ListTopic={ListTopic}
+      />  : 
     <Paper
       elevation={MD ? 0 : 1}
+ 
       sx={{
-        width: MD ? "100%" : "fit-content",
+         width: MD ? "100%" : "fit-content",
         padding: "5px 10px",
         borderRadius: "10px",
         cursor: "pointer",
@@ -342,6 +402,8 @@ function TopicListCard({
         },
       }}
     >
+ 
+      
       <FormControlLabel
         control={
           <Checkbox
@@ -372,6 +434,7 @@ function TopicListCard({
         }
         label={topic}
       />
+       
     </Paper>
   );
 }

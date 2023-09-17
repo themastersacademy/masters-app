@@ -120,7 +120,7 @@ exports.startExam = async function (req, res) {
             .json({ message: "exam started", status: "success" });
         } else {
           const check = await isValidExamEnd(examInfo);
-          console.log(check);
+       
           if (check) {
             delete req.session.examID;
             const batch = await Batch.findOne({ _id: examInfo.batchID });
@@ -150,7 +150,17 @@ exports.startExam = async function (req, res) {
           return res.status(400).json({ message: "exam not started yet" });
         }
       } else {
+
+        examState
+        .deleteOne({ examID, userID })
+        .then(function () {
+          console.log("Data deleted"); // Success
+        })
+        .catch(function (error) {
+          console.log(error); // Failure
+        });
         delete req.session.examID;
+
         return res
           .status(400)
           .json({ status: "info", message: "you attended the exam" });

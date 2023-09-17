@@ -328,13 +328,15 @@ exports.getUserData = async (req, res, next) => {
           getCheck.indexOf(task.topicID) == -1
         ) {
           const getID = [];
-
+          
           task.topic.map((task) => getID.push(task.id));
+       
           getUserGoal[0].topics.push({
             type: task.type,
             topicName: task.type == "group" ? task.title : task.topic[0].title,
             topicID: task.topicID,
             bankID: getID,
+          
           });
           getCheck.push(task.topicID);
         }
@@ -391,11 +393,19 @@ exports.getUserData = async (req, res, next) => {
             });
           } else if (collection.type == "group")
             collection.topic.map((task) => {
+              const ListTopic =[]
               if (
                 eval(task.level.easy >= 0) &&
                 eval(task.level.medium >= 0) &&
                 eval(task.level.hard >= 0)
               ) {
+
+                if(collection.type == "group"){
+                  collection.topic.map(task1 =>{
+                   
+                    ListTopic.push({title:task1.title,id:task1.id,isSelect: false,})})
+                  
+                }
                 topic.topic.push({
                   title: collection.title,
                   id: collection._id,
@@ -403,6 +413,7 @@ exports.getUserData = async (req, res, next) => {
                   topicLength: collection.topic.length,
                   isSelect: false,
                   bankID: task.id,
+                  ListTopic
                 });
               }
             });
@@ -571,16 +582,26 @@ const studentsPerformance = await getGoalAnalysis(getGoalId.courseId,userID)
           });
         } else if (collection.type == "group")
           collection.topic.map((task) => {
+            
+            const ListTopic =[]
+          
             if (
               eval(task.level.easy >= 0) &&
               eval(task.level.medium >= 0) &&
               eval(task.level.hard >= 0)
             ) {
+              if(collection.type == "group"){
+                collection.topic.map(task1 =>{
+                 
+                  ListTopic.push({title:task1.title,id:task1.id,isSelect: false,})})
+                
+              }
               topic.topic.push({
                 title: collection.title,
                 id: collection._id,
                 type: collection.type,
                 isSelect: false,
+                ListTopic,
                 topicLength: collection.topic.length,
                 bankID: task.id,
               });

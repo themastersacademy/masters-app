@@ -196,7 +196,7 @@ function Collection() {
           </Button>
         </div>
       </div>
-      <div style={style.questionBody} className="scrollHide">
+      <div style={style.questionBody} >
         <Question id={id} add={add} senData={senData} />
         {print.length !== 0
           ? print.map((list, index) => (
