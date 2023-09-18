@@ -141,11 +141,10 @@ exports.startExam = async function (req, res) {
               .catch(function (error) {
                 console.log(error); // Failure
               });
-             
 
             return res
               .status(400)
-              .json({ status: "info", message: "exam was completed"  })
+              .json({ status: "info", message: "exam was completed"})
           }
           return res.status(400).json({ message: "exam not started yet" });
         }

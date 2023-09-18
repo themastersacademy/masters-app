@@ -339,16 +339,9 @@ console.log(questionGroupCollection);
           }) }
         });
 
-        
-     
-        
         const countPractice = goal.examHistory.filter(
           (task) => task.type == "practice"
         );
-
-
-
-
         const durationPerQuestion = 90; //seconds;
         //examDuration = "00:00:00"
         const questionCount = value.value;

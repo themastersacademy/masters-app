@@ -11,7 +11,7 @@ import PlanChip from "./PlanChip";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function TopNavBar({user}) {
-  console.log(user);
+
    const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

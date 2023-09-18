@@ -6,6 +6,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useEffect } from "react";
 
 
 export default function PracticeGroup({
@@ -15,11 +16,39 @@ export default function PracticeGroup({
   isSelect,
   type,
   MD,
+  selectGoal,
   ListTopic,
 }) {
-    console.log();
+useEffect(()=>{
+  
+ 
+},[])
+
+const checkIsSelect = ()=>{
+    const isSelect =[]
+    selectGoal.topic[index].ListTopic.map(task => {
+        if(task.isSelect == true) isSelect.push(task)
+    })
+console.log(selectGoal.topic[index].ListTopic.length , isSelect.length);
+if(selectGoal.topic[index].ListTopic.length == isSelect.length) { 
+    setSelectGoal((PreValue) => {
+        const getValue = { ...PreValue };
+        getValue.topic[index].isSelect = true
+        return getValue;
+      })
+}
+else
+{
+    setSelectGoal((PreValue) => {
+        const getValue = { ...PreValue };
+        getValue.topic[index].isSelect = false
+        return getValue;
+      })
+}
+}
+
   return (
-    <div style={{ width: "400px" ,"&:hover":{background:'red'} }}>
+    <div style={{ width: "400px" ,"&:hover":{background:'red'} }} key={index}>
       <Accordion     elevation={MD ? 0 : 1} >
         <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{borderRadius:'10px'}} >
           <div
@@ -44,7 +73,7 @@ export default function PracticeGroup({
                   <FormControlLabel
                 control={
                   <Checkbox
-                    checked={isSelect == true ? true : false}
+                    checked={isSelect }
                     sx={{
                       "&.Mui-checked": {
                         color: "#187163",
@@ -101,15 +130,15 @@ export default function PracticeGroup({
                         ? setSelectGoal((PreValue) => {
                             console.log(PreValue);
                             const getValue = { ...PreValue };
-                          getValue.topic[index].ListTopic[listIndex].isSelect = value
-                      
+                           getValue.topic[index].ListTopic[listIndex].isSelect = value
+                           checkIsSelect()
                             return getValue;
                           })
                         : setSelectGoal((PreValue) => {
                             
                             const getValue ={ ...PreValue };
-                           
                             getValue.topic[index].ListTopic[listIndex].isSelect = value
+                            checkIsSelect()
                             return getValue;
                           });
                     }}

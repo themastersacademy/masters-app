@@ -32,8 +32,7 @@ exports.login = async (req, res, next) => {
       req.session.email = check.email;
       const State = await examState.findOne({ userID: check._id });
  
-      if (State) {
-       
+      if (State) {      
         req.session.examID = State.examID;
        return res.json({ status: "isExam",examID:State.examID });
       } else {
@@ -51,7 +50,13 @@ exports.login = async (req, res, next) => {
     } else {
       const isDelete = await sessions.deleteMany({
         expires: getVerify[0].expires,
+      }).then(function () {
+        console.log("Data deleted"); //  Success
+      })
+      .catch(function (error) {
+        console.log(error); // Failure
       });
+   
       const State = await examState.findOne({ userID: check._id });
       req.session.isAuth = true;
       req.session.isLogin = true;

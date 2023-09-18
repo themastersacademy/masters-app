@@ -24,18 +24,19 @@ export default function PracticeTest({
   const [questionCount, setQuestionCount] = useState([]);
   const [value, setValue] = useState({ value: "", selectLevel: "" });
   
-  const [questionLength,setQuestionLength] = useState(0)
+ const [isSelectAll,setSelectAll] = useState(false)
   let calLength = [];
   useEffect(() => {
     const check = [];
     calLength = [];
-
+    const isSelect = []  
     if (MD !== true)
       selectGoal.topic.map((task) => {
     if(task.type == 'group')
       { 
         if (task.isSelect == true){
           calLength.push(task);
+          isSelect.push(task)
           setSelect(true);  
         }
        if (task.isSelect == false)
@@ -58,7 +59,7 @@ export default function PracticeTest({
       else  if(task.type == 'topic') {
         if (task.isSelect == true) {
           calLength.push(task);
-       
+          isSelect.push(task)
           setSelect(true);
         }
 
@@ -114,6 +115,8 @@ export default function PracticeTest({
       return count;
     });
 
+    if(selectGoal.topic.length == isSelect.length) setSelectAll(true)
+  else setSelectAll(false)
  
      setValue({ value: "", selectLevel: "" });
 
@@ -199,6 +202,7 @@ export default function PracticeTest({
           control={
             <Checkbox
               onChange={(e, value) => {
+                setSelectAll(value)
                 setSelectGoal((PreValue) => {
                   const getValue = { ...PreValue };
                   getValue.topic.map((task) => {
@@ -218,7 +222,10 @@ export default function PracticeTest({
                   color: "#187163",
                 },
               }}
-            />
+
+              checked={isSelectAll}
+                        />
+                      
           }
           label={"Select All"}
         />
@@ -333,7 +340,7 @@ export default function PracticeTest({
 }
 
 function TopicList({ setSelectGoal, selectGoal, MD }) {
- console.log(selectGoal.topic)
+ 
   return (
     <FormGroup>
       <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
@@ -342,9 +349,10 @@ function TopicList({ setSelectGoal, selectGoal, MD }) {
               return (
                 <TopicListCard
                   key={index}
+                  selectGoal={selectGoal}
                   type={topic.type}
                   topic={topic.title}
-                  selectGoal={selectGoal}
+                  
                   setSelectGoal={setSelectGoal}
                   isSelect={topic.isSelect}
                   index={index}
@@ -357,9 +365,10 @@ function TopicList({ setSelectGoal, selectGoal, MD }) {
               return (
                 <TopicListCard
                   key={index}
+                  selectGoal={selectGoal}
                   type={topic.type}
                   topic={topic.title}
-                  selectGoal={selectGoal}
+                
                   setSelectGoal={setSelectGoal}
                   isSelect={topic.isSelect}
                   index={index}
@@ -380,7 +389,8 @@ function TopicListCard({
   isSelect,
   MD,
   ListTopic,
-  type
+  type,
+  selectGoal
 }) {
   
   return (
@@ -392,11 +402,12 @@ function TopicListCard({
       isSelect = {isSelect}
       type ={isSelect}
       MD ={MD}
+      selectGoal={selectGoal}
       ListTopic={ListTopic}
       />  : 
     <Paper
       elevation={MD ? 0 : 1}
- 
+      key={index}
       sx={{
          width: MD ? "100%" : "fit-content",
         padding: "5px 10px",
