@@ -32,25 +32,30 @@ export default function PracticeTest({
 
     if (MD !== true)
       selectGoal.topic.map((task) => {
-  
     if(task.type == 'group')
-      {  task.ListTopic.map(task => {
-       
+      { 
+        if (task.isSelect == true){
+          calLength.push(task);
+          setSelect(true);  
+        }
+       if (task.isSelect == false)
+    {        
+       check.push(task);
+      task.ListTopic.map(task => {
+
           if (task.isSelect == true) {
-            console.log('calling')
+            check.shift();
             calLength.push(task);
             setSelect(true);
           }
   
-          if (task.isSelect == false || task.isSelect == undefined)
-           { 
-            check.push(task);
-       
-          }
-          if (selectGoal.topic.length == check.length) setSelect(false);
+        //  if (selectGoal.topic.length == check.length) setSelect(false);
         })
       }
-      else {
+        if (selectGoal.topic.length == check.length) setSelect(false);
+      
+      }
+      else  if(task.type == 'topic') {
         if (task.isSelect == true) {
           calLength.push(task);
        

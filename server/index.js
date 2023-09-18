@@ -45,6 +45,9 @@ app.use(cors())
 const fs = require('fs')
 const json2xls = require('json2xls');
 
+console.log(Math.round((10%3)));
+console.log(5/3);
+
 // Example JSON
 // const json = [{firstName: 'Bob', name: 'Lennon',batch:'Muthu'}, {firstName: 'Jack', name: 'Sparrow',batch:'Muthu'}]
 

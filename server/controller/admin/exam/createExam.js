@@ -247,8 +247,6 @@ exports.createPracticesExam = async (req, res, next) => {
           }
         );
 
-     
-
         if (value.value % countLenth.length == 0) {
           for (let i = 0; i < countLenth.length ; i++) {
             if (value.selectLevel == "easy")
@@ -328,15 +326,17 @@ exports.createPracticesExam = async (req, res, next) => {
 console.log(questionGroupCollection);
         });
         const questionCategory =[]
+
         questionGroupCollection.map((task, index) => {
          
           const questionList = [];
           task.questions.map((task) => questionList.push({ id: task.id }));
-          questionCategory.push({
+          if(questionList.length > 0)
+       {   questionCategory.push({
             title: task.title,
             id: task.bankID,
             questionList,
-          });
+          }) }
         });
 
         
@@ -406,7 +406,7 @@ exports.createMockExam = async (req, res, next) => {
     
 
       if (course) {
-        
+
         const check = [];
         const questionID = [];
         const finalQuestion = [];
