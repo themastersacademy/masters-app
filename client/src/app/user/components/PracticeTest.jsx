@@ -30,7 +30,7 @@ export default function PracticeTest({
     const check = [];
     calLength = [];
     const isSelect = []  
-    if (MD !== true)
+    // if (MD !== true)
       selectGoal.topic.map((task) => {
     if(task.type == 'group')
       { 
@@ -50,7 +50,6 @@ export default function PracticeTest({
             setSelect(true);
           }
   
-        //  if (selectGoal.topic.length == check.length) setSelect(false);
         })
       }
         if (selectGoal.topic.length == check.length) setSelect(false);
@@ -72,16 +71,16 @@ export default function PracticeTest({
       }
        
       });
-    else
-      selectGoal.topic.map((task) => {
-        if (task.isSelect == true) {
-          calLength.push(task);
-          setSelect(true);
-        }
-        if (task.isSelect == false || task.isSelect == undefined) check.push(task);
+    // else
+    //   selectGoal.topic.map((task) => {
+    //     if (task.isSelect == true) {
+    //       calLength.push(task);
+    //       setSelect(true);
+    //     }
+    //     if (task.isSelect == false || task.isSelect == undefined) check.push(task);
           
-        if (selectGoal.topic.length == check.length) setSelect(false);
-      });
+    //     if (selectGoal.topic.length == check.length) setSelect(false);
+    //   });
 
     setQuestionCount((preValue) => {
       
@@ -136,7 +135,7 @@ export default function PracticeTest({
       check.push(value);
          Notificate('info','Please select level')
     }
-    if (MD !== true)
+    // if (MD !== true)
       selectGoal.topic.map((task) => {
         if (task.isSelect == false || task.isSelect == undefined)
          { isSelect.push(task);}
@@ -157,15 +156,15 @@ export default function PracticeTest({
           Notificate('info','Please select question')
         }
       });
-    else
-      selectGoal.topic.map((task) => {
-        if (task.isSelect == false || task.isSelect == undefined)
-          isSelect.push(task);
-        if (selectGoal.topic.length == isSelect.length) {
-          check.push(task);
-            Notificate('info','Please select question')
-        }
-      });
+    // else
+    //   selectGoal.topic.map((task) => {
+    //     if (task.isSelect == false || task.isSelect == undefined)
+    //       isSelect.push(task);
+    //     if (selectGoal.topic.length == isSelect.length) {
+    //       check.push(task);
+    //         Notificate('info','Please select question')
+    //     }
+    //   });
 
     if (check.length == 0) {
       createPracticesExam(value, selectGoal);

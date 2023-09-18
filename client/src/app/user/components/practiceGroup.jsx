@@ -1,13 +1,11 @@
 import { FormControlLabel, Checkbox } from "@mui/material";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useEffect } from "react";
-
+import { useEffect,useState } from "react";
+import useWindowDimensions from "../../../util/useWindowDimensions";
 
 export default function PracticeGroup({
   topic,
@@ -19,6 +17,11 @@ export default function PracticeGroup({
   selectGoal,
   ListTopic,
 }) {
+    const {width } = useWindowDimensions()
+    const [expanded, setExpanded] = useState(false);
+    const handleClick = () => {
+        setExpanded(!expanded);
+      };
 useEffect(()=>{
   
  
@@ -48,9 +51,9 @@ else
 }
 
   return (
-    <div style={{ width: "400px" ,"&:hover":{background:'red'} }} key={index}>
-      <Accordion     elevation={MD ? 0 : 1} >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{borderRadius:'10px'}} >
+    <div style={{ width:{width : 500 ? '200px':"400px"} ,"&:hover":{background:'red'} }} key={index}>
+      <Accordion     elevation={MD ? 0 : 1} expanded={ expanded} >
+        <AccordionSummary expandIcon={<ExpandMoreIcon onClick={handleClick} />} sx={{borderRadius:'10px'}} >
           <div
             style={{
               display: "flex",
