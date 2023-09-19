@@ -158,10 +158,9 @@ export default function Layout() {
       )
         navigator(`/admin/dashboard?=${data.id}`);
       });
-  
     getInstitute();
     getUserDetails();
-  }, [isChange]);
+  }, [isChange,id]);
 
   return (
     <div>

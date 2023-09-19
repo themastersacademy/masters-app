@@ -305,7 +305,7 @@ exports.getUserData = async (req, res, next) => {
       check = [];
       const send = [];
       const studentsPerformance = [];
-      const getCourseID = [getUserGoal[0].courseId.valueOf()];
+      let getCourseID =  [getUserGoal[0].courseId.valueOf()]
 
       //get Course
       const get = course.filter(
@@ -545,6 +545,7 @@ exports.getViewGoal = async (req, res, next) => {
   try {
     const userID = req.session.userID;
     const { getGoalId } = req.body;
+    req.session.userChooseGoal = getGoalId.courseId.valueOf()
     const course = await Course.findOne({ _id: getGoalId.courseId });
     const goal = await Goal.findOne({
       courseId: getGoalId.courseId,
