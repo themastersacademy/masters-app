@@ -180,11 +180,10 @@ export default function InstitutionCard({
           justifyContent="space-between"
           width="100%"
           height='80px'
-       
-        
         >
-          <Stack  alignItems='center'  height='80px'  position='relative' spacing='10px' direction='row'>
-          <img src={instituteDetails.avatar} alt="" />
+
+          <Stack  alignItems='center'   height='80px'  position='relative' spacing='10px' direction='row'>
+          <img src={instituteDetails.avatar} style={{maxWidth:'60px'}} alt="" />
           <h2
             style={{
               fontSize: MD ? "18px" : "20px",

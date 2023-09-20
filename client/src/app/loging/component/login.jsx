@@ -109,7 +109,7 @@ const handleMouseDownPassword = (event) => {
               onClick={() => navigator("/signup")}
             >
               {" "}
-              sign up{" "}
+              Sign Up{" "}
             </span>{" "}
           </p>
         </Stack>
@@ -133,7 +133,7 @@ const handleMouseDownPassword = (event) => {
             />
         </Stack>
         <Stack direction="column" spacing="10px">
-          <label htmlFor=""> password</label>
+          <label htmlFor=""> Password</label>
             <Input
               placeholder="Enter your password"
                 type={values.showPassword ? "text" : "password"}
@@ -159,7 +159,7 @@ const handleMouseDownPassword = (event) => {
                     </InputAdornment>
                 }
             />
-          <div style={{cursor : 'pointer' , color:'blue'}} onClick={() => navigator('/forgotPass')}>forgot password</div>
+          <div style={{cursor : 'pointer' , color:'blue'}} onClick={() => navigator('/forgotPass')}>Forgot password</div>
         </Stack>
         <Button
           style={{

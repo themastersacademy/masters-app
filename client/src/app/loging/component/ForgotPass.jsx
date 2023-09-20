@@ -97,7 +97,7 @@ const handleMouseDownPassword = (event) => {
             />
         </Stack>
         <Stack direction="column" spacing="10px">
-          <label htmlFor="">Change password</label>
+          <label htmlFor="">Change Password</label>
             <Input
               placeholder="Enter your password"
                 type={values.showPassword ? "text" : "password"}

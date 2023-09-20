@@ -92,7 +92,7 @@ function Page() {
                     }}
                   >
                     Prepare for success - Ace placements and bank exams with The
-                    Master’s Academy. Unlock your potential now!
+                    Masters Academy. Unlock your potential now!
                   </p>
                 </Stack>
               ) : null}

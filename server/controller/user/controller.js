@@ -296,7 +296,6 @@ exports.getUserData = async (req, res, next) => {
           user.batchID
         );
       }
-
       user.goal.map((task) => check.push(task.valueOf()));
       // get Goal
       const getUserGoal = goal.filter(
