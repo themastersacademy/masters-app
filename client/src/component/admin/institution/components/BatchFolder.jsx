@@ -75,7 +75,7 @@ export default function BatchFolder({}) {
   const [isCall,setCall] = useState(false)
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
-
+  const [history,setHistory] = useState([])
   const [notificate, setNotification] = useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -97,7 +97,8 @@ export default function BatchFolder({}) {
       .then((data) => {
       
         if (data.status == "ok") {
- 
+ console.log(data)
+ setHistory(data.history)
           setHead(data.head);
    setBatch(data.message)
         }
@@ -182,7 +183,7 @@ fetch('/api/admin/getRequestAccess',{
         <Requests batch={batch} getRequestAccess={getRequestAccess} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <History batch={batch} />
+        <History batch={batch}  history={history} />
       </CustomTabPanel>
       <Notification
         setNotification={setNotification}

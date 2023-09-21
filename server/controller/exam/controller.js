@@ -61,7 +61,7 @@ exports.startExam = async function (req, res) {
       if (get.length === 0) {
         let totalQuestion = 0;
         const isValidExam = await isValidExamStart(examInfo);
-        
+
         if (isValidExam) {
           const studentAnswerList = [];
           examInfo.questionCategory.forEach((category) => {
@@ -120,7 +120,6 @@ exports.startExam = async function (req, res) {
             .json({ message: "exam started", status: "success" });
         } else {
           const check = await isValidExamEnd(examInfo);
-       
           if (check) {
             delete req.session.examID;
             const batch = await Batch.findOne({ _id: examInfo.batchID });
@@ -144,20 +143,20 @@ exports.startExam = async function (req, res) {
 
             return res
               .status(400)
-              .json({ status: "info", message: "exam was completed"})
+              .json({ status: "info", message: "exam was completed" });
           }
+
           return res.status(400).json({ message: "exam not started yet" });
         }
       } else {
-
         examState
-        .deleteOne({ examID, userID })
-        .then(function () {
-          console.log("Data deleted"); // Success
-        })
-        .catch(function (error) {
-          console.log(error); // Failure
-        });
+          .deleteOne({ examID, userID })
+          .then(function () {
+            console.log("Data deleted"); // Success
+          })
+          .catch(function (error) {
+            console.log(error); // Failure
+          });
         delete req.session.examID;
 
         return res
@@ -189,13 +188,12 @@ exports.startExam = async function (req, res) {
         timeZone: "Asia/Kolkata",
         hour12: false,
       });
-      
-    
+
       let getTime = indianTime.split(",")[1];
-     
- 
-      if(getTime.split(':')[0] == 24) getTime = `00:${getTime.split(':')[1]}:${getTime.split(':')[2]}`
- 
+
+      if (getTime.split(":")[0] == 24)
+        getTime = `00:${getTime.split(":")[1]}:${getTime.split(":")[2]}`;
+
       examInfo.examEndTime = getTime;
 
       const get = examInfo.studentsPerformance.filter(
@@ -271,7 +269,7 @@ exports.startExam = async function (req, res) {
 
 const isValidExamEnd = async function (examInfo) {
   let date = new Date();
-  let indianTime = date.toLocaleString("en-US",{
+  let indianTime = date.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
@@ -282,16 +280,16 @@ const isValidExamEnd = async function (examInfo) {
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
 
   let examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
-  examEnd.setHours(examEnd.getHours()+2)
-  examEnd.setMinutes(examEnd.getMinutes()+30)
-  let indianTimeEnd = examEnd.toLocaleString("en-US",{
+  examEnd.setHours(examEnd.getHours() + 2);
+  examEnd.setMinutes(examEnd.getMinutes() + 30);
+
+  let indianTimeEnd = examEnd.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
   return currentTime > indianTimeEnd;
 };
-const isValidExamStart =  function (examInfo) {
-
+const isValidExamStart = function (examInfo) {
   let date = new Date();
   let indianTime = date.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
@@ -305,29 +303,26 @@ const isValidExamStart =  function (examInfo) {
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
 
   var examStat = new Date(examDate + " " + `${examInfo.examStartTime}:00`);
- 
-  examStat.setHours(examStat.getHours()+2)
-  examStat.setMinutes(examStat.getMinutes()+30)
-          
 
-           
-  const indianTimeStart = examStat.toLocaleString("en-US",{
+  examStat.setHours(examStat.getHours() + 2);
+  examStat.setMinutes(examStat.getMinutes() + 30);
+
+  const indianTimeStart = examStat.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
   var examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
-  
-  examEnd.setHours(examEnd.getHours()+2)
-  examEnd.setMinutes(examEnd.getMinutes()+30)
+  examEnd.setHours(examEnd.getHours() + 2);
+  examEnd.setMinutes(examEnd.getMinutes() + 30);
   const indianTimeEnd = examEnd.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
 
-  console.log(currentTime,indianTimeEnd);
-  console.log( currentTime,indianTimeStart);
-  console.log( 'startTime',currentTime > indianTimeStart)
-console.log( 'endTime', currentTime < indianTimeEnd);
+  console.log(currentTime, indianTimeEnd);
+  console.log(currentTime, indianTimeStart);
+  console.log("startTime", currentTime > indianTimeStart);
+  console.log("endTime", currentTime < indianTimeEnd);
   return (
     examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
     currentTime > indianTimeStart &&
@@ -843,6 +838,26 @@ exports.submitExam = async (req, res, next) => {
           }
           examInfo.save();
 
+          // institute
+
+          const batch = await Batch.findOne({ _id: examInfo.batchID });
+          const student = batch.studentList.filter(
+            (task) => task.userID.valueOf() == userID.valueOf()
+          );
+
+          batch.scheduleTest.map((task) => {
+            if (task.examID.valueOf() == examID.valueOf()) {
+              task.studentPerformance.push({
+                name: student[0].name,
+                rollNumber: student[0].rollNumber,
+                dept: student[0].dept,
+                email: student[0].email,
+                mark,
+              });
+            }
+          });
+
+          batch.save();
           // delate Exam State
           examState
             .deleteOne({ examID, userID })

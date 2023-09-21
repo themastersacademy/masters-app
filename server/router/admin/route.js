@@ -58,7 +58,10 @@ const {
   createScheduleExam,
 } = require("../../controller/admin/exam/createExam.js");
 
+const {downloadList} = require("../../controller/admin/institute/downloadList.js")
 //GET
+//downloadList 
+router.get('/download',downloadList)
 
 router.get("/getBank", getBank);
 router.get("/getCourse", getCourse);
@@ -137,4 +140,6 @@ router.post("/editTeacherAction", editTeacherAction);
 
 //RemoveTeacher
 router.post('/removeTeacher',removeTeacher)
+
+
 module.exports = router;

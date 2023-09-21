@@ -4,6 +4,8 @@ const route = require("./router/route.js");
 const path = require("path");
 const cors = require("cors");
 
+
+const ExcelJS = require('exceljs');
 const {
   sessionManagement,
   AthuVerify,
@@ -43,27 +45,11 @@ app.use(cors())
 //Application Route
 
 
-const fs = require('fs')
-const json2xls = require('json2xls');
 
 
-// Example JSON
 
-// const json = [{firstName: 'Bob', name: 'Lennon',batch:'Muthu'}, {firstName: 'Jack', name: 'Sparrow',batch:'Muthu'}]
 
-// const xls = json2xls(json);
 
-// fs.writeFileSync('exported.xlsx', xls, 'binary');
-// const folderPath = __dirname;
-// app.get('/download',(req,res)=>{
-//   console.log('call');
-
-//   res.download(folderPath +'/exported.xlsx' , function(err) {
-//     if(err) {
-//         console.log(err);
-//     }
-// })
-// })
 
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
@@ -182,12 +168,12 @@ app.get("/exam/solution",isSignIn,(req, res) => {
 
 
 
-
-
-
-
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
+
+
+
+
 
 app.use((err, req, res, next) => {
   console.log(err);
@@ -201,6 +187,7 @@ app.use((err, req, res, next) => {
     data,
 });
 });
+
 
 app.use((req, res, next) => {
   res.status(404).send("Sorry can't find that!")

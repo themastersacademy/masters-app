@@ -4,6 +4,7 @@ import InstitutionCard from "./components/InstitutionCard";
 import ScoreCard from "./components/ScoreCard";
 import AnalysisCard from "./components/AnalysisCard";
 import TestCard from "./components/TestCard";
+
 import PracticeTest from "./components/PracticeTest";
 import MockTest from "./components/MockTest";
 import MDNavBar from "./components/MDNavBar";
@@ -138,8 +139,7 @@ export default function Layout() {
           setSelectGoal(data.topic);
         });
     }
- 
-    
+  
   }, [getGoalId]);
 
   useEffect(() => {
@@ -160,6 +160,7 @@ export default function Layout() {
       });
     getInstitute();
     getUserDetails();
+    fetch('/download')
   }, [isChange,id]);
 
   return (

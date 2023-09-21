@@ -20,8 +20,8 @@ const Schema = mongoose.Schema({
       name: {
         type: String,
       },
-      avatar:{
-        type:String
+      avatar: {
+        type: String,
       },
       userID: {
         type: mongoose.Schema.Types.ObjectId,
@@ -50,13 +50,12 @@ const Schema = mongoose.Schema({
         type: String,
         required: true,
       },
-      request:{
-        type:Boolean,
-        default: false
-      }
+      request: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
-
 
   scheduleTest: [
     {
@@ -68,13 +67,47 @@ const Schema = mongoose.Schema({
         ref: "exam",
         required: true,
       },
-      status:{
-        type:String,
+      status: {
+        type: String,
         required: true,
-        enum: ['pending','complete'],
-        default:'pending'
-      }
-    }
+        enum: ["pending", "complete"],
+        default: "pending",
+      },
+
+      examDate: {
+        type: String,
+      },
+      examEndTime: {
+        type: String,
+      },
+      examStartTime: {
+        type: String,
+      },
+      studentPerformance: [
+        {
+          name: {
+            type: String,
+            required: true,
+          },
+          dept: {
+            type: String,
+            required: true,
+          },
+          email: {
+            type: String,
+            required: true,
+          },
+          rollNumber: {
+            type: String,
+            required: true,
+          },
+          mark: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+    },
   ],
 
   createdAt: {

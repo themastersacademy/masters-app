@@ -1,3 +1,5 @@
+
+
 const router = require('express').Router()
 const adminRoute = require('./admin/route.js')
 const user = require('./user/route.js')
@@ -6,7 +8,9 @@ const exam = require('./exam/route.js')
 const {routerControl} = require('../auth/auth.js')
 
 //Middlewere
+
 // router.use('/admin',AthuVerify,isAdmin,adminRoute)
+
 router.use('/admin',routerControl,adminRoute)
 
 router.use('/user',user)
