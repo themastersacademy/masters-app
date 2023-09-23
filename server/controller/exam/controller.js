@@ -6,6 +6,7 @@ const Goal = require("../../models/goal.js");
 const Batch = require("../../models/batch.js");
 const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
+const questionBank = require("../../models/questionBank.js");
 exports.getExamInfo = async function (req, res) {
   try {
     const path = req.path;
@@ -845,6 +846,9 @@ exports.submitExam = async (req, res, next) => {
             (task) => task.userID.valueOf() == userID.valueOf()
           );
 
+          let examMark = get[0].mark - get[0].negativeMark;
+          if (examMark < 0) examMark = 0;
+
           batch.scheduleTest.map((task) => {
             if (task.examID.valueOf() == examID.valueOf()) {
               task.studentPerformance.push({
@@ -852,7 +856,7 @@ exports.submitExam = async (req, res, next) => {
                 rollNumber: student[0].rollNumber,
                 dept: student[0].dept,
                 email: student[0].email,
-                mark,
+                mark:examMark
               });
             }
           });
@@ -875,6 +879,7 @@ exports.submitExam = async (req, res, next) => {
             status: "success",
             message: "exam submitted successfully",
           });
+          
         }
       } else {
         res.json({
@@ -924,3 +929,60 @@ exports.getExamResult = async (req, res, next) => {
     console.log(error);
   }
 };
+
+
+exports.getChangeQues = async (req,res) =>{
+  try {
+    const option = [
+     
+      {
+        currentBankID :"6502c69c10d5416761c09357",
+        changeBankID :"64f7195b585b4852abd72874",
+      easy:18,
+      medium:24,
+      hard:40,
+      total:82
+    }
+  ]
+    for(let i=0 ;i<option.length;i++){
+      const bank = await questionCollection.find({QuesbankID:option[i].currentBankID})
+      console.log(bank)
+      console.log(bank.length)
+    let fullBank = await questionCollection.find();
+    console.log(fullBank.length);
+  if(bank.length > 123456789)
+ {   
+  bank.map(task => {
+ 
+      task.QuesbankID=option[i].changeBankID
+      task.save()
+    })
+
+  fullBank = await questionCollection.find();
+    console.log(fullBank.length);
+    console.log(bank.length)
+    const quesBank = await questionBank.findOne({_id:option[i].changeBankID})
+    
+     quesBank.level.easy += option[i].easy
+     quesBank.level.medium += option[i].medium
+     quesBank.level.hard += option[i].hard
+     quesBank.totalQuestions += option[i].total
+     quesBank.save()
+     const quesBank1 = await questionBank.findOne({_id:option[i].currentBankID})
+     console.log(quesBank1)
+     quesBank1.level.easy = 0
+     quesBank1.level.medium = 0
+     quesBank1.level.hard =0
+     quesBank1.totalQuestions = 0
+     quesBank1.save()
+  } 
+    else{
+      console.log('complete')
+    }
+  }
+    res.send('ok')
+
+  } catch (error) {
+    console.log(error);
+  }
+}

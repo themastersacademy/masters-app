@@ -48,7 +48,6 @@ function List({ task }) {
     });
   };
 
-
   const style = {
     image: {
       width: "40px",

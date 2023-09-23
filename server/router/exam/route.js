@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {getExamInfo, startExam, getExamState,examStateUpdate,submitExam,getExamResult} = require('../../controller/exam/controller.js')
+const {getExamInfo, startExam, getExamState,examStateUpdate,submitExam,getExamResult,getChangeQues} = require('../../controller/exam/controller.js')
 const { createPracticesExam,createMockExam } = require('../../controller/admin/exam/createExam.js')
 const {solution} = require('../../controller/exam/resultSolution.js')
 const {rank} = require('../../controller/exam/rank.js')
@@ -13,6 +13,9 @@ router.get('/submitExam',submitExam);
 router.get('/get-exam-result/*',getExamResult);
 //exam/solution
 router.get("/solution/*",solution)
+
+//texting
+router.get('/getChangeQues',getChangeQues)
 //post
 router.post('/stateUpdate',examStateUpdate)
 
