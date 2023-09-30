@@ -44,6 +44,22 @@ app.use("/api",route);
 app.use(cors())
 //Application Route
 
+// const fs = require('fs')
+// fs.writeFile("myjsonfile.json", JSON.stringify( [
+     
+//   {
+//     currentBankID :"6501ff8b10d5416761c09245",
+//     changeBankID :"64ca4be0b1881bce7538cf54",
+//   easy:12,
+//   medium:10,
+//   hard:11,
+//   total:33
+// }
+// ], null, 4), (err) => {
+//   if (err) {  console.error(err);  return; };
+//   console.log("File has been created");
+// });
+
 
 
 
@@ -67,7 +83,7 @@ app.get("/isLogin", (req, res) => {
   if (req.session.isLogin)
    { 
     if(req.session.examID){
-      res.json({ status: "isExam", message:'go to exam'});
+      res.json({ status: "isExam", message:'go to exam',examID:req.session.examID});
     }
     else{ 
       if(req.session.userRoll == 'student')  return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID });

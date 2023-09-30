@@ -129,6 +129,8 @@ exports.forgotPass = async (req, res, next) => {
   try {
     const password = req.body.password
     const email = req.body.email;
+    if(typeof(email) == 'string')
+    {
     const user = await User.findOne({ email });
     if (user) {
       const secret = "This is a company secret ";
@@ -140,7 +142,9 @@ exports.forgotPass = async (req, res, next) => {
       req.session.Otp = otp;
       SendEmail(email, otp);
       res.json({ status: "success", message: '"Verify your account"' });
-    } else res.json({ status: "error", message: "Email does not exist yet" });
+    }
+    else res.json({ status: "error", message: "Email does not exist yet" });
+    } else res.json({ status: "error", message: "something wrong"})
   } catch (error) {
     console.log(error);
   }

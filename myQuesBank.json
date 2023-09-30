@@ -1,0 +1,301 @@
+[
+    {
+        "level": {
+            "easy": 71,
+            "medium": 80,
+            "hard": 30
+        },
+        "_id": "64ca4be0b1881bce7538cf54",
+        "title": "Ratio and Proportions",
+        "totalQuestions": 181,
+        "createdAt": "2023-08-02T12:28:16.793Z",
+        "updatedAt": "2023-08-02T12:28:16.793Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 14,
+            "medium": 44,
+            "hard": 2
+        },
+        "_id": "64ca6bfcb1881bce7538cf7f",
+        "title": "Blood Relations",
+        "totalQuestions": 60,
+        "createdAt": "2023-08-02T14:45:16.454Z",
+        "updatedAt": "2023-08-02T14:45:16.454Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 73,
+            "medium": 96,
+            "hard": 87
+        },
+        "_id": "64d2451f8be46563d54f0052",
+        "title": "Time and Work",
+        "totalQuestions": 256,
+        "createdAt": "2023-08-08T13:37:35.729Z",
+        "updatedAt": "2023-08-08T13:37:35.729Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 22,
+            "medium": 18,
+            "hard": 20
+        },
+        "_id": "64dccea5f6dbef664c0716ca",
+        "title": "Seating Arrangements",
+        "totalQuestions": 60,
+        "createdAt": "2023-08-16T13:27:01.221Z",
+        "updatedAt": "2023-08-16T13:27:01.221Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 25,
+            "medium": 29,
+            "hard": 6
+        },
+        "_id": "64dcd3f9f6dbef664c07170c",
+        "title": "Coding And Decoding",
+        "totalQuestions": 60,
+        "createdAt": "2023-08-16T13:49:45.781Z",
+        "updatedAt": "2023-08-16T13:49:45.781Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 20,
+            "medium": 20,
+            "hard": 20
+        },
+        "_id": "64e373d2f6dbef664c071f2e",
+        "title": "Directions",
+        "totalQuestions": 60,
+        "createdAt": "2023-08-21T14:25:22.807Z",
+        "updatedAt": "2023-08-21T14:25:22.807Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 24,
+            "medium": 18,
+            "hard": 18
+        },
+        "_id": "64e6140ff6dbef664c071f90",
+        "title": "Number Series",
+        "totalQuestions": 60,
+        "createdAt": "2023-08-23T14:13:35.756Z",
+        "updatedAt": "2023-08-23T14:13:35.756Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 20,
+            "medium": 20,
+            "hard": 20
+        },
+        "_id": "64edf923d1353a6e9a1c0557",
+        "title": "Syllogism",
+        "totalQuestions": 60,
+        "createdAt": "2023-08-29T13:56:51.594Z",
+        "updatedAt": "2023-08-29T13:56:51.594Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 21,
+            "medium": 23,
+            "hard": 16
+        },
+        "_id": "64f638da585b4852abd724cc",
+        "title": "Pipes and Cisterns",
+        "totalQuestions": 60,
+        "createdAt": "2023-09-04T20:06:50.212Z",
+        "updatedAt": "2023-09-04T20:06:50.212Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 90,
+            "medium": 134,
+            "hard": 89
+        },
+        "_id": "64f7195b585b4852abd72874",
+        "title": "Profit and loss",
+        "totalQuestions": 313,
+        "createdAt": "2023-09-05T12:04:43.082Z",
+        "updatedAt": "2023-09-05T12:04:43.082Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 62,
+            "medium": 90,
+            "hard": 67
+        },
+        "_id": "64f77047585b4852abd729b9",
+        "title": "Simple and Compound Interest",
+        "totalQuestions": 219,
+        "createdAt": "2023-09-05T18:15:35.820Z",
+        "updatedAt": "2023-09-05T18:15:35.820Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 27,
+            "medium": 19,
+            "hard": 15
+        },
+        "_id": "6500246e10d5416761c08f4a",
+        "title": "Percentage",
+        "totalQuestions": 61,
+        "createdAt": "2023-09-12T08:42:22.919Z",
+        "updatedAt": "2023-09-12T08:42:22.919Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 11,
+            "medium": 15,
+            "hard": 10
+        },
+        "_id": "6500947b10d5416761c09042",
+        "title": "Average",
+        "totalQuestions": 36,
+        "createdAt": "2023-09-12T16:40:27.959Z",
+        "updatedAt": "2023-09-12T16:40:27.959Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 3,
+            "medium": 3,
+            "hard": 2
+        },
+        "_id": "650170a910d5416761c090d2",
+        "title": "AGE",
+        "totalQuestions": 8,
+        "createdAt": "2023-09-13T08:19:53.574Z",
+        "updatedAt": "2023-09-13T08:19:53.574Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 0,
+            "medium": 2,
+            "hard": 3
+        },
+        "_id": "6503493d10d5416761c0967e",
+        "title": "Population",
+        "totalQuestions": 5,
+        "createdAt": "2023-09-14T17:56:13.191Z",
+        "updatedAt": "2023-09-14T17:56:13.191Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 2,
+            "medium": 3,
+            "hard": 1
+        },
+        "_id": "6503e30b10d5416761c09778",
+        "title": "Mixture and Alligation",
+        "totalQuestions": 6,
+        "createdAt": "2023-09-15T04:52:27.192Z",
+        "updatedAt": "2023-09-15T04:52:27.192Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 3,
+            "medium": 2,
+            "hard": 2
+        },
+        "_id": "6503ec0410d5416761c097ab",
+        "title": "Number System",
+        "totalQuestions": 7,
+        "createdAt": "2023-09-15T05:30:44.990Z",
+        "updatedAt": "2023-09-15T05:30:44.990Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 13,
+            "medium": 9,
+            "hard": 13
+        },
+        "_id": "6503f69510d5416761c097ea",
+        "title": "Divisibility",
+        "totalQuestions": 35,
+        "createdAt": "2023-09-15T06:15:49.801Z",
+        "updatedAt": "2023-09-15T06:15:49.801Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 14,
+            "medium": 9,
+            "hard": 9
+        },
+        "_id": "65042a4710d5416761c098dd",
+        "title": "LCM and HCF",
+        "totalQuestions": 32,
+        "createdAt": "2023-09-15T09:56:23.300Z",
+        "updatedAt": "2023-09-15T09:56:23.300Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 7,
+            "medium": 12,
+            "hard": 17
+        },
+        "_id": "650448a010d5416761c099ed",
+        "title": "Speed Time and Distance",
+        "totalQuestions": 36,
+        "createdAt": "2023-09-15T12:05:52.108Z",
+        "updatedAt": "2023-09-15T12:05:52.108Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 2,
+            "medium": 4,
+            "hard": 3
+        },
+        "_id": "6504643110d5416761c09ad4",
+        "title": "Race",
+        "totalQuestions": 9,
+        "createdAt": "2023-09-15T14:03:29.530Z",
+        "updatedAt": "2023-09-15T14:03:29.530Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 27,
+            "medium": 24,
+            "hard": 4
+        },
+        "_id": "650a53edca02a0ea25fe1811",
+        "title": "Boats and Streams",
+        "totalQuestions": 55,
+        "createdAt": "2023-09-20T02:07:41.444Z",
+        "updatedAt": "2023-09-20T02:07:41.444Z",
+        "__v": 0
+    },
+    {
+        "level": {
+            "easy": 0,
+            "medium": 0,
+            "hard": 0
+        },
+        "_id": "650a5504ca02a0ea25fe183b",
+        "title": "Problems on Train",
+        "totalQuestions": 0,
+        "createdAt": "2023-09-20T02:12:20.012Z",
+        "updatedAt": "2023-09-20T02:12:20.012Z",
+        "__v": 0
+    }
+]

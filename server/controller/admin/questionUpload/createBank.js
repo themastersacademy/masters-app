@@ -17,7 +17,7 @@ exports.createBank = async (body) => {
         return { status: "error", message: "Question bank already available" };
     }
   }
-  return { status: "error", message: "Something went wrong" };
+  return { status: "error", message: "the name already taken" };
 };
 
 exports.createCollection = async (body) => {

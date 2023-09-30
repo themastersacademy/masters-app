@@ -147,7 +147,7 @@ export default function Layout() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "isLogout") navigator("/login");
-        if (data.status == "isExam" ) navigator("/exam/state");
+        if (data.status == "isExam" ) navigator(`/exam/state?=${data.examID}`)
         if (id == undefined) navigator("/login");
         if (data.status == "isLogin" && data.roll == "student")
         navigator(`/?=${data.id}`);

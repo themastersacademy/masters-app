@@ -68,8 +68,9 @@ function NormalQuestion({
       }}
       key={index}
     >
+      
       <div style={style.outerLayer}>
-        <p style={style.question}>{list.title}</p>
+        <p style={style.question}>{index+1}.{'  '}{list.title}</p>
         <div style={style.option}>
           <div style={style.option1}>
             {list.type === "Multiple Choose" ? (

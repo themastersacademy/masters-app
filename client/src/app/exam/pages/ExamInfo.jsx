@@ -7,6 +7,7 @@ import ExamComplete from "./components/ExamComplete"
 export default function ExamInfo() {
   const { search } = useLocation();
   const examId = search.split("=")[1];
+  const navigator = useNavigate();
   const [examInfo, setExamInfo] = useState(null);
   const [isScheduled, setIsScheduled] = useState(false);
   const [user,setuser] = useState([])
@@ -27,6 +28,20 @@ export default function ExamInfo() {
       fetch('/api/admin/getUserDetails')
       .then(res => res.json())
       .then(data => setuser(data)) 
+
+      fetch("/isLogin")
+      .then((res) => res.json())
+      .then((data) => {
+    
+        if (data.status == "isExam" ) navigator(`/exam/state?=${data.examID}`)
+
+      if (
+        (data.status == "isLogin" && data.roll == "admin") ||
+        (data.status == "isLogin" && data.roll == "teacher") ||
+        (data.status == "isLogin" && data.roll == "institution")
+      )
+        navigator(`/admin/dashboard?=${data.id}`);
+      });
   },[]);
 
   return (
