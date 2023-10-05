@@ -9,6 +9,10 @@ export default function QuestionActionCard({
   currentQuestionIndex
 }) {
   
+  const [count,setCount] = useState('')
+useEffect(()=>{
+  setCount(currentQuestionIndex == undefined ? 0 : currentQuestionIndex)
+},[currentQuestionIndex]) 
 
   return (
     <Paper
@@ -22,9 +26,8 @@ export default function QuestionActionCard({
     >
       <Stack direction="row" alignItems="center" >
     
-  {   0 == currentQuestionIndex ? null : 
+  { 0 == count ? null : 
         <Button
-       
           variant="contained"
           onClick={handlePreviousQuestion}
           sx={{
@@ -32,7 +35,6 @@ export default function QuestionActionCard({
             backgroundColor: "#D1E3E0",
             color: "#187163",
             marginRight:'auto',
-
             "&:hover": {
               backgroundColor: "#D1E3E0",
               color: "#187163",
@@ -43,14 +45,12 @@ export default function QuestionActionCard({
           Previous
         </Button>
         }
-
-{questionLength-1 == currentQuestionIndex ? 
-    
+{questionLength-1 == count ? 
         null
       :
       <Button
       variant="contained"
-      onClick={handleNextQuestion}
+      onClick={ handleNextQuestion}
       sx={{
         textTransform: "none",
         backgroundColor: "#187163",
