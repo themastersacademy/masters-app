@@ -139,7 +139,7 @@ function Collection() {
       <div style={style.navbar}>
         <div style={{ width: "100%", display: "flex", gap: "20px" }}>
           <p
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer",marginLeft:'10px' }}
             onClick={() => {
               navigate("/admin/bank");
             }}
@@ -187,6 +187,7 @@ function Collection() {
               background: `${add ? "#187163" : "#FEA800"}`,
               color: "white",
               transformText: "lowercase",
+              marginRight:'20px',
               "&:hover": {
                 backgroundColor: `${add ? "#185C52" : "#FEA820"}`,
               },

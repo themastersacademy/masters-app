@@ -38,18 +38,15 @@ export default function TopNavBar({user}) {
         position: "sticky",
         top: 0,
         zIndex: 100,
+        height:'80px',
+        padding: "20px 30px",
         borderRadius: "20px",
+        display:'flex',
+        justifyContent:'space-between',
+        alignItems:'center'
       }}
     >
-      <Stack
-        direction="row"
-        spacing={2}
-        alignItems="center"
-        justifyContent={"space-between"}
-        sx={{
-          padding: "20px 30px",
-        }}
-      >
+    
         <Stack direction="row" spacing={2} alignItems="center">
           <img src={Avater.LOGO} />
           <h1
@@ -92,8 +89,8 @@ export default function TopNavBar({user}) {
           >
             <Avatar
               sx={{
-                width: "40px",
-                height: "40px",
+                width: "50px",
+                height: "50px",
               }}
               src={user.avatar}
             />
@@ -107,7 +104,7 @@ export default function TopNavBar({user}) {
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Stack>
-      </Stack>
+    
     </Paper>
   );
 }

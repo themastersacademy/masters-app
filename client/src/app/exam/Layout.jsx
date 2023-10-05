@@ -10,7 +10,8 @@ export default function Exam() {
   window.oncontextmenu = () => {
     return false;
   };
-  let h = window.innerHeight;
+  console.log(window.innerHeight-30)
+  let h = window.innerHeight-'20px';
   let w = window.innerWidth;
 
   // window.addEventListener("beforeunload", (ev) => {

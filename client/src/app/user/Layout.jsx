@@ -156,11 +156,13 @@ export default function Layout() {
         (data.status == "isLogin" && data.roll == "teacher") ||
         (data.status == "isLogin" && data.roll == "institution")
       )
-        navigator(`/admin/dashboard?=${data.id}`);
+   {   if(data.roll == "teacher" || data.roll == "institution") return navigator(`/institution?=${data.institutionID}`)
+     
+    return navigator(`/admin/dashboard?=${data.id}`);}
       });
     getInstitute();
     getUserDetails();
-    fetch('/download')
+    
   }, [isChange,id]);
 
   return (

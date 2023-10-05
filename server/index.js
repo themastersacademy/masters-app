@@ -4,8 +4,8 @@ const route = require("./router/route.js");
 const path = require("path");
 const cors = require("cors");
 
+const {DateTime} = require('luxon')
 
-const ExcelJS = require('exceljs');
 const {
   sessionManagement,
   AthuVerify,
@@ -46,7 +46,6 @@ app.use(cors())
 
 // const fs = require('fs')
 // fs.writeFile("myjsonfile.json", JSON.stringify( [
-     
 //   {
 //     currentBankID :"6501ff8b10d5416761c09245",
 //     changeBankID :"64ca4be0b1881bce7538cf54",
@@ -61,7 +60,35 @@ app.use(cors())
 // });
 
 
+let date3 = new Date();
+let indianTime = date3.toLocaleString("en-US", {
+  timeZone: "Asia/Kolkata",
+  hour12: false,
+});
 
+
+app.get('/getTime',(req,res)=>{
+
+//  const getTime = DateTime.fromISO(`2015-03-04T00:00:00.000Z`).setZone("Asia/Kolkata");
+
+//  let examDateObject =new Date();
+//   examDateObject.setTime(getTime.ts)
+//  console.log(examDateObject);
+//   res.send(examDateObject)
+let date3 = new Date();
+  let indianTime = date3.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  });
+  const get = indianTime.split(",")[0].split('/')
+  const get1 = indianTime.split(",")[1].split(':')
+ const getTime = DateTime.fromISO(`${get[2]}-${get[0]}-${get[1]}T${get1[0]}:${get1[1]}:${get1[2]}.000Z`).setZone("Asia/Kolkata");
+
+ let examDateObject = new Date();
+  examDateObject.setTime(getTime.ts)
+ console.log(examDateObject.getMinutes());
+  res.json({time:examDateObject.getMinutes()})
+})
 
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
@@ -77,7 +104,6 @@ app.get('/isValueExam',(req,res)=>{
     return res.json({ isValue: true });
   }
   else return res.json({ isValue: false,userID:req.session.userID });
-
 })
 app.get("/isLogin", (req, res) => {
   if (req.session.isLogin)
@@ -87,10 +113,10 @@ app.get("/isLogin", (req, res) => {
     }
     else{ 
       if(req.session.userRoll == 'student')  return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID });
-      else if (     req.session.userRoll == "teacher" ||
+      else if (req.session.userRoll == "teacher" ||
       req.session.userRoll == "admin" ||
       req.session.userRoll == "institution")
-      return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID });
+      return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID,institutionID:req.session.institutionID !== undefined ? req.session.institutionID : undefined });
      
     } 
   }
@@ -100,6 +126,7 @@ app.get("/isLogin", (req, res) => {
 app.get("/",examInfo,userVerify, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
+
 
 /// user route
 
@@ -179,13 +206,15 @@ app.get("/exam/solution",isSignIn,(req, res) => {
 });
 
 
-
+//institution user
+app.get('/institution',(req,res)=>{
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+})
+app.get('/institution/batch',(req,res)=>{
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+})
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
-
-
-
-
 
 app.use((err, req, res, next) => {
   console.log(err);

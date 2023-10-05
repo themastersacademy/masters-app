@@ -6,7 +6,7 @@ function QuestionBank({ bank }) {
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "40px",
+       
       
       }}
     >

@@ -346,6 +346,11 @@ exports.createPracticesExam = async (req, res, next) => {
         const examDuration = `${hours}:${minutes}:${seconds}`;
 
         const date = new Date();
+        let indianTime = date.toLocaleString("en-US", {
+          timeZone: "Asia/Kolkata",
+          hour12: false,
+        });
+
         const createExam = await Exam({
           type: "practice",
           title: `Practice Exam ${countPractice.length + 1}`,
@@ -356,7 +361,7 @@ exports.createPracticesExam = async (req, res, next) => {
           }/${
             eval(date.getMonth() + 1) < 10
               ? "0" + eval(date.getMonth() + 1)
-              : date.getMonth()
+              :  eval(date.getMonth() + 1)
           }/${date.getFullYear()}`,
           examDuration,
           mark: course.mark,
@@ -493,7 +498,7 @@ exports.createMockExam = async (req, res, next) => {
           }/${
             eval(date.getMonth() + 1) < 10
               ? "0" + eval(date.getMonth() + 1)
-              : date.getMonth()
+              :  eval(date.getMonth() + 1)
           }/${date.getFullYear()}`,
           examDuration,
           mark: course.mark,

@@ -40,7 +40,7 @@ textTransform:'none'
   };
   return (
     <Paper sx={{ width: "100%", height: "80px", padding: "23px" }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" alignItems="center" justifyContent='space-between' >
         <Stack direction="row" alignItems="center" spacing="20px">
           <img src={task.avatar} style={style.image} alt="" />
           <p style={style.name}>{task.name}</p>

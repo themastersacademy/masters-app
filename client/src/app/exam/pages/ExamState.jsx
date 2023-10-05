@@ -36,9 +36,8 @@ export default function ExamState() {
     let examMinutes = examTime[1];
     let examSeconds = examTime[2];
 
-
     let examDateObject = new Date(
-      `${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds} `
+      `${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds}`
     );
 
     let currentDateObject = new Date()
@@ -422,6 +421,8 @@ const MobileView = ({
         handleNextQuestion={handleNextQuestion}
         handlePreviousQuestion={handlePreviousQuestion}
         isMobileView={true}
+        questionLength={examInfo.questionCollections.length}
+        currentQuestionIndex={currentQuestionIndex}
       />
       <ExamEndDialog
         isDialogOpen={isDialogOpen}

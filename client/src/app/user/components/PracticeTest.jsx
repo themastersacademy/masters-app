@@ -293,6 +293,7 @@ export default function PracticeTest({
             value={"select"}
             label="Difficulty level"
             sx={{
+              textTransform:"capitalize",
               "& .MuiOutlinedInput-root": {
                 borderColor: "green !important",
               },
@@ -302,7 +303,9 @@ export default function PracticeTest({
             }}
             onChange={(e, value) =>
               setValue((preValue) => {
+           
                 const getValue = { ...preValue };
+               
                 getValue.selectLevel = e.target.value;
                 return getValue;
               })

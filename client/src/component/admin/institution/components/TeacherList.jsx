@@ -12,13 +12,26 @@ import AddTeacherBatch from './AddTeacherBatch'
 import '../../../../App.css'
 export default function TeacherList({institute,getTeacheAccess,ControlNotification}) {
     
-  const check = [];
+console.log(institute)
   return (
     <div className="scrollHide"  style={{height:'400px',overflowY:'scroll'}}>
       
         {
-            institute.length !== 0 ?  <Teacher institute={institute} getTeacheAccess={getTeacheAccess} ControlNotification={ControlNotification} />
-       : null
+            institute.teacherList.length !== 0 ?  <Teacher institute={institute} getTeacheAccess={getTeacheAccess} ControlNotification={ControlNotification} />
+       : <div
+       style={{
+         width: "100%",
+         height: "60vh",
+         display: "flex",
+         alignItems: "center",
+         justifyContent: "center",
+         fontSize: "20px",
+         fontWeight: "bold",
+         color: "#CACACA",
+       }}
+     >
+       No Active Teachers
+     </div>
         }
    
     </div>

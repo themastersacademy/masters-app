@@ -37,7 +37,7 @@ useEffect(()=>{
   return (
     <div>
        <InstitutionControl changeRoll={changeRoll} isChange={isChange} />
-       <div style={{marginTop:'20px'}}>
+       <div style={{marginTop:'20px',display:'flex',gap:'10px',flexDirection:'column', padding:'5px',}}>
        {institute.length >0 ?  institute.map((task,index) => <InstitutionDetails task={task} key={index} ControlNotification={ControlNotification} /> )  : null }
        </div>
      

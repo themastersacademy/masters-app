@@ -15,6 +15,7 @@ const {
 } = require("../../util/getInstitutionDetails.js");
 
 exports.login = async (req, res, next) => {
+  try {
   const password = req.body.password;
   const secret = "This is a company secret ";
   const sha256Hasher = crypto.createHmac("sha256", secret);
@@ -30,6 +31,7 @@ exports.login = async (req, res, next) => {
       req.session.userRoll = check.type;
       req.session.userName = check.name;
       req.session.email = check.email;
+      req.session.institutionID = check.institutionID !== undefined ? check.institutionID : undefined
       const State = await examState.findOne({ userID: check._id });
  
       if (State) {      
@@ -45,7 +47,7 @@ exports.login = async (req, res, next) => {
           req.session.isCreate = true;
           return res.json({ status: "goal" });
         }
-        return res.json({ status: "success", id: check._id, roll: check.type });
+        return res.json({ status: "success", id: check._id, roll: check.type,institutionID:check.institutionID !== undefined ? check.institutionID : '' });
       }
     } else {
       const isDelete = await sessions.deleteMany({
@@ -64,15 +66,19 @@ exports.login = async (req, res, next) => {
       req.session.userRoll = check.type;
       req.session.userName = check.name;
       req.session.email = check.email;
+      req.session.institutionID = check.institutionID !== undefined ? check.institutionID : undefined
       if (State) {
         req.session.examID = State.examID;
        return res.json({ status: "isExam" ,examID:State.examID });
       }
-      res.json({ status: "success", id: check._id, roll: check.type });
+      res.json({ status: "success", id: check._id, roll: check.type,institutionID:check.institutionID !== undefined ? check.institutionID : '' });
     }
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });
   }
+} catch (error) {
+    throw error
+}
 };
 
 function isLogin(data, email) {
@@ -80,7 +86,9 @@ function isLogin(data, email) {
 }
 
 exports.create = async (req, res, next) => {
-  console.log(req.body);
+ try {
+  if(typeof(req.body.email) == 'string')
+{  
   const check = await User.findOne({ email: req.body.email });
   if (!check) {
     if (req.session.changeEmail && req.session.changePassword) {
@@ -104,7 +112,10 @@ exports.create = async (req, res, next) => {
     res.json({ status: "success", message: "Verify your account" });
   } else {
     res.json({ status: "error", message: "Account already exists " });
-  }
+  }}
+} catch (error) {
+  throw error
+}
 };
 
 exports.resendOtp = (req, res, next) => {

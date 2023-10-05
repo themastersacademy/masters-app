@@ -44,7 +44,8 @@ function Login ({ controlNotification }) {
             (data.status == "success" && data.roll == "institution") ||
             (data.status == "success" && data.roll == "admin")
           ) {
-            navigator(`/admin/dashboard?=${data.id}`);
+            if(data.roll == "teacher" || data.roll == "institution") return navigator(`/institution?=${data.institutionID}`)
+           return navigator(`/admin/dashboard?=${data.id}`);
           }
           if (data.status == "error")
             controlNotification(data.status, data.message);
@@ -64,7 +65,9 @@ function Login ({ controlNotification }) {
           (data.status == "isLogin" && data.roll == "teacher") ||
           (data.status == "isLogin" && data.roll == "institution")
         )
-          navigator(`/admin/dashboard?=${data.id}`);
+    {     if(data.roll == "teacher" || data.roll == "institution") return navigator(`/institution?=${data.institutionID}`)
+         else  
+      return navigator(`/admin/dashboard?=${data.id}`);}
       });
   }, []);
   const [values, setValues] = useState({

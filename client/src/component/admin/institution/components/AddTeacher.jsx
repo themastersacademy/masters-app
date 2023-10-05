@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { TextField, Autocomplete } from "@mui/material";
 
 export default function AddBatch({ id, ControlNotification, teacher ,getTeacherAccess}) {
-
+  const [changeOpen,setChangeOpen] = useState(false)
   const [open, setOpen] = useState(false);
   const [teacherName, setTeacherName] = useState("");
   const [Error, setError] = useState("");
@@ -74,15 +74,18 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
         <DialogTitle sx={{ background: " #187163;", color: "white" }}>
           Add Teacher
         </DialogTitle>
-        <DialogContent sx={{height:'200px'}} >
+        <DialogContent sx={{minHeight:changeOpen == false ?  '100px' : '300px'}} >
             
           <Autocomplete
             disablePortal
-        
             options={teacher}
+            onClick={()=>{
+              console.log('call');
+            }}
             onChange={handleSelect}
-            renderInput={(params) => (
-              <TextField
+            renderInput={(params) => {
+              setChangeOpen(params.inputProps["aria-expanded"])
+             return <TextField
                 fullWidth
                 error ={Error == false ? false : true }
                 {...params}
@@ -104,13 +107,14 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
                       borderColor: "#187163",
                     },
                   },
+             
               marginTop:'10px'
                 }}
                 label="Add teacher"
                 placeholder="Enter Email"
                 helperText={ Error == false ? '' : 'The teacher name is already exists'}
               />
-            )}
+            }}
           />
         </DialogContent>
         <DialogActions>

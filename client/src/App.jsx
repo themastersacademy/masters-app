@@ -34,7 +34,7 @@ function App() {
           {
             // admin and institute page
           }
-          <Route path="/admin/dashboard" element={<Layout />} />
+          {/* <Route path="/admin/dashboard" element={<Layout />} />
           <Route path="/admin/bank" element={<Layout />} />
           <Route path="/admin/analytics" element={<Layout />} />
           <Route path="/admin/institution" element={<Layout />} />
@@ -42,9 +42,13 @@ function App() {
           <Route path="/admin/manage" element={<Layout />} />
           <Route path="/admin/bank/collection" element={<Layout />} />
           <Route path="/admin/dashboard/course" element={<Layout />} />
-          <Route path="/admin/institution/page/batch" element={<Layout />} /> 
+          <Route path="/admin/institution/page/batch" element={<Layout />} />  */}
 
-               {/* <Route path="/login" element={<Login />} />
+          <Route path="/institution" element={<Layout />} />
+          <Route path="/institution/batch" element={<Layout />} />
+          <Route path="/institution/page/batch" element={<Layout />} /> 
+
+          <Route path="/login" element={<Login />} />
           <Route path="/login/verify" element={<Login />} />
           <Route path="/login/create" element={<Login />} />
           <Route path="/login/goal" element={<Login />} />
@@ -56,7 +60,8 @@ function App() {
           <Route path="/admin/manage" element={<AsaidMenu />} />
           <Route path="/admin/bank/collection" element={<AsaidMenu />} />
           <Route path="/admin/dashboard/course" element={<AsaidMenu />} />
-          <Route path="/admin/institution/page/batch" element={<AsaidMenu />} /> */}
+          <Route path="/admin/institution/page/batch" element={<AsaidMenu />} />
+
         </Routes>
       </Router>
     </div>

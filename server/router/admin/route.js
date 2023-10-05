@@ -60,6 +60,7 @@ const {
 
 const {downloadList} = require("../../controller/admin/institute/downloadList.js")
 //GET
+
 //downloadList 
 router.get('/download',downloadList)
 

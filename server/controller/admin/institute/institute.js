@@ -1,9 +1,25 @@
 const Institution = require("../../../models/institution");
 const User = require("../../../models/user");
+const sessions = require("../../../models/session.js");
+
 exports.getInstitution = async (req, res, next) => {
-  const institute = await Institution.findOne({ _id: req.body.id });
-  if (institute) res.json({ status: "success", message: institute });
-  else res.json({ status: "error", message: "something wrong" });
+  try {
+    let institute = await Institution.findOne({ _id: req.body.id });
+   const user = await User.findOne({_id:req.session.userID})
+   
+if(req.session.userRoll == 'teacher') {
+    const check = []
+    user.batchID.map(task => check.push(task.valueOf()))
+   const get = institute.batch.filter(task => check.indexOf(task.batchID.valueOf()) !== -1)
+   institute.batch=get
+   institute.teacherList = []
+  }
+    if (institute) res.json({ status: "success", message: institute });
+    else res.json({ status: "error", message: "something wrong" });
+  } catch (error) {
+    throw error
+  }
+
 };
 
 exports.getInstituteName = async (req, res, next) => {
@@ -12,7 +28,6 @@ exports.getInstituteName = async (req, res, next) => {
     const institute = await Institution.find();
     if (institute) {
       institute.map((task) => data.push({ label: task.name, id: task._id }));
-
       res.json({ status: "ok", message: data });
     }
   } catch (error) {}
@@ -23,7 +38,7 @@ exports.getTeacher = async (req, res, next) => {
     const user = await User.find();
     if (user) {
       const send = [];
-      console.log(user);
+     
       user.map((task) => {
    if('student' == task.type)
         send.push({ label: task.email, id: task._id })
@@ -54,7 +69,23 @@ exports.createTeacher = async (req, res, next) => {
           institute.save();
           user.institutionID = institute._id;
           user.type = "teacher";
+          user.batchID = []
           user.save();
+
+          // Delete session
+          const getSession = await sessions.find()
+          const getVerify = await isLogin(getSession, user.email);
+          if(getVerify.length > 0) {
+             await sessions.deleteMany({
+              expires: getVerify[0].expires,
+            }).then(function () {
+              console.log("Data deleted"); //  Success
+            })
+            .catch(function (error) {
+              console.log(error); // Failure
+            });
+          }
+
           res.json({ status: "success", message: "Add teacher successfully" });
         } else
           res.json({
@@ -71,7 +102,7 @@ exports.createTeacher = async (req, res, next) => {
 
 exports.addTeacherBatch = async (req, res, next) => {
   const { id, teacherName, teacherID } = req.body;
-  console.log(req.body);
+ 
   try {
     const user = await User.findOne({ _id: teacherID });
 
@@ -159,9 +190,24 @@ exports.removeTeacher = async (req, res, next) => {
       const getUserID = user.batchID.filter(
         (task) => collectBatch.indexOf(task.valueOf()) == -1
       );
-      user.batchID=getUserID
-      user.type = 'student'
+
+      // Delete session
       
+      const getSession = await sessions.find()
+      const getVerify = await isLogin(getSession, user.email);
+      if(getVerify.length > 0) {
+         await sessions.deleteMany({
+          expires: getVerify[0].expires,
+        }).then(function () {
+          console.log("Data deleted"); //  Success
+        })
+        .catch(function (error) {
+          console.log(error); // Failure
+        });
+      }
+      user.batchID=[]
+      user.type = 'student'
+      user.institutionID = undefined
       user.save();
       console.log(user)
       res.json({status:'success',message:'Remove teacher successfully'})
@@ -171,3 +217,8 @@ exports.removeTeacher = async (req, res, next) => {
    res.json({status:'error',message:'Something wrong'})
   }
 };
+
+
+function isLogin(data, email) {
+  return data.filter((task) => task.session.email == email);
+}

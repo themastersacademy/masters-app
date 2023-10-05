@@ -59,13 +59,15 @@ exports.isUser = (req, res, next) => {
 
 exports.userVerify = (req, res, next) => {
   if (req.session.isAuth) {
-    if (req.session.userRoll == "student") next();
+    if (req.session.userRoll == "student") return next();
     if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" ||  req.session.userRoll == " institution")
+    if(req.session.userRoll == "teacher" || req.session.userRoll == "institution"  ) return res.redirect(`/institution?=${req.session.institutionID}`)
       res.redirect(`/admin/dashboard?=${req.session.userID}`);
   } else {
     res.redirect("/login");
   }
 };
+
 exports.userCreate = (req, res, next) => {
   if (req.session.isCreate) {
     next();
@@ -99,9 +101,15 @@ exports.isSignIn = (req, res, next) => {
 };
 exports.isRoll = async (req, res, next) => {
   try {
+   
     if (req.session.isAuth) {
-      if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" || req.session.userRoll == " institution" )
-        next();
+      
+        if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" || req.session.userRoll == "institution" )
+     {   
+       if(req.session.userRoll == "teacher" || req.session.userRoll == "institution"  ) return res.redirect(`/institution?=${req.session.institutionID}`)
+    // else
+    return  next()
+    }
       else res.redirect(`/?=${req.session.userID}`);
     } else {
       res.redirect("/login");
@@ -170,23 +178,7 @@ exports.isValueExam = async (req, res, next) => {
   }
 };
 
-// exports.isValueExam = async (req, res, next) => {
-//   try {
-//     if (
-//       req.session.userRoll == "teacher" ||
-//       req.session.userRoll == "admin" ||
-//       req.session.userRoll == "institution"
-//     )
-//       return res.redirect(`/login`);
-//     if (req.session.examID) {
-//       next();
-//     } else {
-//       res.redirect("/");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+
 
 exports.isSignIn = (req, res, next) => {
   if (req.session.isAuth) {
@@ -203,14 +195,26 @@ exports.isSignIn = (req, res, next) => {
   }
 };
 
+// router control
 exports.routerControl = async(req,res,next) =>{
   try {
-    if(req.session.isAuth) next()
-    else res.status(500).send('text')
+    if(req.session.isAuth && req.session.userRoll == 'admin' || req.session.isAuth ) next()
+    else res.status(403).send('You are not authorized')
   } catch (error) {
     console.log(error);
   }
 }
+exports.institutionControl = async (req,res,next) =>{
+  try {
+    if( req.session.userRoll == 'institution' || req.session.isAuth && req.session.userRoll == 'teacher' ) next()
+    else res.status(403).send('You are not authorized')
+  } catch (error) {
+    console.log(error);
+  }
+ 
+}
+
+//
 
 exports.sessionDistroy = async(req,res,next) =>{
   try {

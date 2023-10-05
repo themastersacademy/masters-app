@@ -29,6 +29,7 @@ export default function CourseCollection({ courseList, setNotify, isNotify }) {
 }
 
 function CollectionCart({ course, index }) {
+  
   const navigate = useNavigate();
   const style = {
     container: {
@@ -62,7 +63,12 @@ function CollectionCart({ course, index }) {
       position: "absolute",
       top: "0",
       right: "0",
-      backgroundColor: "#FFF1E8",
+      width:'60px',
+      fontWeight: "700",
+      fontSize:'12px',
+      textAlign:'center',
+      color: course.status == 'publish'? "#02C94F": "#F0954F",
+      backgroundColor: course.status == 'publish'? "#D4F6E1": "#FFF1E8",
       borderRadius: "0px 5px",
     },
   };
@@ -78,7 +84,7 @@ function CollectionCart({ course, index }) {
 
             <div>
               <p style={style.heading}>{course.title}</p>
-              <p style={style.subHeading}>Test {course.totalTest}</p>
+            
             </div>
           </div>
           <Button
@@ -96,7 +102,7 @@ function CollectionCart({ course, index }) {
           >
             View
           </Button>
-          <div style={style.status}>{course.status}</div>
+          <div style={style.status}>{course.status == 'publish'? 'Live' : 'Draft' }</div>
         </Paper>
       </div>
     </>

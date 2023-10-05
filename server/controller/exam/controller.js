@@ -333,12 +333,13 @@ const isValidExamStart = function (examInfo) {
 };
 
 exports.getExamState = async function (req, res) {
+  try {
   const userID = req.session.userID;
 
   const userName = req.session.userName;
   const examId = req.session.examID;
 
-  try {
+ 
     const getExam = await exam.findOne({ _id: examId });
     const User = await user.findOne({ _id: userID });
     if (getExam && User) {
@@ -463,6 +464,7 @@ exports.getExamState = async function (req, res) {
 };
 
 exports.examStateUpdate = async (req, res, next) => {
+  try {
   const userID = req.session.userID;
   const examID = req.session.examID;
   const {
@@ -475,7 +477,7 @@ exports.examStateUpdate = async (req, res, next) => {
   console.log(windowCloseWarning, windowResizedWarning);
   console.log(studentAnswerList);
   console.log(bookmarkedQuestionList);
-  try {
+  
     const User = await user.findOne({ _id: userID });
     const examState = await exam.findOne({ _id: examID });
 
@@ -894,44 +896,6 @@ exports.submitExam = async (req, res, next) => {
   }
 };
 
-exports.getExamResult = async (req, res, next) => {
-  try {
-    const path = req.path;
-    const examID = path.split("/")[2];
-    console.log(examID);
-    const userID = req.session.userID;
-
-    const examInfo = await exam.findOne({ _id: examID });
-    if (examInfo) {
-      const User = await user.findOne({ _id: userID });
-      const get = examInfo.studentsPerformance.filter(
-        (task) => task.id.valueOf() == userID.valueOf()
-      );
-      if (get.length !== 0) {
-        const examResult = {
-          mark: get[0].mark - get[0].negativeMark,
-          topics: get[0].topics,
-          totalMarks: examInfo.mark * examInfo.actualAnswerList.length,
-          questionAttempted: get[0].questionAttempted,
-          totalQuestion: examInfo.actualAnswerList.length,
-          questionUnAttempted:
-            examInfo.actualAnswerList.length - get[0].questionAttempted,
-        };
-        const userdetails = {
-          avatar: User.avatar,
-          id: User._id,
-        };
-        res.json({ examResult, userdetails });
-      }
-    } else {
-      return res.status(404).send("exam not found");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-
 
 exports.getExamResult = async (req, res, next) => {
   try {
@@ -969,6 +933,7 @@ exports.getExamResult = async (req, res, next) => {
     console.log(error);
   }
 };
+
 
 exports.getChangeQues = async (req,res) =>{
   try {

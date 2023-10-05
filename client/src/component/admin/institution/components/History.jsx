@@ -164,7 +164,7 @@ function List({ task }) {
                   }
                 </TableCell>
                 <TableCell align="center">
-                  <p style={style.status}>{row.status}</p>
+                  <p style={style.status}>{row.status == 'complete' ? 'completed' : row.status}</p>
                 </TableCell>
 
                 <TableCell align="center">

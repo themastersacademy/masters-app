@@ -36,19 +36,15 @@ export default function ExamHeader({ isMobileView ,user}) {
       elevation={2}
       sx={{
         width: "100%",
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'space-between',
         height:  width < 500 ? '60px' : "70px" ,
         borderRadius: "20px",
+        padding :  width < 500 ? '10px' : "15px" 
       }}
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{
-          //padding: isMobileView ? "10px 15px" :"10px 30px",
-          padding :  width < 500 ? '10px' : "15px" 
-        }}
-      >
+  
         <Stack direction="row" gap={isMobileView ? 1 : 2} alignItems="center">
           <img
             src={Avater.LOGO}
@@ -111,7 +107,7 @@ export default function ExamHeader({ isMobileView ,user}) {
           </Menu>
         </Avatar>
 }
-      </Stack>
+    
     </Paper>
   );
 }

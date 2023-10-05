@@ -1,10 +1,15 @@
 import { Paper, Stack, Button } from "@mui/material";
+import { useEffect, useState } from "react";
 
 export default function QuestionActionCard({
   handleNextQuestion,
   handlePreviousQuestion,
   isMobileView,
+  questionLength,
+  currentQuestionIndex
 }) {
+  
+
   return (
     <Paper
       elevation={3}
@@ -12,17 +17,22 @@ export default function QuestionActionCard({
         padding: "20px 20px",
         borderRadius: isMobileView ? 0 : "20px",
         height: "80px",
-        margin: isMobileView ? "20px" : 0,
+        margin: isMobileView ? "30px" : 0,
       }}
     >
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" alignItems="center" >
+    
+  {   0 == currentQuestionIndex ? null : 
         <Button
+       
           variant="contained"
           onClick={handlePreviousQuestion}
           sx={{
             textTransform: "none",
             backgroundColor: "#D1E3E0",
             color: "#187163",
+            marginRight:'auto',
+
             "&:hover": {
               backgroundColor: "#D1E3E0",
               color: "#187163",
@@ -32,22 +42,30 @@ export default function QuestionActionCard({
         >
           Previous
         </Button>
-        <Button
-          variant="contained"
-          onClick={handleNextQuestion}
-          sx={{
-            textTransform: "none",
-            backgroundColor: "#187163",
-            color: "#fff",
-            "&:hover": {
-              backgroundColor: "#187163",
-              color: "#fff",
-            },
-            border: "2px solid #187163",
-          }}
-        >
-          Next
-        </Button>
+        }
+
+{questionLength-1 == currentQuestionIndex ? 
+    
+        null
+      :
+      <Button
+      variant="contained"
+      onClick={handleNextQuestion}
+      sx={{
+        textTransform: "none",
+        backgroundColor: "#187163",
+        color: "#fff",
+        marginLeft:'auto',
+        "&:hover": {
+          backgroundColor: "#187163",
+          color: "#fff",
+        },
+        border: "2px solid #187163",
+      }}
+    >
+      Next
+    </Button>
+      }
       </Stack>
     </Paper>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Paper } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ColorRadioButtons from "../../../../../util/selectOption";
@@ -171,25 +171,29 @@ function NormalQuestion({
           flexDirection: "column",
         }}
       >
-        <IconButton
+        <Button
           sx={{
-            color: "white",
-            background: "#187163",
+            color: "#787486",
+            background: "#E8E8EA",
             borderRadius: "5px",
-            width: "50px",
-            height: "30px",
-            "&:hover": {
-              backgroundColor: "#185C52",
-            },
+            // width: '65px',
+            // height: '27px',
+            textTransform:'none',
+            fontSize:'14px',
+            border:'2px solid #787486',
+             "&:hover": {
+              background: "#E8E8EA",
+             },
           }}
           onClick={() => {
             callEdit(list);
             setOpen(!isOpen);
           }}
         >
-          <EditIcon />
-        </IconButton>
-        <IconButton
+          {/* <EditIcon /> */}
+          Edit
+        </Button>
+        {/* <IconButton
           sx={{
             color: "white",
             background: "#FEA800",
@@ -212,7 +216,7 @@ function NormalQuestion({
           }}
         >
           <DeleteIcon />
-        </IconButton>
+        </IconButton> */}
       </div>
     </Paper>
   );

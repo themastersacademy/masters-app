@@ -47,9 +47,11 @@ exports.getUserDetails = async (req, res, next) => {
     const userID = req.session.userID;
     const user = await User.findOne({ _id: userID });
     if (user) {
+      console.log(user)
       const userDetails = {
         name: user.name,
         avatar: user.avatar,
+        roll:user.type
       };
       
       res.json(userDetails)

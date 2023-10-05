@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "./Searchbar";
 import { Paper, Stack } from "@mui/material";
-
+import "../../../../App.css";
 import AddBatch from "./AddBatch";
 import Image from "../../../../util/Avater";
 import { SvgIcon } from "@mui/material";
 import "../../../../App.css";
 import AddTeacher from "./AddTeacher";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import TeacherList from './TeacherList'
+import TeacherList from "./TeacherList";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -42,54 +42,53 @@ export default function InstitutePage({ ControlNotification }) {
         setTeacher(data.message);
       });
   };
-  const editTeacherAction = (type,data) =>{
-    fetch('/api/admin/editTeacherAction',{
-  method:"POST",
-  headers:{
-    "Content-type":"application/json"
-  },
-  body:JSON.stringify({type,data,id})
-    })
-    .then(res => res.json())
-    .then((data) => {
-      if(data.status == 'success'){
-    getInstitution()
-    ControlNotification(data.status,data.message)
-      }
-      if(data.status == 'error')   ControlNotification(data.status,data.message)
-    })
-  } 
-  const removeTeacher = (data) =>{
-    fetch('/api/admin/removeTeacher',{
-      method:"POST",
-      headers:{
-        "Content-type":"application/json"
+  const editTeacherAction = (type, data) => {
+    fetch("/api/admin/editTeacherAction", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
       },
-      body:JSON.stringify({data,id})
-        })
-        .then(res => res.json())
-        .then((data) => {
-          if(data.status == 'success'){
-        getInstitution()
-        getTeacher()
-        ControlNotification(data.status,data.message)
-          }
-          if(data.status == 'error')   ControlNotification(data.status,data.message)
-        })
-  }
-const getTeacherAccess =(status,data) =>{
+      body: JSON.stringify({ type, data, id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "success") {
+          getInstitution();
+          ControlNotification(data.status, data.message);
+        }
+        if (data.status == "error")
+          ControlNotification(data.status, data.message);
+      });
+  };
+  const removeTeacher = (data) => {
+    fetch("/api/admin/removeTeacher", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ data, id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "success") {
+          getInstitution();
+          getTeacher();
+          ControlNotification(data.status, data.message);
+        }
+        if (data.status == "error")
+          ControlNotification(data.status, data.message);
+      });
+  };
+  const getTeacherAccess = (status, data) => {
+    if (status == "callInstitute") getInstitution();
+    if (status == "removeBatch") editTeacherAction("removeBatch", data);
+    if (status == "removeTeacher") removeTeacher(data);
 
-if(status == 'callInstitute') getInstitution()
-if(status == 'removeBatch') editTeacherAction('removeBatch',data)
-if(status == 'removeTeacher')  removeTeacher(data)
-
-
-if(status == 'success' ) {
-  getInstitution()
-  getTeacher()
-} 
-
-}
+    if (status == "success") {
+      getInstitution();
+      getTeacher();
+    }
+  };
   useEffect(() => {
     getInstitution();
     getTeacher();
@@ -114,7 +113,13 @@ if(status == 'success' ) {
   );
 }
 
-const Home = ({ institute, id, ControlNotification, teacher,getTeacherAccess }) => {
+const Home = ({
+  institute,
+  id,
+  ControlNotification,
+  teacher,
+  getTeacherAccess,
+}) => {
   const style = {
     image: {
       width: " 40px",
@@ -170,16 +175,23 @@ const Home = ({ institute, id, ControlNotification, teacher,getTeacherAccess }) 
             ControlNotification={ControlNotification}
             getTeacherAccess={getTeacherAccess}
           />
-          <AddBatch id={id} ControlNotification={ControlNotification} getTeacherAccess={getTeacherAccess} />
+          <AddBatch
+            id={id}
+            ControlNotification={ControlNotification}
+            getTeacherAccess={getTeacherAccess}
+          />
         </Stack>
       </Stack>
-      <ChooseTab institute={institute} getTeacherAccess={getTeacherAccess} ControlNotification={ControlNotification}/>
+      <ChooseTab
+        institute={institute}
+        getTeacherAccess={getTeacherAccess}
+        ControlNotification={ControlNotification}
+      />
     </Paper>
   );
 };
 
-function ChooseTab({ institute,getTeacherAccess,ControlNotification }) {
-
+function ChooseTab({ institute, getTeacherAccess, ControlNotification }) {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -193,36 +205,42 @@ function ChooseTab({ institute,getTeacherAccess,ControlNotification }) {
           <TabList
             onChange={handleChange}
             aria-label="lab API tabs example"
-          
             sx={{
               "& .MuiTabs-indicator": {
                 backgroundColor: "#FEA800",
-               
               },
-              "& .MuiTab-root " :{ color:' black !important' }
-
+              "& .MuiTab-root ": { color: " black !important" },
             }}
-            
           >
             <Tab
-              sx={{ textTransform: "none", fontSize:'16px' ,fontWeight: "550" ,
-           
-            }}
+              sx={{
+                textTransform: "none",
+                fontSize: "16px",
+                fontWeight: "550",
+              }}
               label="Active Batches"
               value="1"
             />
             <Tab
-              sx={{ textTransform: "none",fontSize:'16px', fontWeight: "550" }}
+              sx={{
+                textTransform: "none",
+                fontSize: "16px",
+                fontWeight: "550",
+              }}
               label="Teacher List"
               value="2"
             />
           </TabList>
         </Box>
         <TabPanel value="1">
-          <ActiveBatch institute={institute} />
+          {institute.length == 0 ? null : <ActiveBatch institute={institute} />}
         </TabPanel>
         <TabPanel value="2">
-       <TeacherList institute={institute} getTeacheAccess={getTeacherAccess} ControlNotification={ControlNotification} />    
+          <TeacherList
+            institute={institute}
+            getTeacheAccess={getTeacherAccess}
+            ControlNotification={ControlNotification}
+          />
         </TabPanel>
       </TabContext>
     </Box>
@@ -230,10 +248,11 @@ function ChooseTab({ institute,getTeacherAccess,ControlNotification }) {
 }
 
 const ActiveBatch = ({ institute }) => {
+  console.log(institute);
   return (
     <div
       className="scrollHide"
-      style={{ width:'100%', height: "450px", overflow: "scroll", }}
+      style={{ width: "100%", height: "450px", overflow: "scroll" }}
     >
       <div
         style={{
@@ -242,11 +261,38 @@ const ActiveBatch = ({ institute }) => {
           gap: "10px",
         }}
       >
-        {institute.batch == undefined
-          ? null
-          : institute.batch.map((task, index) => (
+        {institute.batch == undefined || institute.batch.length == 0 ? (
+          <div
+            style={{
+              width: "100%",
+              height: "60vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: "#CACACA",
+            }}
+          >
+            No Active Batches
+          </div>
+        ) : (
+          <div
+            className="scrollHide"
+            style={{
+              padding: "20px",
+              display: "flex",
+              gap: "20px",
+              height: "55vh",
+              width: "100%",
+              overflowY: "scroll",
+            }}
+          >
+            {institute.batch.map((task, index) => (
               <Batch task={task} key={index} />
             ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -280,8 +326,9 @@ const Batch = ({ task }) => {
         height: "70px",
         borderRadius: "5px",
         background: "#FFF",
-        boxShadow: " 0px 15px 62px 0px rgba(0, 0, 0, 0.08)",
+        boxShadow: " 0px 15px 62px 0px rgba(0, 0, 0, 0.10)",
         cursor: "pointer",
+        padding: "10px",
       }}
       onClick={RieDirect}
     >
@@ -295,5 +342,3 @@ const Batch = ({ task }) => {
     </Paper>
   );
 };
-
-
