@@ -8,6 +8,7 @@ const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
 const questionBank = require("../../models/questionBank.js");
 const fs = require("fs");
+const {currentTime,examEndTime,examStartTime,checkTime} = require('../../util/time.js')
 exports.getExamInfo = async function (req, res) {
   try {
     const path = req.path;
@@ -289,9 +290,12 @@ const isValidExamEnd = async function (examInfo) {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
-  return currentTime > indianTimeEnd;
+  const Time = await currentTime()
+  const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
+  return Time > End;
+  //return currentTime > indianTimeEnd;
 };
-const isValidExamStart = function (examInfo) {
+const isValidExamStart = async function (examInfo) {
   let date = new Date();
   let indianTime = date.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
@@ -299,7 +303,7 @@ const isValidExamStart = function (examInfo) {
   });
   const getTime = indianTime.split(",");
   const getDate = getTime[0].split("/");
-  const currentTime = indianTime;
+  const currentTime1 = indianTime;
   let examDate = examInfo.examDate.split("/");
 
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
@@ -313,6 +317,7 @@ const isValidExamStart = function (examInfo) {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
+
   var examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
   examEnd.setHours(examEnd.getHours() + 2);
   examEnd.setMinutes(examEnd.getMinutes() + 30);
@@ -321,14 +326,20 @@ const isValidExamStart = function (examInfo) {
     hour12: false,
   });
 
-  console.log(currentTime, indianTimeEnd);
-  console.log(currentTime, indianTimeStart);
-  console.log("startTime", currentTime > indianTimeStart);
-  console.log("endTime", currentTime < indianTimeEnd);
+
+ const current = await currentTime()
+ const Start = await examStartTime(examInfo.examDate,examInfo.examStartTime)
+ const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
+console.log(current , Start , End);
+  console.log( 'stat',  current > Start
+   );
+   console.log( 'end',current < End);
   return (
     examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
-    currentTime > indianTimeStart &&
-    currentTime < indianTimeEnd
+    // currentTime1 > indianTimeStart &&
+    // currentTime1 < indianTimeEnd
+    current > Start &&
+    current < End
   );
 };
 

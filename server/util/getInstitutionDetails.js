@@ -1,5 +1,6 @@
 const Batch = require("../models/batch.js");
 const Institution = require("../models/institution.js");
+const {currentTime,examEndTime} = require('./time.js')
 exports.getInstitutionDetails = async (institutionID, batchs) => {
   try {
     const collectBatch = [];
@@ -34,7 +35,7 @@ const isValidExamEnd = async function (examInfo) {
     hour12: false,
   });
 
-  const currentTime = indianTime;
+  // const currentTime = indianTime;
 
   let examDate = examInfo.examDate.split("/");
   examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
@@ -46,5 +47,8 @@ const isValidExamEnd = async function (examInfo) {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
-  return currentTime > indianTimeEnd;
+  const current = currentTime()
+  const endTime = examEndTime(examInfo.examDate,examInfo.examEndTime)
+  return current > endTime
+ // return currentTime > indianTimeEnd;
 };
