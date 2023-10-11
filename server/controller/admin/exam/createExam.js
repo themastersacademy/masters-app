@@ -1,6 +1,5 @@
 const Exam = require("../../../models/exam");
 const Batch = require("../../../models/batch");
-
 const User = require("../../../models/user");
 const Course = require("../../../models/course");
 const Goal = require("../../../models/goal");
@@ -127,15 +126,23 @@ exports.createScheduleExam = async (req, res, next) => {
           questionList: list,
         });
       });
-      const examDate = new Date(details.setDate);
 
+      const examDate = new Date(details.setDate);
+      let indianTime = examDate.toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+        hour12: false,
+      });
+     
+      const changeDate = indianTime.split(',')[0].split('/')
+      const date = changeDate[1]
+      const month = changeDate[0]
+      const year = changeDate[2]
+    
       const exam = await Exam({
         type: type,
         batchID: id,
         title: details.setExamTitle,
-        examDate: `${examDate.getDate()}/${eval(
-          examDate.getMonth() + 1
-        )}/${examDate.getFullYear()}`,
+        examDate:`${date}/${month}/${year}`,
         examStartTime: details.setTimeFrom,
         examEndTime: details.setTimeTo,
         examDuration: details.examDuration,
@@ -143,12 +150,11 @@ exports.createScheduleExam = async (req, res, next) => {
         negativeMark: details.setNegativeMark,
         questionCategory: questionCategory,
       });
+      console.log(exam);
       exam.save();
 
       batch.scheduleTest.push({
-        examDate:`${examDate.getDate()}/${eval(
-          examDate.getMonth() + 1
-        )}/${examDate.getFullYear()}`,
+        examDate:`${date}/${month}/${year}`,
         name: details.setExamTitle,
         examID: exam._id,
         examEndTime: details.setTimeTo,
@@ -173,8 +179,7 @@ exports.createPracticesExam = async (req, res, next) => {
       courseId: selectGoal.courseId,
       userId: id,
     });
-    console.log("practices");
-    console.log(selectGoal);
+
     const user = await User.findOne({ _id: id });
     if (user) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
@@ -345,24 +350,22 @@ exports.createPracticesExam = async (req, res, next) => {
         let seconds = totalSeconds % 60;
         const examDuration = `${hours}:${minutes}:${seconds}`;
 
-        const date = new Date();
-        let indianTime = date.toLocaleString("en-US", {
+        const changeTime = new Date();
+        let indianTime = changeTime.toLocaleString("en-US", {
           timeZone: "Asia/Kolkata",
           hour12: false,
         });
-
+      
+        const changeDate = indianTime.split(',')[0].split('/')
+        const date = changeDate[1]
+        const month = changeDate[0]
+        const year = changeDate[2]
         const createExam = await Exam({
           type: "practice",
           title: `Practice Exam ${countPractice.length + 1}`,
           courseId: selectGoal.courseId,
           questionCategory,
-          examDate: `${
-            eval(date.getDate()) < 10 ? "0" + date.getDate() : date.getDate()
-          }/${
-            eval(date.getMonth() + 1) < 10
-              ? "0" + eval(date.getMonth() + 1)
-              :  eval(date.getMonth() + 1)
-          }/${date.getFullYear()}`,
+          examDate:`${date}/${month}/${year}`,
           examDuration,
           mark: course.mark,
           negativeMark: course.negativeMark,
@@ -486,20 +489,22 @@ exports.createMockExam = async (req, res, next) => {
         let hours = Math.floor(totalMinutes / 60);
         let minutes = totalMinutes % 60;
         const examDuration = `${hours}:${minutes}:00`;
-
-        const date = new Date();
+/// Create Indian Time
+        const changeTime = new Date();
+        let indianTime = changeTime.toLocaleString("en-US", {
+          timeZone: "Asia/Kolkata",
+          hour12: false,
+        });
+        const changeDate = indianTime.split(',')[0].split('/')
+        const date = changeDate[1]
+        const month = changeDate[0]
+        const year = changeDate[2]
         const createExam = await Exam({
           type: "mock",
           title: `Mock Exam ${countMock.length + 1}`,
           courseId: selectGoal.courseId,
           questionCategory,
-          examDate: `${
-            eval(date.getDate()) < 10 ? "0" + date.getDate() : date.getDate()
-          }/${
-            eval(date.getMonth() + 1) < 10
-              ? "0" + eval(date.getMonth() + 1)
-              :  eval(date.getMonth() + 1)
-          }/${date.getFullYear()}`,
+          examDate:`${date}/${month}/${year}`,
           examDuration,
           mark: course.mark,
           negativeMark: course.negativeMark,

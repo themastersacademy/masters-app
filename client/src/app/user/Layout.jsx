@@ -4,7 +4,6 @@ import InstitutionCard from "./components/InstitutionCard";
 import ScoreCard from "./components/ScoreCard";
 import AnalysisCard from "./components/AnalysisCard";
 import TestCard from "./components/TestCard";
-
 import PracticeTest from "./components/PracticeTest";
 import MockTest from "./components/MockTest";
 import MDNavBar from "./components/MDNavBar";
@@ -15,7 +14,10 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Notification from "../../util/Alert";
+import Footer from '../../util/Footer'
+import Loader from "../../util/Loader";
 export default function Layout() {
+  const [loading,setLoading] = useState(false)
   const navigator = useNavigate();
   const { search } = useLocation();
   const id = search.split("=")[1];
@@ -54,6 +56,7 @@ export default function Layout() {
       });
   };
   const getUserDetails = () => {
+    setLoading(true)
     fetch("/api/user/getUserData", {
       method: "POST",
       headers: {
@@ -72,7 +75,11 @@ export default function Layout() {
           setGoal(data.data);
           if (data.topic.courseId !== "") setSelectGoal(data.topic);
         }
-      });
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+     })
   };
  
 
@@ -165,7 +172,8 @@ export default function Layout() {
     
   }, [isChange,id]);
 
-  return (
+  return loading == true ? (<Loader />) :(
+
     <div>
       {width > 1024 ? (
         <DTView
@@ -242,6 +250,7 @@ function DTView({
     <Stack
       direction="column"
       alignItems="center"
+
       sx={{
         width: "100%",
         padding: "30px 0px",
@@ -253,6 +262,7 @@ function DTView({
       <Stack
         direction="column"
         alignItems="center"
+        gap={'10px'}
         sx={{
           width: "100%",
           padding: "0px 20px",
@@ -301,6 +311,7 @@ function DTView({
          {  analysis !=='' && <AnalysisCard analysis={analysis} />}
           </Grid>
         </Grid>
+        <Footer />
       </Stack>
     </Stack>
   );
@@ -361,6 +372,8 @@ function MoView({
       sx={{
         width: "100%",
         minHeight: "100vh",
+        display:"flex",
+        flexDirection:'column'
       }}
     >
       <MDNavBar
@@ -448,8 +461,12 @@ function MoView({
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={4}>
-        o
+     
       </CustomTabPanel>
+      <div style={{ marginTop:'auto',}}>
+      <Footer/>
+      </div>
+    
     </Paper>
   );
 }

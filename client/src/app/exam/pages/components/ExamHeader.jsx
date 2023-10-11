@@ -7,6 +7,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useWindowDimensions from "../../../../util/useWindowDimensions";
+import SvgIcon from '@mui/material/SvgIcon';
+import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 export default function ExamHeader({ isMobileView ,user}) {
   const {width} =useWindowDimensions()
   const path = window.location.pathname;
@@ -100,10 +103,22 @@ export default function ExamHeader({ isMobileView ,user}) {
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem onClick={handleHome}>
               {/* <Avatar src='' /> */}
-                   Home
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%'}} >
+                <SvgIcon sx={{color:'#187163'}}  component={HomeIcon} >
+                 
+                 </SvgIcon> 
+               <p >Home </p>{" "}
+                </div>
             </MenuItem>
-            
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+    
+            <MenuItem onClick={handleLogout}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%'}} >
+                <SvgIcon sx={{color:'#187163'}}  component={LogoutIcon} >
+                 
+                 </SvgIcon> 
+               <p >Logout </p>{" "}
+                </div>
+            </MenuItem>
           </Menu>
         </Avatar>
 }

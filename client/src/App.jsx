@@ -1,9 +1,9 @@
 import "./App.css";
 import Login from "./app/loging/Page";
-import Layout from "./app/admin/Layout";
+import InstitutionLayout from "./app/admin/InstitutionLayout";
 import UserLayout from "./app/user/Layout";
 import ExamLayout from "./app/exam/Layout";
-import AsaidMenu from "./component/admin/AsaidMenu";
+import AdminLayout from "./component/admin/AdminLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -32,35 +32,30 @@ function App() {
           <Route path="/login/goal" element={<Login />} />
 
           {
-            // admin and institute page
+            // admin and 
           }
-          {/* <Route path="/admin/dashboard" element={<Layout />} />
-          <Route path="/admin/bank" element={<Layout />} />
-          <Route path="/admin/analytics" element={<Layout />} />
-          <Route path="/admin/institution" element={<Layout />} />
-          <Route path="/admin/institution/page" element={<Layout />} />
-          <Route path="/admin/manage" element={<Layout />} />
-          <Route path="/admin/bank/collection" element={<Layout />} />
-          <Route path="/admin/dashboard/course" element={<Layout />} />
-          <Route path="/admin/institution/page/batch" element={<Layout />} />  */}
-
-          <Route path="/institution" element={<Layout />} />
-          <Route path="/institution/batch" element={<Layout />} />
-          <Route path="/institution/page/batch" element={<Layout />} /> 
-
+{
+  //institute page
+}
+          <Route path="/institution" element={<InstitutionLayout />} />
+          <Route path="/institution/batch" element={<InstitutionLayout />} />
+          <Route path="/institution/page/batch" element={<InstitutionLayout />} /> 
+{
+  // admin page
+}
           <Route path="/login" element={<Login />} />
           <Route path="/login/verify" element={<Login />} />
           <Route path="/login/create" element={<Login />} />
           <Route path="/login/goal" element={<Login />} />
-          <Route path="/admin/dashboard" element={<AsaidMenu />} />
-          <Route path="/admin/bank" element={<AsaidMenu />} />
-          <Route path="/admin/analytics" element={<AsaidMenu />} />
-          <Route path="/admin/institution" element={<AsaidMenu />} />
-          <Route path="/admin/institution/page" element={<AsaidMenu />} />
-          <Route path="/admin/manage" element={<AsaidMenu />} />
-          <Route path="/admin/bank/collection" element={<AsaidMenu />} />
-          <Route path="/admin/dashboard/course" element={<AsaidMenu />} />
-          <Route path="/admin/institution/page/batch" element={<AsaidMenu />} />
+          <Route path="/admin/dashboard" element={<AdminLayout />} />
+          <Route path="/admin/bank" element={<AdminLayout />} />
+          <Route path="/admin/analytics" element={<AdminLayout />} />
+          <Route path="/admin/institution" element={<AdminLayout />} />
+          <Route path="/admin/institution/page" element={<AdminLayout />} />
+          <Route path="/admin/manage" element={<AdminLayout />} />
+          <Route path="/admin/bank/collection" element={<AdminLayout />} />
+          <Route path="/admin/dashboard/course" element={<AdminLayout />} />
+          <Route path="/admin/institution/page/batch" element={<AdminLayout />} />
 
         </Routes>
       </Router>

@@ -4,13 +4,14 @@ import ExamResult from "./pages/ExamResult";
 import { useState, useEffect } from "react";
 import { Stack } from "@mui/material";
 import ResultSolution from "./pages/components/ResultSolution";
-
+import Footer from "../../util/Footer";
+import useWindowDimensions from "../../util/useWindowDimensions";
 export default function Exam() {
   const path = window.location.pathname;
   window.oncontextmenu = () => {
     return false;
   };
-  
+  const {width} = useWindowDimensions()
   let h = window.innerHeight;
   let w = window.innerWidth;
 
@@ -40,12 +41,20 @@ export default function Exam() {
       <Stack
         direction="column"
         alignItems="center"
+        sx={{ backgroundColor: "#C5CFD3"}}
+     padding={'5px'}
       >
         {path === "/exam/info" && <ExamInfo />}
         {path === "/exam/state" && <ExamState />}
         {/* {examInfo == null ? null : path === "/exam/state" && <ExamState exam={examInfo}/>} */}
         {path === "/exam/result" && <ExamResult />}
         {path === "/exam/solution" && <ResultSolution />}
+        {path === "/exam/result" ? 
+        <div style={{width:width > 1509 ?'80%' : '98%',height:'100%'}}>
+        <Footer />
+        </div>
+ : null}
+       
       </Stack>
     </Stack>
   );

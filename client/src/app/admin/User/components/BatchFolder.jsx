@@ -13,7 +13,8 @@ import SvgIcon from '@mui/material/SvgIcon'
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Requests from './Requests'
 import Batch from "./Batch";
-import { DateTime }  from "luxon"
+import { useNavigate } from "react-router-dom";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,7 +46,7 @@ function a11yProps(index) {
 export default function BatchFolder() {
   const { search } = useLocation();
   const id = search.split("=")[1];
-  console.log(search)
+ 
   const [head, setHead] = useState([]);
   const [question, setQuestion] = useState({
     avalibleQues: [],
@@ -60,7 +61,7 @@ export default function BatchFolder() {
   
 
   const [details, setDetails] = useState({
-    // setDate: new Date(),
+
     setDate:indianTime,
     setTimeFrom: "0:0",
     setTimeTo: "0:0",
@@ -98,9 +99,22 @@ export default function BatchFolder() {
       .then((data) => {
       
         if (data.status == "ok") {
- console.log(data)
+console.log(data);
  setHistory(data.history)
           setHead(data.head);
+          let numArray = [];
+          let order = []
+          data.message.studentList.map(task => numArray.push(task.rollNumber))
+          const ascending = numArray.sort() 
+          ascending.map(task =>{
+            data.message.studentList.map(roll =>{
+              if(task == roll.rollNumber)
+              order.push(roll)
+            })
+          })
+          const clearduplicate = order.filter((task,index) => order.indexOf(task) == index)
+          data.message.studentList = []
+          data.message.studentList = clearduplicate
    setBatch(data.message)
         }
       });
@@ -144,7 +158,7 @@ fetch('/api/institution/getRequestAccess',{
         },
       }}
     >
-      {head.avatar == undefined ? null : <BatchHead task={head} />}
+      {head.avatar == undefined ? null : <BatchHead task={head} institionID={batch.institutionID} />}
 
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -196,8 +210,9 @@ fetch('/api/institution/getRequestAccess',{
   );
 }
 
-const BatchHead = ({ task }) => {
+const BatchHead = ({ task,institionID }) => {
   const  text = task.batchCode
+  const navigate = useNavigate()
 const clickCopy = () =>{
  
     navigator.clipboard.writeText(text);
@@ -239,14 +254,15 @@ color:'#187163'
   };
 
   return (
-    <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{padding:'10px'}}>
+    <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{padding:'10px',height:'80px'}}>
       <Stack direction='row' alignItems='center' spacing='15px'>
-        <img src={task.avatar} style={style.image} alt="" />
-        <p style={style.title} > {task.name} </p>
+      <p  onClick={()=>{navigate(`/institution?=${institionID}`)}} >Institution</p>
+         <p style={{fontSize:'20px'}}>{'>'}</p>
+        <p style={{...style.batchName,marginLeft:'20px'}}>{task.batchName}</p> 
       </Stack>
 
       <Stack direction='column' justifyContent='center' spacing='10px'>
-        <p style={style.batchName}>{task.batchName}</p>
+       
         <Stack direction='row' alignItems='center'  spacing='5px'>
         <div  ><span>Batch code :</span> <span style={style.batchCode} >{task.batchCode}</span> </div> 
 

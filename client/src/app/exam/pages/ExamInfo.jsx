@@ -17,13 +17,12 @@ export default function ExamInfo() {
     fetch(`/api/exam/get-exam-info/${examId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
-      
+      console.log(data)
         setExamInfo(data);
         setIsScheduled(() => {
           return data.type === "schedule" ? true : false;
         });
-        console.log(data);
+       
       });
       fetch('/api/admin/getUserDetails')
       .then(res => res.json())
@@ -83,7 +82,8 @@ const ExamInfoBody = ({
   NoOfquestion,
   duration,
   totalMark,
-  setMessage
+  setMessage,
+ 
 }) => {
   const [isTimeOver, setIsTimeOver] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00:00");
@@ -126,7 +126,26 @@ const ExamInfoBody = ({
     let examDateObject = new Date(
       `${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds}`
     );
-    let currentDateObject = new Date();
+
+    const getExamDate = new Date();
+    let changeTime = getExamDate.toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+      hour12: false,
+    });
+   
+    const getDate = changeTime.split(',')[0].split('/')
+    const getTime =  changeTime.split(',')[1].split(':')
+    
+    const indianTime = {
+       date : getDate[1],
+       month : getDate[0],
+       year : getDate[2],
+       hour:getTime[0],
+       minutes:getTime[1],
+       sec:getTime[2]
+    }
+    let currentDateObject = new Date(`${indianTime.month}/${indianTime.date}/${indianTime.year} ${indianTime.hour}:${indianTime.minutes}:${indianTime.sec}`);
+    
     let remainingTime = examDateObject - currentDateObject;
     return remainingTime;
   };
@@ -247,8 +266,7 @@ const ExamInfoBody = ({
               .then((data) => {
                
                
-                if(data.status == 'info')  { 
-               
+                if(data.status == 'info'  )  {           
                   setMessage(data.message)
                   setExamComplete(true)
                

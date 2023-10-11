@@ -8,11 +8,10 @@ const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
 const questionBank = require("../../models/questionBank.js");
 const fs = require("fs");
-const {currentTime,examEndTime,examStartTime,checkTime} = require('../../util/time.js')
+const {examEndTime,examStartTime} = require('../../util/time.js')
 exports.getExamInfo = async function (req, res) {
   try {
     const path = req.path;
-
     const examId = path.split("/")[2];
     const examInfo = await exam.findOne({ _id: examId });
     if (!examInfo) {
@@ -24,7 +23,23 @@ exports.getExamInfo = async function (req, res) {
         NoOfquestion.push(task);
       })
     );
-
+    // const examDate = new Date();
+    // let changeTime = examDate.toLocaleString("en-US", {
+    //   timeZone: "Asia/Kolkata",
+    //   hour12: false,
+    // });
+   
+    // const getDate = changeTime.split(',')[0].split('/')
+    // const getTime =  changeTime.split(',')[1].split(':')
+    
+    // const indianTime = {
+    //    date : getDate[1],
+    //    month : getDate[0],
+    //    year : getDate[2],
+    //    hour:getTime[0],
+    //    minutes:getTime[1],
+    //    sec:getTime[2]
+    // }
     res.status(200).json({
       totalMark: NoOfquestion.length * examInfo.mark,
       NoOfquestion: NoOfquestion.length,
@@ -34,6 +49,7 @@ exports.getExamInfo = async function (req, res) {
       examEndTime: examInfo.examEndTime,
       examStartTime: examInfo.examStartTime,
       type: examInfo.type,
+    
     });
   } catch (error) {
     console.error(error);
@@ -123,7 +139,7 @@ exports.startExam = async function (req, res) {
             .json({ message: "exam started", status: "success" });
         } else {
           const check = await isValidExamEnd(examInfo);
-          if (check) {
+          if (!check ) {
             delete req.session.examID;
             const batch = await Batch.findOne({ _id: examInfo.batchID });
             batch.scheduleTest.map((task) => {
@@ -148,8 +164,19 @@ exports.startExam = async function (req, res) {
               .status(400)
               .json({ status: "info", message: "exam was completed" });
           }
-
-          return res.status(400).json({ message: "exam not started yet" });
+          else
+          {
+                examState
+                       .deleteOne({ examID, userID })
+                       .then(function () {
+                         console.log("Data deleted"); //  Success
+                       })
+                       .catch(function (error) {
+                         console.log(error); // Failure
+                       });
+                       delete req.session.examID;
+                return res.status(400).json({status: "info", message: "exam not started yet" });
+          }
         }
       } else {
         examState
@@ -271,29 +298,11 @@ exports.startExam = async function (req, res) {
 };
 
 const isValidExamEnd = async function (examInfo) {
-  let date = new Date();
-  let indianTime = date.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
 
-  const currentTime = indianTime;
+   const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
 
-  let examDate = examInfo.examDate.split("/");
-  examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+  return  End;
 
-  let examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
-  examEnd.setHours(examEnd.getHours() + 2);
-  examEnd.setMinutes(examEnd.getMinutes() + 30);
-
-  let indianTimeEnd = examEnd.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
-  const Time = await currentTime()
-  const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
-  return Time > End;
-  //return currentTime > indianTimeEnd;
 };
 const isValidExamStart = async function (examInfo) {
   let date = new Date();
@@ -303,43 +312,14 @@ const isValidExamStart = async function (examInfo) {
   });
   const getTime = indianTime.split(",");
   const getDate = getTime[0].split("/");
-  const currentTime1 = indianTime;
-  let examDate = examInfo.examDate.split("/");
 
-  examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
-
-  var examStat = new Date(examDate + " " + `${examInfo.examStartTime}:00`);
-
-  examStat.setHours(examStat.getHours() + 2);
-  examStat.setMinutes(examStat.getMinutes() + 30);
-
-  const indianTimeStart = examStat.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
-
-  var examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
-  examEnd.setHours(examEnd.getHours() + 2);
-  examEnd.setMinutes(examEnd.getMinutes() + 30);
-  const indianTimeEnd = examEnd.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
-
-
- const current = await currentTime()
- const Start = await examStartTime(examInfo.examDate,examInfo.examStartTime)
+const Start = await  examStartTime(examInfo.examDate,examInfo.examStartTime) 
  const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
-console.log(current , Start , End);
-  console.log( 'stat',  current > Start
-   );
-   console.log( 'end',current < End);
+
   return (
     examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
-    // currentTime1 > indianTimeStart &&
-    // currentTime1 < indianTimeEnd
-    current > Start &&
-    current < End
+     Start &&
+    End
   );
 };
 

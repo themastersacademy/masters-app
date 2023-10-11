@@ -1,5 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
-
+import { useEffect, useState } from "react";
+import useWindowDimensions from "../../../../util/useWindowDimensions";
 export default function QuestionCollections({
   questionCategoryList,
   handleQuestionClick,
@@ -7,7 +8,26 @@ export default function QuestionCollections({
   isBookmarked,
   studentAnswers,
   isMobileView,
+  questionLength
 }) {
+  const {width} = useWindowDimensions()
+  const [selectAns,setAns] = useState(0)
+  const [selectBk,setBook] = useState(0)
+  useEffect(()=>{
+   let Ans = 0
+   let Book = 0
+    studentAnswers.map(task =>{
+     if(task !== null) {
+      Ans += 1
+     }
+    })
+     
+isBookmarked.map(task =>{
+  if(task == true)  Book += 1 
+})
+    setAns(Ans)
+    setBook(Book)
+  },[studentAnswers,isBookmarked])
   return (
     <Paper
       sx={{
@@ -43,10 +63,10 @@ export default function QuestionCollections({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Stack direction="row" alignItems="center">
+        <Stack direction={width < 406 ?'column' : 'row'} alignItems="center" justifyContent={'center'} >
           <div
             style={{
-              width: "20px",
+              width: "18px",
               height: "20px",
               borderRadius: "2px",
               backgroundColor: "#187163",
@@ -54,12 +74,12 @@ export default function QuestionCollections({
               marginRight: "10px",
             }}
           ></div>
-          <p>1 answered</p>
+          <p style={{fontSize:width < 406 ? "13px" : '15px',  width: width < 406 ? "70px": '100px'}}>{selectAns} answered</p>
         </Stack>
-        <Stack direction="row" alignItems="center">
+        <Stack direction={width < 406 ?'column' : 'row'} alignItems="center">
           <div
             style={{
-              width: "20px",
+              width: "18px",
               height: "20px",
               borderRadius: "2px",
               backgroundColor: "#FEA800",
@@ -67,12 +87,12 @@ export default function QuestionCollections({
               marginRight: "10px",
             }}
           ></div>
-          <p>1 marked</p>
+          <p  style={{fontSize:width < 406 ? "13px" : '15px',  width: width < 406 ? "70px": '80px'}}>{selectBk} marked</p>
         </Stack>
-        <Stack direction="row" alignItems="center">
+        <Stack direction={width < 406 ?'column' : 'row'} alignItems="center">
           <div
             style={{
-              width: "20px",
+              width: "18px",
               height: "20px",
               borderRadius: "2px",
               backgroundColor: "white",
@@ -80,7 +100,7 @@ export default function QuestionCollections({
               marginRight: "10px",
             }}
           ></div>
-          <p>10 unanswered</p>
+          <p  style={{fontSize:width < 406 ? "12px" : '13px',  width: width < 406 ? "90px": '100px'}} >{questionLength - selectAns} unanswered</p>
         </Stack>
       </Stack>
       <Stack

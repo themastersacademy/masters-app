@@ -7,6 +7,7 @@ import ExamResultAnalytics from "./components/ExamResultAnalytics";
 import LeaderBoard from "./components/LeaderBoard";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Footer from "../../../util/Footer";
 export default function ExamResult() {
   const { search } = useLocation();
   const examID = search.split("=")[1];
@@ -37,6 +38,7 @@ export default function ExamResult() {
         width: "100%",
         padding: width > 1024 ? "20px 20px" : "20px 10px",
         maxWidth: "1240px",
+      
         backgroundColor: "#C5CFD3",
       }}
     >
@@ -55,6 +57,7 @@ export default function ExamResult() {
           user={user}
         />
       )}
+       
     </Stack>
   );
 }
@@ -87,7 +90,10 @@ const DtView = ({ leaderBoardList, examResult, examID, user }) => {
           </Stack>
         {leaderBoardList.rankList && <LeaderBoard leaderBoardList={leaderBoardList} />}
         </Stack>
+      
       </Paper>
+    
+     
     </Stack>
   );
 };

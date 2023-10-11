@@ -1,4 +1,4 @@
-import { Paper, CircularProgress, Box, Stack } from "@mui/material";
+import { Paper, CircularProgress, Box, Stack,Button } from "@mui/material";
 import { circularProgressClasses } from "@mui/material/CircularProgress";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
@@ -6,6 +6,7 @@ export default function ExamTimerCard({
   remainingTime,
   timePercentage,
   isMobileView,
+  handleDialogOpen
 }) {
   return !isMobileView ? (
     <Paper
@@ -73,17 +74,36 @@ export default function ExamTimerCard({
         width: "100%",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: 'space-between',
         gap: "0.5rem",
         fontWeight: "700",
         fontSize: "18px",
         color: "#187163",
         borderRadius: "0",
-        height: "50px",
+        height: "80px",
+        padding:'10px'
       }}
     >
+      <Stack direction={'row'} gap={'5px'} >
       <AccessTimeIcon />
       {remainingTime}
+      </Stack>
+    
+      <Button
+            variant="contained"
+            onClick={handleDialogOpen}
+            sx={{
+              textTransform: "none",
+              backgroundColor: "#187163",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#187163",
+                color: "#fff",
+              },
+            }}
+          >
+            End Test
+          </Button>
     </Paper>
   );
 }

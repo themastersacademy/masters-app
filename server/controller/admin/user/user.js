@@ -21,6 +21,7 @@ exports.getUserID = async (req, res, next) => {
 };
 
 exports.changeRoll = async (req, res, next) => {
+  
   const id = req.body.list.id;
   const email = req.body.list.email;
   const name = req.body.list.name;
@@ -32,9 +33,11 @@ exports.changeRoll = async (req, res, next) => {
     const institution = await Institution({
       name: name,
       id: id,
-      avatar: user.avatar,
+      avatar:req.body.list.avatar,
     });
+   
     institution.save();
+    user.avatar = req.body.list.avatar
     user.institutionID = institution._id;
     user.save();
 

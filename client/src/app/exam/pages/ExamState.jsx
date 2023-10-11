@@ -24,9 +24,8 @@ export default function ExamState() {
   const [studentAnswers, setStudentAnswers] = useState([]);
   const [isBookmarked, setIsBookmarked] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [user,setuser] = useState([])
+  const [user, setuser] = useState([]);
   const calculateRemainingTime = () => {
-
     let examTime = examInfo.examEndTime.split(":");
     let examDate = examInfo.examDate.split("/");
     let examDay = examDate[0];
@@ -40,7 +39,7 @@ export default function ExamState() {
       `${examMonth}/${examDay}/${examYear} ${examHours}:${examMinutes}:${examSeconds}`
     );
 
-    let currentDateObject = new Date()
+    let currentDateObject = new Date();
 
     let remainingTime = examDateObject - currentDateObject;
 
@@ -88,16 +87,15 @@ export default function ExamState() {
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
         setCurrentQuestionIndex(eval(data.studentsPerformance[0].currentIndex));
       });
-      fetch('/api/admin/getUserDetails')
-      .then(res => res.json())
-      .then(data => setuser(data))
-      
-      fetch('/isValueExam')
-      .then(res => res.json())
-      .then(data =>{ 
-        if(data.isValue == false) 
-        navigate(`/?=${data.userID}`)
-      }  )
+    fetch("/api/admin/getUserDetails")
+      .then((res) => res.json())
+      .then((data) => setuser(data));
+
+    fetch("/isValueExam")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.isValue == false) navigate(`/?=${data.userID}`);
+      });
   }, []);
 
   useEffect(() => {
@@ -254,7 +252,7 @@ const DtView = ({
   isDialogOpen,
   handleDialogClose,
   handleDialogOpen,
-  user
+  user,
 }) => {
   return (
     <Stack
@@ -296,6 +294,8 @@ const DtView = ({
           <QuestionActionCard
             handleNextQuestion={handleNextQuestion}
             handlePreviousQuestion={handlePreviousQuestion}
+            questionLength={examInfo.questionCollections.length}
+            currentQuestionIndex={currentQuestionIndex}
           />
         </Stack>
       </Stack>
@@ -313,6 +313,7 @@ const DtView = ({
           handleQuestionClick={handleQuestionClick}
           questionCategoryList={examInfo.questionCategoryList}
           isBookmarked={isBookmarked}
+          questionLength={examInfo.questionCollections.length}
           studentAnswers={studentAnswers}
         />
       </Stack>
@@ -342,7 +343,7 @@ const MobileView = ({
   isDialogOpen,
   handleDialogClose,
   handleDialogOpen,
-  user
+  user,
 }) => {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (open) => (event) => {
@@ -354,6 +355,7 @@ const MobileView = ({
         width: "100%",
         padding: "20 20px",
         height: "100%",
+
         position: "fixed",
       }}
       direction="column"
@@ -368,6 +370,7 @@ const MobileView = ({
           remainingTime={remainingTime}
           timePercentage={timePercentage}
           isMobileView={true}
+          handleDialogOpen={handleDialogOpen}
         />
         <ExamEndCard
           title={examInfo.examTitle}
@@ -376,6 +379,8 @@ const MobileView = ({
           currentQuestionIndex={currentQuestionIndex}
           questionLength={examInfo.questionCollections.length}
           handleDialogOpen={handleDialogOpen}
+          handleNextQuestion={handleNextQuestion}
+          handlePreviousQuestion={handlePreviousQuestion}
         />
         <QuestionStateCard
           index={currentQuestionIndex}
@@ -414,16 +419,17 @@ const MobileView = ({
             isBookmarked={isBookmarked}
             studentAnswers={studentAnswers}
             isMobileView={true}
+            questionLength={examInfo.questionCollections.length}
           />
         </SwipeableDrawer>
       </Stack>
-      <QuestionActionCard
+      {/* <QuestionActionCard
         handleNextQuestion={handleNextQuestion}
         handlePreviousQuestion={handlePreviousQuestion}
         isMobileView={true}
         questionLength={examInfo.questionCollections.length}
         currentQuestionIndex={currentQuestionIndex}
-      />
+      /> */}
       <ExamEndDialog
         isDialogOpen={isDialogOpen}
         handleDialogClose={handleDialogClose}

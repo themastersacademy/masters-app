@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,14 +10,10 @@ import Paper from "@mui/material/Paper";
 import '../../../../App.css'
 import { Stack,Button,SvgIcon } from "@mui/material";
 
-
-
-export default function Batch({ batch,getRequestAccess }) {
-  
-  
+export default function Batch({ batch,getRequestAccess }) {  
   const check = [];
   return (
-    <div className="scrollHide" style={{overflow:'scroll',height:'65vh' }} >
+    <div  style={{overflow:'scroll',height:'65vh' }} >
        {batch.studentList.length > 0
         ? batch.studentList.map((task, index) => {
             if (task.request == true) {

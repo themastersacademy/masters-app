@@ -4,7 +4,7 @@ const route = require("./router/route.js");
 const path = require("path");
 const cors = require("cors");
 
-const {DateTime} = require('luxon')
+
 
 const {
   sessionManagement,
@@ -44,86 +44,16 @@ app.use("/api",route);
 app.use(cors())
 //Application Route
 
-// const fs = require('fs')
-// fs.writeFile("myjsonfile.json", JSON.stringify( [
-//   {
-//     currentBankID :"6501ff8b10d5416761c09245",
-//     changeBankID :"64ca4be0b1881bce7538cf54",
-//   easy:12,
-//   medium:10,
-//   hard:11,
-//   total:33
-// }
-// ], null, 4), (err) => {
-//   if (err) {  console.error(err);  return; };
-//   console.log("File has been created");
-// });
 
 
 
 
-app.get('/getTime',(req,res)=>{
-
-//  const getTime = DateTime.fromISO(`2015-03-04T00:00:00.000Z`).setZone("Asia/Kolkata");
-
-//  let examDateObject =new Date();
-//   examDateObject.setTime(getTime.ts)
-//  console.log(examDateObject);
-//   res.send(examDateObject)
-let date3 = new Date();
-  let indianTime = date3.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
-  const get = indianTime.split(",")[0].split('/')
-  const get1 = indianTime.split(",")[1].split(':')
- const getTime = DateTime.fromISO(`${get[2]}-${get[0]}-${get[1]}T${get1[0]}:${get1[1]}:${get1[2]}.000Z`).setZone("Asia/Kolkata");
-
- let examDateObject = new Date();
- console.log(examDateObject.ts);
-  examDateObject.setTime(getTime.ts)
- console.log(examDateObject.getMinutes());
-  res.json({time:examDateObject.getHours()})
-})
-
-let date3 = new Date();
-  let indianTime = date3.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
-  const get = indianTime.split(",")[0].split('/')
-  const get1 = indianTime.split(",")[1].split(':')
-console.log(indianTime.split(",")[0].split('/'));
 
 
-const first = DateTime.fromISO(`${get[2]}-${get[0]}-${get[1]}T${get1[0]}:${get1[1]}:${get1[2]}.000Z`).setZone("Asia/Kolkata").invalid.explanation.slice(11,45)
-const two =   DateTime.fromISO(`2023-10-6T 09:30:00.000Z`).setZone("Asia/Kolkata").invalid.explanation.slice(11,45)
-let testDate = new DateTime('2023-6-10T8:50:00.000Z').setZone("Asia/Kolkata")
-const testTwo = DateTime.fromISO(`${get[2]}-${get[0]}-${get[1]}T${get1[0]}:${get1[1]}:${get1[2]}.000Z`)
-
-console.log( DateTime.fromISO(`${get[2]}-${get[0]}-${get[1]}T${get1[0]}:${get1[1]}:${get1[2]}.000Z`).setZone("Asia/Kolkata").ts > new DateTime('2023-6-10T:11:00.000Z').setZone("Asia/Kolkata").ts )
-
-const d = new Date();
-// d.setMonth('10'-1)
-// d.setFullYear(2023)
-// d.setDate(6)
-const localTime = d.getTime();
-
-const localOffset = d.getTimezoneOffset() * 60000;
-const utc = localTime + localOffset;
-const offset = +5.5 // UTC of USA Eastern Time Zone is -05.00
-const usa = utc + (3600000 * offset);
-
-const usaTimeNow = new Date(usa).toLocaleString();
-console.log(3600000 * 1 );
-const offset1 = +5.5; // UTC of USA Eastern Time Zone is -05.00
-
-const usa1 = utc + (3600000 * offset + (eval('0'*3600000) + (eval('0'*60000))));
-const usaTimeNow1 = new Date(usa1).toLocaleString();
 
 
-console.log( new Date(usaTimeNow) > new Date(usaTimeNow1)  )
 
+// application
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
    { 
@@ -131,6 +61,7 @@ app.get("/isCheck", (req, res) => {
   }
   else return res.json({ status: "isLogout" });
 });
+
 
 app.get('/isValueExam',(req,res)=>{
   if (req.session.examID)

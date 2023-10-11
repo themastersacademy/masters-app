@@ -83,7 +83,7 @@ export default function AddTeacherBatch({ institute,teacherID,ControlNotificatio
         <DialogTitle sx={{ background: " #187163;", color: "white" }}>
           Add Batch
         </DialogTitle>
-        <DialogContent sx={{height:'200px'}} >
+        <DialogContent sx={{height:'100px'}} >
             
           <Autocomplete
             disablePortal

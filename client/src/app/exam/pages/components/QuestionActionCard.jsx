@@ -9,7 +9,7 @@ export default function QuestionActionCard({
   currentQuestionIndex
 }) {
   
-  const [count,setCount] = useState('')
+  const [count,setCount] = useState(currentQuestionIndex == undefined ? 0 : currentQuestionIndex)
 useEffect(()=>{
   setCount(currentQuestionIndex == undefined ? 0 : currentQuestionIndex)
 },[currentQuestionIndex]) 

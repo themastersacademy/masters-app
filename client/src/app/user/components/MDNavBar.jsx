@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { ExpandMore } from "@mui/icons-material";
 import AddGoal from "./AddGoal";
 import { useNavigate } from "react-router-dom";
+import SvgIcon from '@mui/material/SvgIcon';
+import LogoutIcon from '@mui/icons-material/Logout';
 export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,addGoal,setGoalId,id}) {
   const [open, setOpen] = useState(false);
   const navigete = useNavigate()
@@ -92,7 +94,14 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
                    {user.name}
             </MenuItem>
             
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%'}} >
+                <SvgIcon sx={{color:'#187163'}}  component={LogoutIcon} >
+                 
+                 </SvgIcon> 
+               <p >Logout </p>{" "}
+                </div>
+            </MenuItem>
           </Menu>
       <SwipeableDrawer
         anchor={"bottom"}

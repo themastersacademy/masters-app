@@ -78,6 +78,7 @@ else
                   <Checkbox
                     checked={isSelect }
                     sx={{
+
                       "&.Mui-checked": {
                         color: "#187163",
                       },
@@ -102,6 +103,7 @@ else
                     }}
                   />
                 }
+                sx={{ '& .MuiFormControlLabel-label': { fontWeight:'bold'} }}
                 label={topic}
               />
               

@@ -1,13 +1,22 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-
-export default function ExamEndCard({ title, isMobileView, toggleDrawer, currentQuestionIndex, questionLength, handleDialogOpen }) {
+import BVquestionActionCard from "./BVquestionActionCard";
+export default function ExamEndCard({
+  title,
+  isMobileView,
+  toggleDrawer,
+  questionLength,
+  handleDialogOpen,
+  handleNextQuestion,
+  handlePreviousQuestion,
+  currentQuestionIndex
+}) {
   return (
     <Paper
       elevation={2}
       sx={{
         width: "100%",
-        height: isMobileView ? "50px" : "70px",
+        height: isMobileView ? "60px" : "70px",
         borderRadius: isMobileView ? 0 : "20px",
       }}
     >
@@ -16,7 +25,7 @@ export default function ExamEndCard({ title, isMobileView, toggleDrawer, current
         alignItems="center"
         justifyContent="space-between"
         sx={{
-          padding: isMobileView ? "0 20px" : "10px 30px",
+          padding: isMobileView ? "0 0" : "10px 30px",
           height: isMobileView ? "50px" : "70px",
         }}
       >
@@ -30,35 +39,33 @@ export default function ExamEndCard({ title, isMobileView, toggleDrawer, current
             {title}
           </h2>
         ) : (
+          <BVquestionActionCard 
+          handleNextQuestion={handleNextQuestion}
+          handlePreviousQuestion={handlePreviousQuestion}
+          isMobileView={true}
+          questionLength={questionLength}
+          currentQuestionIndex={currentQuestionIndex == undefined ? 0 : currentQuestionIndex}
+          toggleDrawer={toggleDrawer}
+          />
+       
+        )}
+        {!isMobileView ? (
           <Button
-            variant="text"
-            onClick={toggleDrawer(true)}
+            variant="contained"
+            onClick={handleDialogOpen}
             sx={{
               textTransform: "none",
-              color: "#187163",
-              fontSize: "16px",
-              fontWeight: "500",
-            }}
-          >
-            {`Q${currentQuestionIndex+1} of ${questionLength}`}
-            <ExpandMore sx={{ fontSize: "20px" }} />
-          </Button>
-        )}
-        <Button
-          variant="contained"
-          onClick={handleDialogOpen}
-          sx={{
-            textTransform: "none",
-            backgroundColor: "#187163",
-            color: "#fff",
-            "&:hover": {
               backgroundColor: "#187163",
               color: "#fff",
-            },
-          }}
-        >
-          End Test
-        </Button>
+              "&:hover": {
+                backgroundColor: "#187163",
+                color: "#fff",
+              },
+            }}
+          >
+            End Test
+          </Button>
+        ) : null}
       </Stack>
     </Paper>
   );

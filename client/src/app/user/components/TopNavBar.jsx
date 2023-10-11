@@ -10,6 +10,8 @@ import Avater from "../../../util/Avater";
 import PlanChip from "./PlanChip";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SvgIcon from '@mui/material/SvgIcon';
+import LogoutIcon from '@mui/icons-material/Logout';
 export default function TopNavBar({user}) {
 
    const navigete = useNavigate()
@@ -101,7 +103,14 @@ export default function TopNavBar({user}) {
                    {user.name}
             </MenuItem>
             
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>
+            <div style={{display:'flex',alignItems:'center',gap:'20px',justifyContent:'center',width:'100%'}} >
+                <SvgIcon sx={{color:'#187163'}}  component={LogoutIcon} >
+                 
+                 </SvgIcon> 
+               <p >Logout </p>{" "}
+                </div>
+            </MenuItem>
           </Menu>
         </Stack>
     

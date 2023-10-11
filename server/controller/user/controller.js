@@ -121,6 +121,7 @@ exports.create = async (req, res, next) => {
 exports.resendOtp = (req, res, next) => {
   try {
     const otp = generateOtp();
+    if(req.session.wrongCountOtp ) req.session.wrongCountOtp = 0
     req.session.Otp = otp;
     if (req.session.email !== undefined) {
       SendEmail(req.session.email, otp);
@@ -170,7 +171,20 @@ exports.checkOtp = async (req, res, next) => {
       req.session.userID = createAccount._id;
       createAccount.save();
       res.json({ status: "success", change : 'create' , message: "Account create successfully" });
-    } else res.json({ status: "error", message: "The otp is not match" });
+    } else {
+      if(req.session.wrongCountOtp == undefined) req.session.wrongCountOtp = 1
+      else {
+        req.session.wrongCountOtp += 1
+        if(req.session.wrongCountOtp > 5) {
+          const otp = generateOtp();
+          req.session.Otp = otp;
+          SendEmail(req.session.email, otp);
+          req.session.wrongCountOtp = 0
+         return res.json({ status: "info", message: "resend OTP successfully" })
+        }
+      }
+     return res.json({ status: "error", message: "The otp is not match" })
+    };
   } else if (req.session.changeEmail && req.session.changePassword) {
     if (req.session.Otp == req.body.otp) {
       const user = await User.findOne({ email: req.session.changeEmail });
@@ -187,7 +201,21 @@ exports.checkOtp = async (req, res, next) => {
       } 
       else res.json({ status: "error",message: "Something wrong" });
     }
-    else res.json({ status: "error", message: "The otp is not match" });
+    else {
+      if(req.session.wrongCountOtp == undefined) req.session.wrongCountOtp = 1
+      else {
+        req.session.wrongCountOtp += 1
+        if(req.session.wrongCountOtp > 5) {
+          const otp = generateOtp();
+          req.session.Otp = otp;
+          SendEmail(req.session.changeEmail, otp);
+          req.session.wrongCountOtp = 0
+         return res.json({ status: "info", message: "resend OTP successfully" })
+        }
+      }
+
+    return  res.json({ status: "error", message: "The otp is not match" })
+  }
   }
 };
 
@@ -308,7 +336,7 @@ exports.getUserData = async (req, res, next) => {
       if (user.institutionID !== undefined) {
         instuteDetails = await getInstitutionDetails(
           user.institutionID,
-          user.batchID
+          user.batchID,
         );
       }
     
