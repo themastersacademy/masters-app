@@ -253,7 +253,7 @@ color:'#187163'
     <Stack direction='row'  alignItems='center' justifyContent='space-between' sx={{padding:'10px',height:'80px'}}>
       <Stack direction='row' alignItems='center' spacing='15px'>
      
-        <p  onClick={()=>{navigate(`/admin/institution/page?=${institionID}`)}} >Institution</p>
+        <p style={{cursor:'pointer'}} onClick={()=>{navigate(`/admin/institution/page?=${institionID}`)}} >Institution</p>
          <p style={{fontSize:'20px'}}>{'>'}</p>
         <p style={{...style.batchName,marginLeft:'20px'}}>{task.batchName}</p> 
       </Stack>

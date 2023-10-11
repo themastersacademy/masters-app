@@ -57,6 +57,10 @@ export default function ExamResult() {
           user={user}
         />
       )}
+<div style={{marginTop:'20px'}}>
+<Footer />
+</div>
+  
        
     </Stack>
   );

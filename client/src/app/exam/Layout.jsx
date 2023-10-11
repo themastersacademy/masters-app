@@ -49,11 +49,11 @@ export default function Exam() {
         {/* {examInfo == null ? null : path === "/exam/state" && <ExamState exam={examInfo}/>} */}
         {path === "/exam/result" && <ExamResult />}
         {path === "/exam/solution" && <ResultSolution />}
-        {path === "/exam/result" ? 
-        <div style={{width:width > 1509 ?'80%' : '98%',height:'100%'}}>
+        {/* {path === "/exam/result" ? 
+        <div style={{width: '80%',height:'100%'}}>
         <Footer />
         </div>
- : null}
+ : null} */}
        
       </Stack>
     </Stack>

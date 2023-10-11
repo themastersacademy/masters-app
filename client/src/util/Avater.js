@@ -1,5 +1,5 @@
 import profileOne from "../public/image/5927577 2.png"
-import LOGO from '../public/image/logo.svg'
+import LOGO from '../public/image/logo.svg.svg'
 import FileImage from '../public/image/Group 131255 (1).png'
 import QuestionImage from '../public/image/Group 897.png'
 import uploadImage from '../public/image/Vector.svg'
@@ -17,7 +17,7 @@ import Badge1 from '../public/image/badge1.svg'
 import Badge2 from '../public/image/badge2.svg'
 import Badge3 from '../public/image/badge3.svg'
 import WarningIcon from '../public/image/warning-icon.png'
-
+import coomingSoon from '../public/image/Screenshot 2023-10-11 200030 1.png'
  const Image = {
     student: profileOne,
     LOGO,
@@ -37,7 +37,8 @@ import WarningIcon from '../public/image/warning-icon.png'
     badge1: Badge1,
     badge2: Badge2,
     badge3: Badge3,
-    WarningIcon
+    WarningIcon,
+    coomingSoon
 }
 
 export default Image

@@ -109,7 +109,7 @@ const textHtml = (OTP) => {
               <div style="display: flex; width: 50%; ">
                   <img
                   style="height: 50px; margin-right: 10px "
-                  src="https://upload.incrix.com/search?url=/file/MasterAcademy/image/file-1695651175031.png"
+                  src="https://upload.incrix.com/search?url=/file/MasterAcademy/image/file-1697039117590.png"
                   alt="Company Logo"
                 />
               

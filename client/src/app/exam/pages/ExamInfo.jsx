@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ExamHeader from "./components/ExamHeader";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ExamComplete from "./components/ExamComplete"
+import Footer from "../../../util/Footer";
 export default function ExamInfo() {
   const { search } = useLocation();
   const examId = search.split("=")[1];
@@ -67,6 +68,8 @@ export default function ExamInfo() {
           setExamComplete={setExamComplete}
           setMessage={setMessage}
         />
+
+        <Footer />
       </Stack>
     )
   );

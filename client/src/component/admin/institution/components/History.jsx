@@ -131,7 +131,7 @@ function List({ task }) {
 
                 <TableCell align="center"  ><p style={style.date} >{row.examDate}</p></TableCell>
                 <TableCell align="center">
-                  {eval(row.examStartTime.split(":")[0] <= 12) ? (
+                  {eval(row.examStartTime.split(":")[0] < 12) ? (
                     <p style={style.time}>{row.examStartTime} am </p>
                   ) : (
                     <p style={style.time}>
@@ -151,7 +151,7 @@ function List({ task }) {
                     to
                   </p>{" "}
                   {
-                    eval(row.examEndTime.split(":")[0] <= 12) ? (
+                    eval(row.examEndTime.split(":")[0] < 12) ? (
                       <p style={style.time}>{row.examEndTime} am </p>
                     ) : (
                       <p style={style.time}>

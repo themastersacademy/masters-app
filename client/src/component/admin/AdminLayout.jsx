@@ -399,7 +399,7 @@ export default function AsaidMenu() {
         </List>
         
         <Divider />
-        <div style={{marginTop:"auto",display:'flex',flexDirection:'row',justifyContent:'flex-end',marginRight:'10px',padding:'5px'}}>
+        <div style={{marginTop:"auto",display:'flex',flexDirection:'row',justifyContent:'center',marginRight:'10px',padding:'5px'}}>
           {open == false ? null : 
         <p style={style.footer}>
           <font color="#187163"> Designed </font> by incrix
