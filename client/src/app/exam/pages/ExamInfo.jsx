@@ -25,7 +25,7 @@ export default function ExamInfo() {
         });
        
       });
-      fetch('/api/admin/getUserDetails')
+      fetch('/api/user/getUserDetails')
       .then(res => res.json())
       .then(data => setuser(data)) 
 

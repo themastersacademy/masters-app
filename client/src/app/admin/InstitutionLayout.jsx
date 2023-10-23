@@ -45,7 +45,7 @@ function Dashboard() {
       .then((data) => {
         if (data.status == "isLogout") navigator("/login");
       });
-    fetch("/api/admin/getUserDetails")
+    fetch("/api/institution/getUserDetails")
       .then((res) => res.json())
       .then((data) => {
         setUser(data);

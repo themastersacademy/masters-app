@@ -40,9 +40,8 @@ exports.login = async (req, res, next) => {
       } else {
         if (check.avatar == undefined || check.name == undefined) {
           req.session.isCreate = true;
-          return res.json({ status: "userDetails" });
+          return res.json({ status: "userDetails" }) 
         }
-        
         if (check.goal.length == 0) {
           req.session.isCreate = true;
           return res.json({ status: "goal" });
@@ -71,7 +70,18 @@ exports.login = async (req, res, next) => {
         req.session.examID = State.examID;
        return res.json({ status: "isExam" ,examID:State.examID });
       }
-      res.json({ status: "success", id: check._id, roll: check.type,institutionID:check.institutionID !== undefined ? check.institutionID : '' });
+
+      if (check.avatar == undefined || check.name == undefined) {
+        req.session.isCreate = true;
+        return res.json({ status: "userDetails" });
+      }
+      
+      if (check.goal.length == 0) {
+        req.session.isCreate = true;
+        return res.json({ status: "goal" });
+      }
+
+     return res.json({ status: "success", id: check._id, roll: check.type,institutionID:check.institutionID !== undefined ? check.institutionID : '' });
     }
   } else {
     res.json({ status: "error", message: "Incorrect email or password " });

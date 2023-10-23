@@ -3,7 +3,8 @@ const session = require("express-session");
 const mongoDBstore = require("connect-mongodb-session")(session);
 const examState = require("../models/examState");
 const User = require('../models/user')
-
+const sessions = require("../models/session.js");
+const {isLogin} = require('../util/sessionVerfy.js')
 exports.sessionManagement = async (app) => {
   const store = new mongoDBstore({
     uri: process.env.MONGODBURL,
@@ -85,7 +86,7 @@ exports.isLogin = (req, res, next) => {
       req.session.userRoll == " institution"
     )
      {
-      console.log('call institute');
+     
       return res.redirect(`/admin/dashboard?=${req.session.userID}`);}
     else return res.redirect(`/?=${req.session.userID}`);
   } else {
@@ -103,7 +104,6 @@ exports.isRoll = async (req, res, next) => {
   try {
    
     if (req.session.isAuth) {
-      
         if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" || req.session.userRoll == "institution" )
      {   
        if(req.session.userRoll == "teacher" || req.session.userRoll == "institution"  ) return res.redirect(`/institution?=${req.session.institutionID}`)
@@ -196,18 +196,65 @@ exports.isSignIn = (req, res, next) => {
 };
 
 // router control
-exports.routerControl = async(req,res,next) =>{
+exports.routerControl = async (req,res,next) =>{
   try {
-    if(req.session.isAuth && req.session.userRoll == 'admin' || req.session.isAuth ) next()
-    else res.status(403).send('You are not authorized')
+    if(req.session.isAuth && req.session.userRoll == 'admin' ) {
+      next()
+    }
+    else {
+      if(req.session.isAuth)
+      {
+        const getVerify = await isLogin(req.session.email);
+        const isDelete = await sessions.deleteMany({
+          expires: getVerify[0].expires,
+        }).then(function () {
+          console.log("Data deleted"); //  Success
+        })
+        .catch(function (error) {
+          console.log(error); // Failure
+        });
+       return res.redirect('/')
+      }
+    return  res.status(403).send('You are not authorized')
+  }
   } catch (error) {
     console.log(error);
   }
 }
+
+
+exports.examRouterControl = async (req,res,next) =>{
+  try {
+    if( req.session.isAuth && req.session.userRoll == 'admin' || req.session.isAuth && req.session.userRoll == 'student' ) {
+      next()
+    }
+    else {
+    return  res.status(403).send('You are not authorized')
+  }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+exports.userRouterControl = async(req,res,next) =>{
+  try {
+    if(req.session.isAuth && req.session.userRoll == 'student'  ) {
+      next()
+    }
+    else {
+    return  res.status(403).send('You are not authorized')
+  }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 exports.institutionControl = async (req,res,next) =>{
   try {
     if( req.session.userRoll == 'institution' || req.session.isAuth && req.session.userRoll == 'teacher' ) next()
-    else res.status(403).send('You are not authorized')
+    else {
+      console.log('You are not authorized')
+ return res.status(403).send('You are not authorized')}
   } catch (error) {
     console.log(error);
   }

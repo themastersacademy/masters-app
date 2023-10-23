@@ -87,7 +87,7 @@ export default function ExamState() {
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
         setCurrentQuestionIndex(eval(data.studentsPerformance[0].currentIndex));
       });
-    fetch("/api/admin/getUserDetails")
+    fetch("/api/user/getUserDetails")
       .then((res) => res.json())
       .then((data) => setuser(data));
 

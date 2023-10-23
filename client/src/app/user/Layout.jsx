@@ -49,7 +49,7 @@ export default function Layout() {
   };
 
   const getInstitute = () => {
-    fetch("/api/admin/getInstitute")
+    fetch("/api/user/getInstitute")
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "ok") setInstitue(data.message)

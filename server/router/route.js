@@ -6,7 +6,7 @@ const user = require('./user/route.js')
 const {institutionControl} = require('../auth/auth.js')
 const { isAdmin, AthuVerify } = require('../auth/auth.js')
 const exam = require('./exam/route.js')
-const {routerControl} = require('../auth/auth.js')
+const {routerControl,examRouterControl} = require('../auth/auth.js')
 
 //Middlewere
 
@@ -19,7 +19,7 @@ router.use('/institution',institutionControl,instituteRoute)
 
 router.use('/user',user)
 
-router.use('/exam',routerControl,exam)
+router.use('/exam',examRouterControl,exam)
 //GET
 
 

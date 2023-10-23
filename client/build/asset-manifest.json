@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.4aea53cb.css",
-    "main.js": "/static/js/main.500597e9.js",
+    "main.js": "/static/js/main.a69c811e.js",
     "static/js/787.c4e7f8f9.chunk.js": "/static/js/787.c4e7f8f9.chunk.js",
     "static/media/5927577 7.png": "/static/media/5927577 7.628a2ba8de6d91607184.png",
     "static/media/5927577 5.png": "/static/media/5927577 5.e9917e6c5089325f2944.png",
     "static/media/5927577 8.png": "/static/media/5927577 8.c9c56da897cc8d9ee406.png",
     "static/media/Screenshot 2023-10-11 200030 1.png": "/static/media/Screenshot 2023-10-11 200030 1.fd2302fb7789d10c2f38.png",
     "static/media/5927577 6.png": "/static/media/5927577 6.84a316b493704788d017.png",
-    "static/media/logo.svg.svg": "/static/media/logo.svg.75b3044752c9a9dc265de21470fb8ad3.svg",
+    "static/media/logo.svg.svg": "/static/media/logo.svg.0b9e553b3e06cf12f4ccfad11544873e.svg",
     "static/media/Online test-pana (1) 1.png": "/static/media/Online test-pana (1) 1.c79f52d9177f30543f7b.png",
     "static/media/card-bg.svg": "/static/media/card-bg.584acdab2bb87fd49767f8719d62b5b2.svg",
     "static/media/badge1.svg": "/static/media/badge1.6daae8f336ee7cb4374fae9069a7ed92.svg",
@@ -17,11 +17,11 @@
     "index.html": "/index.html",
     "static/media/Vector.svg": "/static/media/Vector.ca727fed06ef6123ba19b59a0694d0d0.svg",
     "main.4aea53cb.css.map": "/static/css/main.4aea53cb.css.map",
-    "main.500597e9.js.map": "/static/js/main.500597e9.js.map",
+    "main.a69c811e.js.map": "/static/js/main.a69c811e.js.map",
     "787.c4e7f8f9.chunk.js.map": "/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4aea53cb.css",
-    "static/js/main.500597e9.js"
+    "static/js/main.a69c811e.js"
   ]
 }

@@ -58,6 +58,7 @@ router.get("/getInstitution", getInstitutions);
 router.get("/getInstitute", getInstituteName);
 router.get("/getTeacher", getTeacher);
 router.get("/getUserDetails",getUserDetails)
+
 // POST
 
 router.post("/question", Get);
