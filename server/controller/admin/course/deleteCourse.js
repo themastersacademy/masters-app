@@ -9,7 +9,7 @@ exports.deleteCourseCollection = async (req, res, next) => {
     const get2 = Delete.collections.filter(
       (task) => task.id !== req.body.collectionsID
     );
-    console.log(get)
+
     if (get[0].topic.length !== 1) {
       const groupTopic = get[0].topic.filter(
         (task) => task.title !== req.body.title
@@ -40,7 +40,7 @@ exports.deleteCourseCollection = async (req, res, next) => {
 exports.deleteGroupCourseCollection = async (req,res,next) =>{
   const Delete = await Course.findOne({ _id: req.body.courseID });
   if(Delete){
-    console.log('delete call')
+   
   const get = Delete.collections.filter(task => task.title !== req.body.title)
   Delete.collections=[]
   Delete.collections=get

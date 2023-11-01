@@ -10,20 +10,12 @@ import useWindowDimensions from '../../../util/useWindowDimensions';
 export default function ChooseGoal({ controlNotification }) {
   const { width } = useWindowDimensions();
   const navigator = useNavigate();
-  const name = [
-    "Placement Training",
-    "Gate Exam",
-    "Banking Exam",
-    "TRB Exam",
-    "Gate Exam",
-    "Banking Exam",
-    "TRB Exam",
-  ];
+
 
   const [goal, setGoal] = useState([]);
 
   useEffect(() => {
-    fetch("/api/admin/getCourse")
+    fetch("/api/user/getCourse")
       .then((res) => res.json())
       .then((data) => {
        

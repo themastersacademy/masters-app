@@ -31,7 +31,7 @@ function Login ({ controlNotification }) {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          
           if (data.status == "goal") navigator(`/login/goal`);
           if (data.status == "userDetails") navigator(`/login/create`);
           if (data.status == "isExam") navigator(`/exam/state?=${data.examID}`);
@@ -56,7 +56,7 @@ function Login ({ controlNotification }) {
     fetch("/isLogin")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+    
         if (data.status == "isExam") navigator(`/exam/state?=${data.examID}`);
         if (data.status == "isLogin" && data.roll == "student")
           navigator(`/?=${data.id}`);
@@ -162,7 +162,11 @@ const handleMouseDownPassword = (event) => {
                     </InputAdornment>
                 }
             />
-          <div style={{cursor : 'pointer' , color:'blue'}} onClick={() => navigator('/forgotPass')}>Forgot password</div>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'>
+            <div style={{cursor : 'pointer' , fontSize: width > 500 ? '16px' : '14px',color:'blue'}} onClick={() => navigator('/forgotPass')}>Forgot password</div>
+            <a href="policy" style={{fontSize: width > 500 ? '16px' : '14px'}}> Terms and Policy </a>
+            </Stack>
+
         </Stack>
         <Button
           style={{

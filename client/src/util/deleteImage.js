@@ -8,6 +8,6 @@ export const deleteImage = (imageUrl) =>{
       })
         .then((res) => res.json())
         .then((data) => {
-       console.log(data)
+     
         });
 }

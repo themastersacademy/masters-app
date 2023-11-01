@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import Notification from "../../util/Alert";
 import Footer from '../../util/Footer'
 import Loader from "../../util/Loader";
+import Payment from "./components/Payment";
 export default function Layout() {
   const [loading,setLoading] = useState(false)
   const navigator = useNavigate();
@@ -66,6 +67,7 @@ export default function Layout() {
     })
       .then((res) => res.json())
       .then((data) => {
+       
         if (data.status == "ok") {
         
          setInstituteDetails(data.instuteDetails)
@@ -98,7 +100,7 @@ export default function Layout() {
       });
   };
   const createPracticesExam = (value, selectGoal) => {
-    console.log(value, selectGoal);
+ 
     fetch("/api/exam/createPracticesExam", {
       method: "POST",
       headers: {
@@ -123,7 +125,7 @@ export default function Layout() {
   })
   .then(res => res.json())
   .then(data => {
-    console.log(data)
+  
     if (data.status == "success") {
       navigator(`/exam/info?=${data.examId}`);
     }
@@ -141,6 +143,7 @@ export default function Layout() {
       })
         .then((res) => res.json())
         .then((data) => {
+     
          setAnalysis(data.studentsPerformance[0].Analysis)
           setStudentsPerformance(data.goal)
           setSelectGoal(data.topic);
@@ -213,6 +216,7 @@ export default function Layout() {
           setDetails={setDetails}
           studentsPerformance={studentsPerformance}
           Notificate={Notifications}
+          width={width}
           instituteDetails={instituteDetails}
         />
       )}
@@ -361,6 +365,7 @@ function MoView({
   setGoalId,
   studentsPerformance,
   analysis,
+  width,
   instituteDetails
 }) {
   const [value, setValue] = useState(0);
@@ -421,7 +426,8 @@ function MoView({
           <Tab label="Scorecard" {...a11yProps(1)} />
           <Tab label="Analysis" {...a11yProps(2)} />
           <Tab label="Institute" {...a11yProps(3)} />
-          <Tab label="Subscribe" {...a11yProps(4)} />
+          {width > 600 ? null :  <Tab label="Subscribe" {...a11yProps(4)} />}
+         
         </Tabs>
       </Stack>
       <CustomTabPanel value={value} index={0}>
@@ -461,7 +467,7 @@ function MoView({
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={4}>
-     
+        <Payment Payment={selectGoal.Payment} Notificate={Notificate} />
       </CustomTabPanel>
       <div style={{ marginTop:'auto',}}>
       <Footer/>

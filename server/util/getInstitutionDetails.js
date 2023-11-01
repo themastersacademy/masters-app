@@ -25,7 +25,7 @@ exports.getInstitutionDetails = async (institutionID, batchs) => {
         collectBatch,
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 

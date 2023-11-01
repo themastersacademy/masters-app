@@ -68,7 +68,7 @@ export default function InstitutionCard({
     instituteDetails.collectBatch.map(task =>{ if(task.scheduleTest.length > 0) isClose(true) })
   },[instituteDetails])
   const handleSubmit = () =>{
-    console.log(details)
+    
     fetch('/api/user/request',{
       method:"POST",
       headers:{

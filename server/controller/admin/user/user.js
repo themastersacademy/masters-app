@@ -16,7 +16,7 @@ exports.getUserID = async (req, res, next) => {
       res.json({ status: "succes", message: get });
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -50,16 +50,19 @@ exports.getUserDetails = async (req, res, next) => {
     const userID = req.session.userID;
     const user = await User.findOne({ _id: userID });
     if (user) {
-      console.log(user)
+  
       const userDetails = {
         name: user.name,
         avatar: user.avatar,
-        roll:user.type
+        roll:user.type,
+        id:user._id
       };
       
       res.json(userDetails)
     }
+    else res.json({status:'is not valid'})
+
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };

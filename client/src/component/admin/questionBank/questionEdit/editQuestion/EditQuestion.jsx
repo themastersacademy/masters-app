@@ -132,7 +132,7 @@ function Question({
     let getImageUrl = "";
     let getExplanatinImageUrl = "";
     if (image !== "") {
-      console.log(oldImageUrl)
+    
       if(oldImageUrl !== '')  await deleteImage(oldImageUrl);
      
       getImageUrl = await sendImage(image,setTimeQues);
@@ -150,7 +150,7 @@ function Question({
       if(explanatinImageUrl !== edit.explanatinImageUrl) {
        
          getExplanatinImageUrl = await sendImage(explanatinImageUrl,setTimeExplanation)
-         console.log(getExplanatinImageUrl)
+        
         }
 
     }
@@ -172,7 +172,7 @@ function Question({
       answer: answer,
       Number: Numbers,
     };
-    console.log(send);
+
     setExplain("");
     setLevel("");
     setOptions("");
@@ -395,7 +395,7 @@ function Question({
                     style={style.changeImage}
                     onClick={() =>
                       setImage((preValue) => {
-                        console.log(preValue);
+                       
                         const getValue = [...preValue];
                         getValue[0].changeQuestionImage = true;
                         return getValue;
@@ -480,7 +480,7 @@ function Question({
                     style={style.changeImage}
                     onClick={() =>
                       setImage((preValue) => {
-                        console.log(preValue);
+                   
                         const getValue = [...preValue];
                         getValue[1].changeExpanationImage = true;
                         return getValue;

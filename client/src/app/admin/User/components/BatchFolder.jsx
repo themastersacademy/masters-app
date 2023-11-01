@@ -99,7 +99,7 @@ export default function BatchFolder() {
       .then((data) => {
       
         if (data.status == "ok") {
-console.log(data);
+
  setHistory(data.history)
           setHead(data.head);
           let numArray = [];

@@ -15,7 +15,7 @@ export default function AddOption({ quesTask, getGroupName, question }) {
       getGroupName(event.target.value)
     }
     
-    console.log(event.target.value);
+  
     setOption(event.target.value);
   };
 

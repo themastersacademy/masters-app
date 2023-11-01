@@ -13,20 +13,7 @@ export default function GroupAddTopic({ createTopic,task ,checkPublish,Notificat
   const [open, setOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
 
-  const getCourse = () => {
-    // fetch("/api/admin/getBank")
-    // .then((res) => res.json())
-    // .then((data) => {
-    //   console.log(data)
-    //   if (data.status === "ok") {
-    //  setTask(data.message)
-    //   }
-    // });
-  }
-  
-  useEffect(()=>{
-    getCourse()
-  },[])
+
   const handleClickOpen = () => {
    if(checkPublish !== 'publish') 
    { setOpen(true);}

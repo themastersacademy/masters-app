@@ -144,7 +144,7 @@ exports.resendOtp = (req, res, next) => {
     else
     res.json({ status: "error", message: "somthing wrong" });
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 exports.forgotPass = async (req, res, next) => {
@@ -168,7 +168,7 @@ exports.forgotPass = async (req, res, next) => {
     else res.json({ status: "error", message: "Email does not exist yet" });
     } else res.json({ status: "error", message: "something wrong"})
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 exports.checkOtp = async (req, res, next) => {
@@ -230,7 +230,7 @@ exports.checkOtp = async (req, res, next) => {
 };
 
 exports.createDetails = async (req, res, next) => {
-  console.log(req.body);
+
   const user = await User.findOne({ _id: req.session.userID });
   if (user) {
     user.name = req.body.name;
@@ -318,7 +318,7 @@ exports.request = async (req, res, next) => {
       } else res.json({ status: "error", message: "something wrong" });
     } else res.json({ status: "error", message: "something wrong" });
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -340,6 +340,7 @@ exports.getUserData = async (req, res, next) => {
         duration: "",
         noOfQuestion: "",
         totalMArk: "",
+        Payment:[]
       };
       let instuteDetails = {};
 
@@ -499,6 +500,8 @@ exports.getUserData = async (req, res, next) => {
         (topic.duration = get[0].duration),
           (topic.noOfQuestion = calcTolalQues),
           (topic.totalMArk = get[0].mark * calcTolalQues);
+          topic.Payment = get[0].Payment
+          req.session.Plan = get[0]._id
       }
 
       getUserGoal[0].save();
@@ -513,7 +516,7 @@ exports.getUserData = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    
     res.json({ staus: "error", message: "something wrong" });
   }
 };
@@ -551,7 +554,7 @@ exports.getGoal = async (req, res, next) => {
 
 exports.addGoal = async (req, res, next) => {
   const { id, goal } = req.body;
-  console.log("goal call");
+ 
   try {
     const user = await User.findOne({ _id: id });
     const course = await Course.find();
@@ -582,7 +585,7 @@ exports.addGoal = async (req, res, next) => {
           userId: user._id,
           topics: collectTopic,
         });
-        console.log(createGoal);
+      
          createGoal.save();
         user.goal.push(createGoal._id);
       });
@@ -619,6 +622,7 @@ const studentsPerformance = await getGoalAnalysis(getGoalId.courseId,userID)
         duration: "",
         noOfQuestion: "",
         totalMArk: "",
+        Payment:[]
       };
 
       course.collections.map((collection, index) => {
@@ -690,11 +694,13 @@ const studentsPerformance = await getGoalAnalysis(getGoalId.courseId,userID)
       (topic.duration = course.duration),
         (topic.noOfQuestion = calcTolalQues),
         (topic.totalMArk = course.mark * calcTolalQues);
-
-
+        topic.Payment=course.Payment
+        req.session.Plan =course._id
       res.json({ staus: "ok", topic: topic, goal: goal.examHistory,studentsPerformance});
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
+
+

@@ -37,7 +37,7 @@ exports.createCourseTopic = async (req, res, next) => {
       ],
     });
     edit.save();
-    console.log(edit);
+   
 
     res.json({
       status: "success",
@@ -107,13 +107,14 @@ exports.createCourseMock = async (req, res, next) => {
 exports.createCourseDuration = async (req, res, next) => {
   const create = await Course.findOne({ _id: req.body.id });
   if (create) {
-    console.log(req.body.course);
+ 
     create.mark = req.body.course.mark;
     create.negativeMark = req.body.course.negativeMark;
     create.duration = req.body.course.duration;
     create.lowPercentage = req.body.course.lowPercentage;
     create.mediumPercentage = req.body.course.mediumPercentage;
     create.highPercentage = req.body.course.highPercentage;
+    create.Payment = req.body.course.Payment
     create.save();
     res.json({
       status: "success",

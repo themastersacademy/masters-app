@@ -27,7 +27,7 @@ exports.createBatch = async (req, res, next) => {
           try {
             institute.save();
           } catch (error) {
-            console.log(error);
+            throw error
           }
         }
         res.json({
@@ -38,7 +38,7 @@ exports.createBatch = async (req, res, next) => {
         res.json({ status: "error", message: "The batch name already exists" });
     }
   } catch (error) {
-    console.log(error);
+  
     res.json({ status: "error", message: "Something wrong" });
   }
 };
@@ -53,7 +53,7 @@ exports.getBatechTopic = async (req, res, next) => {
       res.json({ status: "success", message: bank });
     } else res.json({ status: "error", message: "Something wrong" });
   } catch (error) {
-    console.log(error);
+
     res.json({ status: "error", message: "Something wrong" });
   }
 };
@@ -192,7 +192,7 @@ exports.getRequestAccess = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    
     res.json({ status: "error", message: "something wrong" });
   }
 };

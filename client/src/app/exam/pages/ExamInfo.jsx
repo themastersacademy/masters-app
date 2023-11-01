@@ -18,7 +18,7 @@ export default function ExamInfo() {
     fetch(`/api/exam/get-exam-info/${examId}`)
       .then((res) => res.json())
       .then((data) => {
-      console.log(data)
+ 
         setExamInfo(data);
         setIsScheduled(() => {
           return data.type === "schedule" ? true : false;

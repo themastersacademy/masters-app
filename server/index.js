@@ -1,6 +1,7 @@
 //Imports
 const express = require("express");
 const route = require("./router/route.js");
+const paymentRouter = require('./paymentRoute/route.js')
 const path = require("path");
 const cors = require("cors");
 
@@ -39,16 +40,9 @@ sessionManagement(app);
 
 //Server Route
 app.use("/api",route);
+app.use('/payment',paymentRouter)
 app.use(cors())
 //Application Route
-
-
-
-
-
-
-
-
 
 
 // application
@@ -177,28 +171,47 @@ app.get('/institution',(req,res)=>{
 app.get('/institution/batch',(req,res)=>{
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 })
+
+//payment Pages
+
+app.get('/checkout',(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
+app.get('/plan',(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
+
+// Error Page
+app.get('/error',(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
+
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 
+
 app.use((err, req, res, next) => {
-  console.log(err);
+
   const status = err.status || 500;
   const message = "Something went wrong";
   const data = err.data || null;
-  res.status(status).json({
-    statue: 500,
-    type: "error",
-    message,
-    data,
+//   res.status(status).json({
+//     statue: 500,
+//     type: "error",
+//     message,
+//     data,
+// });
+ res.redirect('/error')
 });
-});
+
 
 
 app.use((req, res, next) => {
-  res.status(404).send("Sorry can't find that!")
+  res.redirect('/error')
 })
 
 //Server
-app.listen(3001, () => {
+app.listen(1338, () => {
   console.log(`Server start at port : ${process.env.PORT}`);
 });
+

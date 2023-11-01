@@ -44,7 +44,7 @@ exports.createScheduleExam = async (req, res, next) => {
       Collection.map((task) => {
         if (indexValue.indexOf(task.QuesbankID.valueOf()) !== -1) {
           const index = indexValue.indexOf(task.QuesbankID.valueOf());
-          console.log(task);
+          
           if ("Easy" == task.level) questionID[index].easy.push(task._id);
           if ("Medium" == task.level) questionID[index].medium.push(task._id);
           if ("Hard" == task.level) questionID[index].hard.push(task._id);
@@ -150,7 +150,7 @@ exports.createScheduleExam = async (req, res, next) => {
         negativeMark: details.setNegativeMark,
         questionCategory: questionCategory,
       });
-      console.log(exam);
+      
       exam.save();
 
       batch.scheduleTest.push({
@@ -167,7 +167,7 @@ exports.createScheduleExam = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -321,7 +321,7 @@ exports.createPracticesExam = async (req, res, next) => {
           if (task.type == "topic") {
             questionGroupCollection.push(task);
           }
-          console.log(questionGroupCollection);
+          
         });
         const questionCategory = [];
 
@@ -380,7 +380,7 @@ exports.createPracticesExam = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -434,7 +434,7 @@ exports.createMockExam = async (req, res, next) => {
           questionID,
           finalQuestion
         );
-        console.log(questions);
+      
         const questionGroup = [];
         const questionGroupCollectionArray = [];
         const questionGroupCollection = [];
@@ -518,6 +518,6 @@ exports.createMockExam = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };

@@ -7,8 +7,10 @@ import AddGoal from "./AddGoal";
 import { useNavigate } from "react-router-dom";
 import SvgIcon from '@mui/material/SvgIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
+import useWindowDimensions from "../../../util/useWindowDimensions";
 export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,addGoal,setGoalId,id}) {
   const [open, setOpen] = useState(false);
+  const {width} = useWindowDimensions()
   const navigete = useNavigate()
   const toggleDrawer = (open) => (event) => {
     setOpen(open);
@@ -68,6 +70,24 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
         </Stack>
       </Button>
   
+  <Stack direction='row' alignItems='center' gap='20px' >
+ 
+ { width > 600 ?  <Button
+            variant="contained"
+            sx={{
+              height:'35px',
+              textTransform: "none",
+              backgroundColor: "#187163",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#187163",
+                color: "#fff",
+              },
+            }}
+            onClick={()=> navigete('/plan')}
+          >
+            Upgrade to PRO
+          </Button> : null }
          <Button
             d="basic-button"
             aria-controls={open ? "basic-menu" : undefined}
@@ -88,6 +108,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
               src={user.avatar}
             />
           </Button>
+          </Stack>
           <Menu anchorEl={anchorEl} open={openNav} onClose={handleClose}>
             <MenuItem onClick={handleClose}>
               <Avatar src={user.avatar} />

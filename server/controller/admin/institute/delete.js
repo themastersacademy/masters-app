@@ -6,14 +6,14 @@ exports.deleteBatchTopic = async(req,res,next) =>{
         const batch = await Batch.findOne({_id:req.body.id})
         if(batch){
             const get = batch.scheduleTest.filter(task => task.quesID.valueOf() !== req.body.deleteID.valueOf())
-            console.log(get)
+           
           
             batch.scheduleTest = get
             batch.save()
             res.json({status:'success',message:'Topic delete successfully'})
         }
     } catch (error) {
-        console.log(error)
+        throw error
     }
 
 

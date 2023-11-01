@@ -32,7 +32,7 @@ const checkIsSelect = ()=>{
     selectGoal.topic[index].ListTopic.map(task => {
         if(task.isSelect == true) isSelect.push(task)
     })
-console.log(selectGoal.topic[index].ListTopic.length , isSelect.length);
+
 if(selectGoal.topic[index].ListTopic.length == isSelect.length) { 
     setSelectGoal((PreValue) => {
         const getValue = { ...PreValue };
@@ -133,7 +133,7 @@ else
                     onChange={(e, value) => {
                       MD == undefined
                         ? setSelectGoal((PreValue) => {
-                            console.log(PreValue);
+                          
                             const getValue = { ...PreValue };
                            getValue.topic[index].ListTopic[listIndex].isSelect = value
                            checkIsSelect()

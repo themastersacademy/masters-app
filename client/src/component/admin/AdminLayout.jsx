@@ -136,7 +136,7 @@ export default function AsaidMenu() {
     fetch("/api/admin/getUserDetails")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+      
         setUser(data);
       });
   }, []);
@@ -174,7 +174,7 @@ export default function AsaidMenu() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+     
         setMessage(data.message);
         setSeverity(data.status);
         setNotification(true);

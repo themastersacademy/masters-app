@@ -81,7 +81,7 @@ export default function ExamState() {
     fetch(`/api/exam/get-exam-state/${examID}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+       
         setExamInfo(data);
         setStudentAnswers(data.studentsPerformance[0].studentAnswerList);
         setIsBookmarked(data.studentsPerformance[0].bookmarkedQuestionList);
@@ -106,9 +106,9 @@ export default function ExamState() {
     }
   }, [examInfo]);
   useEffect(() => {
-    console.log("call");
+    
     // if (isTimeOver) {
-    console.log(studentAnswers);
+ 
     if (studentAnswers.length !== 0) {
       fetch("/api/exam/stateUpdate", {
         method: "POST",
@@ -122,7 +122,7 @@ export default function ExamState() {
         }),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data));
+        .then((data) => {})
     }
   }, [studentAnswers, isBookmarked, currentQuestionIndex]);
 

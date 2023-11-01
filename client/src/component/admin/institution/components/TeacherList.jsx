@@ -12,7 +12,7 @@ import AddTeacherBatch from './AddTeacherBatch'
 import '../../../../App.css'
 export default function TeacherList({institute,getTeacheAccess,ControlNotification}) {
     
-console.log(institute)
+
   return (
     <div className="scrollHide"  style={{height:'400px',overflowY:'scroll'}}>
       

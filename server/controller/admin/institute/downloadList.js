@@ -6,7 +6,7 @@ exports.downloadList = async (req, res) => {
     const batch = await Batch.findOne({ _id: batchid });
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
-    console.log(req.headers);
+   
     const list = batch.scheduleTest.filter(
       (task) => task.examID.valueOf() == examid.valueOf()
     );

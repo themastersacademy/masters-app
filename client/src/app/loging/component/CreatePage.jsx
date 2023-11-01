@@ -37,7 +37,7 @@ export default function CreatePage({ controlNotification }) {
 
     gender.map((task) => {
       if (task.title == "Male" && task.isSelect == true) {
-        console.log("call");
+      
         Maleavatar.map((task1) => {
           if (task1.isSelect == false) check.push(task1);
           else getDetails.push({gender:task.title,url:task1.url})

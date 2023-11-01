@@ -21,7 +21,7 @@ export default function AddGoal({ isChange,id,addGoal }) {
 
   const submit = () => {
     callList();
-    console.log(select)
+ 
     addGoal(select)
    
     setOpen(false);

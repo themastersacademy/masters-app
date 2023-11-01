@@ -81,7 +81,7 @@ export default function AddBatch({ id, ControlNotification, teacher ,getTeacherA
             disablePortal
             options={teacher}
             onClick={()=>{
-              console.log('call');
+            
             }}
             onChange={handleSelect}
             renderInput={(params) => {

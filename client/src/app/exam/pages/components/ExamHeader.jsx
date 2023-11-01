@@ -10,7 +10,9 @@ import useWindowDimensions from "../../../../util/useWindowDimensions";
 import SvgIcon from '@mui/material/SvgIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 export default function ExamHeader({ isMobileView ,user}) {
+
   const {width} =useWindowDimensions()
   const path = window.location.pathname;
   const navigete = useNavigate()
@@ -48,7 +50,15 @@ export default function ExamHeader({ isMobileView ,user}) {
       }}
     >
   
-        <Stack direction="row" gap={isMobileView ? 1 : 2} alignItems="center">
+      {path == '/checkout' && width < 652  ?  <Stack>
+        <Stack direction='row' gap='10px' alignItems={'center'}>
+          <SvgIcon onClick={()=> {
+            if(width >  600) navigete(`/plan`)
+            else navigete(`/?=${user.id}`)
+            }} sx={{color:'#187163'}} component={KeyboardBackspaceIcon}/>
+          <p style={{fontSize:'14px',fontWeight:'500'}}  >Checkout</p>
+        </Stack>
+      </Stack> :   <Stack direction="row" gap={isMobileView ? 1 : 2} alignItems="center">
           <img
             src={Avater.LOGO}
             alt="Avatar"
@@ -63,6 +73,7 @@ export default function ExamHeader({ isMobileView ,user}) {
             The <font color="#FEA800">Masters Academy</font>
           </h1>
         </Stack>
+}
         {
   path == '/exam/state' ?  user && <Avatar
     sx={{
@@ -72,7 +83,28 @@ export default function ExamHeader({ isMobileView ,user}) {
  src={user.avatar}
 />
 :
-        
+    path == '/policy' && !user ?  <Stack direction='row' gap='10px'>
+      <Button style={{
+        textTransform:'none',
+        background:'#187163',
+        color:'white',
+        width: width > 652 ? '100px' : '50px'
+      }}
+      onClick={() => navigete('/login')}
+      >
+ Login
+      </Button>
+      <Button   style={{
+        textTransform:'none',
+        background:'#187163',
+        color:'white',
+        width: width > 652 ? '100px' : '50px'
+      }}
+      onClick={() => navigete('/signup')}
+      >
+   SignUp
+      </Button>
+    </Stack> :   
         <Avatar
           sx={{
             width: width < 500 ? '40px' : "50px" ,

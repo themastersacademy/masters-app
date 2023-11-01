@@ -248,7 +248,7 @@ function ChooseTab({ institute, getTeacherAccess, ControlNotification }) {
 }
 
 const ActiveBatch = ({ institute }) => {
-  console.log(institute);
+  
   return (
     <div
       className="scrollHide"

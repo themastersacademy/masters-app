@@ -115,7 +115,7 @@ exports.isRoll = async (req, res, next) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.log();
+  throw error
   }
 };
 
@@ -138,7 +138,7 @@ exports.examInfo = async (req, res, next) => {
       res.redirect(`/exam/state?=${req.session.examID}`);
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -157,7 +157,7 @@ exports.checkExamInfo = async (req, res, next) => {
      return res.redirect(`/login`);
     
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 exports.isValueExam = async (req, res, next) => {
@@ -174,7 +174,7 @@ exports.isValueExam = async (req, res, next) => {
       res.redirect("/");
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -211,14 +211,14 @@ exports.routerControl = async (req,res,next) =>{
           console.log("Data deleted"); //  Success
         })
         .catch(function (error) {
-          console.log(error); // Failure
+          console.log(error) // Failure
         });
        return res.redirect('/')
       }
-    return  res.status(403).send('You are not authorized')
+    return  res.redirect('/error')
   }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
@@ -229,10 +229,10 @@ exports.examRouterControl = async (req,res,next) =>{
       next()
     }
     else {
-    return  res.status(403).send('You are not authorized')
+    return  res.redirect('/error')
   }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
@@ -242,10 +242,10 @@ exports.userRouterControl = async(req,res,next) =>{
       next()
     }
     else {
-    return  res.status(403).send('You are not authorized')
+    return  res.redirect('/error')
   }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
@@ -253,10 +253,23 @@ exports.institutionControl = async (req,res,next) =>{
   try {
     if( req.session.userRoll == 'institution' || req.session.isAuth && req.session.userRoll == 'teacher' ) next()
     else {
-      console.log('You are not authorized')
- return res.status(403).send('You are not authorized')}
+      if(req.session.isAuth)
+      {
+        const getVerify = await isLogin(req.session.email);
+        const isDelete = await sessions.deleteMany({
+          expires: getVerify[0].expires,
+        }).then(function () {
+          console.log("Data deleted"); //  Success
+        })
+        .catch(function (error) {
+          console.log(error) // Failure
+        });
+       return res.redirect('/')
+      }
+ return res.redirect('/error')
+}
   } catch (error) {
-    console.log(error);
+    throw error
   }
  
 }
@@ -268,7 +281,7 @@ exports.sessionDistroy = async(req,res,next) =>{
     if(req.session.isAuth)  return res.redirect(`/?=${req.session.userID}`);
     else next()
   } catch (error) {
-    console.log(error);
+    throw error
   }
   }
 
@@ -284,6 +297,6 @@ try {
     else res.redirect('/login')
   }
 } catch (error) {
-  console.log(error);
+  throw error
 }
 }

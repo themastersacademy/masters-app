@@ -40,9 +40,9 @@ exports.createPracticeExamQues = async (
             return Math.floor(Math.random() * (max - min) + min);
           }
           const random = getRandomInt(0, task.easy.length -1);
-          console.log(random);
+         
           if (index.indexOf(random) == -1) {
-            console.log(task.easy[random])
+           
             finalQuestion[quesIndex].questions.push({ id: task.easy[random] });
             index.push(random);
             i++;
@@ -58,7 +58,7 @@ exports.createPracticeExamQues = async (
             return Math.floor(Math.random() * (max - min) + min);
           }
           const random = getRandomInt(0,task.medium.length -1);
-          console.log(random);
+       
           if (index.indexOf(random) == -1) {
           
             finalQuestion[quesIndex].questions.push({
@@ -80,7 +80,7 @@ exports.createPracticeExamQues = async (
             return Math.floor(Math.random() * (max - min) + min);
           }
           const random = getRandomInt(0, task.hard.length -1 );
-          console.log(random);
+        
           if (index.indexOf(random) == -1) {
            
             finalQuestion[quesIndex].questions.push({ id: task.hard[random] });
@@ -92,7 +92,7 @@ exports.createPracticeExamQues = async (
     });
     return finalQuestion;
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 exports.createMockExamQues = async (bankID, collectQuestion, finalQuestion) => {
@@ -173,6 +173,6 @@ exports.createMockExamQues = async (bankID, collectQuestion, finalQuestion) => {
     });
     return finalQuestion;
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };

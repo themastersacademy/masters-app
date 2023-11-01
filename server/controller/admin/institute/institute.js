@@ -95,7 +95,7 @@ exports.createTeacher = async (req, res, next) => {
       } else res.json({ status: "error", message: "something wrong" });
     } else res.json({ status: "error", message: "something wrong" });
   } catch (error) {
-    console.log(error);
+
     res.json({ status: "error", message: "something wrong" });
   }
 };
@@ -139,7 +139,7 @@ exports.addTeacherBatch = async (req, res, next) => {
 exports.editTeacherAction = async (req, res, next) => {
   const { type, data, id } = req.body;
   const { teacher, removeBatch } = data;
-  console.log(removeBatch);
+
   try {
     const user = await User.findOne({ _id: teacher.id });
 
@@ -152,21 +152,20 @@ exports.editTeacherAction = async (req, res, next) => {
 
         task.batchList = get;
       });
-      console.log(institute.teacherList);
-      console.log("next");
+
       institute.save();
       const get = user.batchID.filter(
         (task) => task.valueOf() !== removeBatch.batchID.valueOf()
       );
-      console.log(get);
+     
 
       user.batchID = get;
       user.save();
-      console.log(user);
+     
       res.json({ status: "success", message: "Remove batch successfully" });
     } else res.json({ status: "error", message: "Something wrong" });
   } catch (error) {
-    console.log(error);
+  
     res.json({ status: "error", message: "Something wrong" });
   }
 };
@@ -209,7 +208,7 @@ exports.removeTeacher = async (req, res, next) => {
       user.type = 'student'
       user.institutionID = undefined
       user.save();
-      console.log(user)
+ 
       res.json({status:'success',message:'Remove teacher successfully'})
     }
     else res.json({status:'error',message:'Something wrong'})

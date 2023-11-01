@@ -67,7 +67,7 @@ export default function AddNew({ changeRoll, isChange }) {
   };
   useEffect(() => {
     callList();
-    console.log(select);
+   
     if (select.name !== "" && select.email !== "" && select.avatar !== "")
       setCheck(true);
     else setCheck(false);

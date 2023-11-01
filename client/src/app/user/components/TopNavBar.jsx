@@ -72,6 +72,7 @@ export default function TopNavBar({user}) {
                 color: "#fff",
               },
             }}
+            onClick={()=> navigete('/plan')}
           >
             Upgrade to PRO
           </Button>

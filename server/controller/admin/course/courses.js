@@ -39,7 +39,6 @@ exports.getCourseAvalible = async (req, res, next) => {
         getbanksID.push(task.id.valueOf());
       })
     );
-
     courseSetting.push({
       duration: get.duration,
       mark: get.mark,
@@ -47,8 +46,8 @@ exports.getCourseAvalible = async (req, res, next) => {
       lowPercentage: get.lowPercentage,
       mediumPercentage: get.mediumPercentage,
       highPercentage: get.highPercentage,
+      Payment:get.Payment == undefined ? undefined : get.Payment 
     });
-
     const getBank = await questionBank.find();
 
     const avalibleQues = getBank.filter((task) => {
@@ -85,7 +84,7 @@ exports.getCollectionName = async (req, res, next) => {
     if (getName.indexOf(task.title) == -1) {
      
       if(task.level.easy >= 5 && task.level.medium >= 5 && task.level.hard >= 5 )   {
-        console.log(task)
+        
         send.push(task);}
     
     }
@@ -114,8 +113,7 @@ exports.editGroupNameCourseCollection = async (req, res, next) => {
 exports.publishCourse = async (req, res, next) => {
   const publish = await Course.findOne({ _id: req.body.id });
   if (publish) {
-    console.log("call");
-    console.log(publish)
+
     if (
       (publish.duration !== 0) &
       (publish.mark !== 0) 
@@ -131,7 +129,7 @@ exports.publishCourse = async (req, res, next) => {
         res.json({ status: "info", message: "Please fill the mock setting" });
       }
     } else {
-      console.log("out call");
+    
       res.json({ status: "info", message: "Please fill the course setting" });
     }
   }
@@ -140,7 +138,7 @@ exports.publishCourse = async (req, res, next) => {
 exports.checkPublish = async (req, res, next) => {
   const publish = await Course.findOne({ _id: req.body.id });
   if (publish) {
-    console.log("call publish");
+  
     if (publish.collections.length == 0) {
       publish.status = "draft";
       publish.mockUpdate = false;

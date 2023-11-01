@@ -200,7 +200,8 @@ const SaveButton = ({
   const sendData = () => {
   
     if(collectDetails.mediumPercentage[0] > '0'){
-   fetch("/api/admin/createCourseDuration", {
+      if(collectDetails.Payment.length > 0)
+{   fetch("/api/admin/createCourseDuration", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -209,8 +210,12 @@ const SaveButton = ({
     })
       .then((res) => res.json())
       .then((data) => {
-        ControlNotification(data.status, data.message);
-      });
+        ControlNotification(data.status,data.message)
+      })
+    }
+    else{
+      ControlNotification('info','Please set Payment')
+    }
     }
     else{
       ControlNotification('info','Please set the medium percentage');

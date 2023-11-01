@@ -22,7 +22,7 @@ function ImageUplaod({ getImage, uploadImageSize, setImageUpload,Notification })
     }
    
 if(incommingFiles.target.files[0].size < '3000000') {
-console.log(incommingFiles.target.files[0])
+
 
     const size = formatSizeUnits(incommingFiles.target.files[0].size);
 

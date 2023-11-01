@@ -231,9 +231,9 @@ exports.startExam = async function (req, res) {
       );
       if (get.length === 0) {
         const studentAnswerList = [];
-        console.log(examInfo.questionCategory);
+       
         examInfo.questionCategory.forEach((category) => {
-          console.log(category.questionList.length);
+          
           category.questionList.forEach((question) => {
             studentAnswerList.push(null);
           });
@@ -292,7 +292,7 @@ exports.startExam = async function (req, res) {
       }
     }
   } catch (error) {
-    console.log(error);
+   
     throw error;
   }
 };
@@ -450,7 +450,7 @@ exports.getExamState = async function (req, res) {
       }
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -465,9 +465,7 @@ exports.examStateUpdate = async (req, res, next) => {
     windowCloseWarning,
     windowResizedWarning,
   } = req.body;
-  console.log(windowCloseWarning, windowResizedWarning);
-  console.log(studentAnswerList);
-  console.log(bookmarkedQuestionList);
+
   
     const User = await user.findOne({ _id: userID });
     const examState = await exam.findOne({ _id: examID });
@@ -502,7 +500,7 @@ exports.examStateUpdate = async (req, res, next) => {
       // }
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -572,7 +570,7 @@ exports.submitExam = async (req, res, next) => {
           });
 
           if (goal) {
-            console.log(goal);
+         
             const questionCategoryList = [];
             examInfo.questionCategory.map((task) =>
               questionCategoryList.push({
@@ -793,7 +791,7 @@ exports.submitExam = async (req, res, next) => {
                 wrongQuestion += 1;
               }
             }),
-              console.log(correctQuestion, wrongQuestion, totalQuestion);
+             
             topics.push({
               topicName: task.title,
               accuracy: (correctQuestion / totalQuestion) * 100,
@@ -883,7 +881,7 @@ exports.submitExam = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -892,7 +890,7 @@ exports.getExamResult = async (req, res, next) => {
   try {
     const path = req.path;
     const examID = path.split("/")[2];
-    console.log(examID);
+
     const userID = req.session.userID;
 
     const examInfo = await exam.findOne({ _id: examID });
@@ -921,7 +919,7 @@ exports.getExamResult = async (req, res, next) => {
       return res.status(404).send("exam not found");
     }
   } catch (error) {
-    console.log(error);
+    throw error
   }
 };
 
@@ -932,12 +930,12 @@ exports.getChangeQues = async (req,res) =>{
    const Bank = await questionBank.find()
 fs.writeFile("myQuesBank.json", JSON.stringify(Bank, null, 4), (err) => {
   if (err) {  console.error(err);  return; };
-  console.log("File has been created");
+  
 });
     res.send('ok')
 
   } catch (error) {
-    console.log(error);
+    throw error
   }
 } 
 

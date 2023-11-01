@@ -88,11 +88,11 @@ export default function SetQuestion({
             onChange={(e) => {
               if (0 <= e.target.value) {
                 if (avalible.level.easy >= e.target.value) {
-                  console.log(e.target.value);
+                
                   setQuestion((preValue) => {
                     const getValue = { ...preValue };
                     getValue.batchQues[index].level.easy = e.target.value;
-                    console.log(getValue);
+                   
                     return getValue;
                   });
 

@@ -42,7 +42,6 @@ export default function BasicTabs({setDetails,collectDetails,setPageController,s
 
   const { search } = useLocation();
   const id = search.split("?")[1];
-
   const [value, setValue] = useState(0);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
@@ -70,9 +69,14 @@ const getMockTest = () =>{
     .then((res) => res.json())
     .then((data) => {
       if (data.status == "ok") {
-      
+     
+      if(data.courseSetting[0].Payment == undefined) setDetails({...data.courseSetting[0],Payment:[]})
+      else
+      {
+         setDetails(data.courseSetting[0])
 
-       setDetails(data.courseSetting[0])
+        
+        }
          setCourse(data.courseDetails)
          setCourseAvalible(data.message)
       }

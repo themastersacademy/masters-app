@@ -11,10 +11,13 @@ const {
   addGoal,
   getViewGoal,
   resendOtp,
-  forgotPass
- 
-} = require("../../controller/user/controller.js");
+  forgotPass,
 
+} = require("../../controller/user/controller.js");
+const {
+  getCourse,
+} = require("../../controller/admin/course/courses.js");
+const {  getPlan,sendPlan,getCheckout} = require('../../controller/user/payment.js')
 const {getUserDetails } = require("../../controller/admin/user/user.js");
 
 const {
@@ -27,7 +30,12 @@ const { isExam } = require("../../util/checkLogin.js")
 router.get('/resendOtp',resendOtp)
 router.get("/getInstitute", getInstituteName);
 router.get("/getUserDetails",getUserDetails)
+router.get('/getPlan',getPlan)
+router.get('/getCheckout',getCheckout)
+router.get('/getCourse',getCourse)
 //post
+//sendPlan
+router.post('/sendPlan',sendPlan)
 // login
 router.post("/login",login);
 //forgetPass

@@ -18,7 +18,7 @@ export default function Requests({ batch,getRequestAccess }) {
         ? batch.studentList.map((task, index) => {
             if (task.request == false) {
               check.push(task);
-              console.log(task);
+            
             }
           })
         : null}

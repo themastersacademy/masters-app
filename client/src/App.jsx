@@ -5,7 +5,10 @@ import UserLayout from "./app/user/Layout";
 import ExamLayout from "./app/exam/Layout";
 import AdminLayout from "./component/admin/AdminLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import DTPayment from "./app/user/components/DTPayment";
+import CheckOut from "./app/user/components/CheckOut";
+import Team from "./util/TeamAndCon.jsx";
+import Error from './util/ErrorPage'
 function App() {
   return (
     <div style={{ fontFamily: "DM Sans" }}>
@@ -20,6 +23,8 @@ function App() {
           <Route path="/exam/state" element={<ExamLayout />} />
           <Route path="/exam/result" element={<ExamLayout />} />
           <Route path="/exam/solution" element={<ExamLayout />} />
+          <Route path='/plan' element ={<DTPayment />} />
+          <Route path="/checkout" element={<CheckOut/>} />
           {
             //user Login page
           }
@@ -57,6 +62,9 @@ function App() {
           <Route path="/admin/dashboard/course" element={<AdminLayout />} />
           <Route path="/admin/institution/page/batch" element={<AdminLayout />} />
 
+    {/* Error Page */}
+          <Route path="/error" element={<Error />} />
+          <Route path="/policy" element={<Team />} />
         </Routes>
       </Router>
     </div>

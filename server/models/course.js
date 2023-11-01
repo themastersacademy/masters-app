@@ -73,6 +73,21 @@ const Schema = mongoose.Schema({
     type: Number,
     default:0
   },
+  Payment:[{
+   month:{
+    type:Number,
+     required: true,
+  
+   },
+   amount:{
+    type:Number,
+     required: true,
+   },
+   discount:{
+  type:Number,
+   required: true,
+   }
+  }],
   lowPercentage:{
 type:Array,
 default:[0,0]

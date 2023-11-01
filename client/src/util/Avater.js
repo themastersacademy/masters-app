@@ -17,14 +17,22 @@ import Badge1 from '../public/image/badge1.svg'
 import Badge2 from '../public/image/badge2.svg'
 import Badge3 from '../public/image/badge3.svg'
 import WarningIcon from '../public/image/warning-icon.png'
+import Dash from '../public/image/Vector 79.png'
+import Red from '../public/image/icon.png'
+import Free from '../public/image/icon (1).png'
 import coomingSoon from '../public/image/Screenshot 2023-10-11 200030 1.png'
+import Error from '../public/image/404.png'
  const Image = {
     student: profileOne,
     LOGO,
+    Error,
     FileImage,
     QuestionImage,
     uploadImage,
     cardBg,
+    Dash,
+    Free,
+    Red,
     loginWalpaper,
     MaleAvatar1,
     MaleAvatar2,
