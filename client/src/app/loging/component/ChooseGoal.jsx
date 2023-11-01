@@ -51,7 +51,15 @@ export default function ChooseGoal({ controlNotification }) {
         .then((res) => res.json())
         .then((data) => {
           controlNotification(data.status, data.message);
-          if (data.status == "success") navigator('/login')
+          if (data.status == "success") { 
+            fetch('/logout')
+            .then(res => res.json())
+            .then((data) =>{ 
+              if(data.status == 'logout')
+            navigator('/login')
+          })
+          
+        }
         });
     }
   };

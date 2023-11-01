@@ -64,7 +64,8 @@ app.get('/isValueExam',(req,res)=>{
 })
 app.get("/isLogin", (req, res) => {
   if (req.session.isLogin)
-   { 
+   {
+    if(req.session.checkPage) return res.json({ status : req.session.checkPage });
     if(req.session.examID){
       res.json({ status: "isExam", message:'go to exam',examID:req.session.examID});
     }
@@ -74,7 +75,6 @@ app.get("/isLogin", (req, res) => {
       req.session.userRoll == "admin" ||
       req.session.userRoll == "institution")
       return res.json({ status: "isLogin" ,roll: req.session.userRoll, id: req.session.userID,institutionID:req.session.institutionID !== undefined ? req.session.institutionID : undefined });
-     
     } 
   }
   else return res.json({ status: "isLogout" });
@@ -83,8 +83,6 @@ app.get("/isLogin", (req, res) => {
 app.get("/",examInfo,userVerify, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
-
-
 
 /// user route
 
@@ -186,6 +184,10 @@ app.get('/error',(req,res) => {
   res.sendFile(path.join(__dirname, "../client/build","index.html"))
 })
 
+//Policy
+app.get('/policy',(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 

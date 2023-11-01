@@ -56,7 +56,8 @@ function Login ({ controlNotification }) {
     fetch("/isLogin")
       .then((res) => res.json())
       .then((data) => {
-    
+        if (data.status == "goal") navigator(`/login/goal`);
+        if (data.status == "userDetails") navigator(`/login/create`);
         if (data.status == "isExam") navigator(`/exam/state?=${data.examID}`);
         if (data.status == "isLogin" && data.roll == "student")
           navigator(`/?=${data.id}`);

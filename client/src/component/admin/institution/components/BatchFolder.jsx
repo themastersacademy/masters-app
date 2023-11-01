@@ -97,31 +97,42 @@ export default function BatchFolder({}) {
       .then((data) => {
       
         if (data.status == "ok") {
-
- setHistory(data.history)
+        setHistory(data.history)
           setHead(data.head);
-
           // change ascending order
           
+          // let numArray = [];
+          // let order = []
+          // data.message.studentList.map(task => numArray.push(task.rollNumber))
+
+          // let i = 0, j;
+          // while (i < numArray.length) {
+          //     j = i + 1;
+          //     while (j < numArray.length) {
+       
+          //         if (eval(numArray[j]) < eval(numArray[i])) {
+          //             let temp = numArray[i];
+          //             numArray[i] = numArray[j];
+          //             numArray[j] = temp;
+          //         }
+          //         j++;
+          //     }
+          //     i++;
+          // }
+          // const ascending = numArray 
+          // ascending.map(task =>{
+          //   data.message.studentList.map(roll =>{
+          //     if(task == roll.rollNumber)
+          //     order.push(roll)
+          //   })
+          // })
+          // const clearduplicate = order.filter((task,index) => order.indexOf(task) == index)
+          // data.message.studentList = []
+          // data.message.studentList = clearduplicate
           let numArray = [];
           let order = []
           data.message.studentList.map(task => numArray.push(task.rollNumber))
-
-          let i = 0, j;
-          while (i < numArray.length) {
-              j = i + 1;
-              while (j < numArray.length) {
-       
-                  if (eval(numArray[j]) < eval(numArray[i])) {
-                      let temp = numArray[i];
-                      numArray[i] = numArray[j];
-                      numArray[j] = temp;
-                  }
-                  j++;
-              }
-              i++;
-          }
-          const ascending = numArray 
+          const ascending = numArray.sort() 
           ascending.map(task =>{
             data.message.studentList.map(roll =>{
               if(task == roll.rollNumber)

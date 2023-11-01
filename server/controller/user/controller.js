@@ -40,10 +40,12 @@ exports.login = async (req, res, next) => {
       } else {
         if (check.avatar == undefined || check.name == undefined) {
           req.session.isCreate = true;
+          req.session.checkPage = 'userDetails' 
           return res.json({ status: "userDetails" }) 
         }
         if (check.goal.length == 0) {
           req.session.isCreate = true;
+          req.session.checkPage = 'goal' 
           return res.json({ status: "goal" });
         }
         return res.json({ status: "success", id: check._id, roll: check.type,institutionID:check.institutionID !== undefined ? check.institutionID : '' });
@@ -73,11 +75,13 @@ exports.login = async (req, res, next) => {
 
       if (check.avatar == undefined || check.name == undefined) {
         req.session.isCreate = true;
+        req.session.checkPage = 'userDetails' 
         return res.json({ status: "userDetails" });
       }
       
       if (check.goal.length == 0) {
         req.session.isCreate = true;
+        req.session.checkPage = 'goal' 
         return res.json({ status: "goal" });
       }
 
@@ -238,6 +242,7 @@ exports.createDetails = async (req, res, next) => {
     user.gender = req.body.gender;
     user.avatar = req.body.avatar;
     user.save();
+    if(req.session.checkPage == 'userDetails') req.session.checkPage  = undefined
     if(user.goal.length == 0) return res.json({ status: "success" , change:'create', message: "Save the details successfully" });
     else res.json({ status: "success", change:'edit', message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });

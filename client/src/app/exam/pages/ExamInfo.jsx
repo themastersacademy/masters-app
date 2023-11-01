@@ -49,9 +49,12 @@ export default function ExamInfo() {
       <Stack
         sx={{
           width: "100%",
+          height:'95vh',
           padding: "0px 20px",
           marginTop: "20px",
           maxWidth: "1240px",
+          display:'flex',
+          flexDirection:'column'
         }}
       >
         <ExamHeader user={user} />
@@ -68,8 +71,10 @@ export default function ExamInfo() {
           setExamComplete={setExamComplete}
           setMessage={setMessage}
         />
-
-        <Footer />
+<Stack marginTop='auto'>
+<Footer />
+</Stack>
+     
       </Stack>
     )
   );

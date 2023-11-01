@@ -143,7 +143,6 @@ export default function Layout() {
       })
         .then((res) => res.json())
         .then((data) => {
-     
          setAnalysis(data.studentsPerformance[0].Analysis)
           setStudentsPerformance(data.goal)
           setSelectGoal(data.topic);
@@ -156,6 +155,8 @@ export default function Layout() {
     fetch("/isLogin")
       .then((res) => res.json())
       .then((data) => {
+        if (data.status == "goal") navigator(`/login/goal`);
+        if (data.status == "userDetails") navigator(`/login/create`);
         if (data.status == "isLogout") navigator("/login");
         if (data.status == "isExam" ) navigator(`/exam/state?=${data.examID}`)
         if (id == undefined) navigator("/login");
