@@ -184,7 +184,7 @@ function DTCheckOut ({user,details,width}) {
                   </p>
                 </Stack>
               </Stack>
-          <form method="POST" name="customerData" action="http://localhost:1338/payment/ccavRequestHandler">  
+          <form method="POST" name="customerData" action="https://themastersacademy.in/payment/ccavRequestHandler">  
 
               <button
                 style={{
@@ -308,7 +308,7 @@ function MDCheckOut({user,details}){
                 </Stack>
               </Stack>
 
-              <form method="POST" style={{width:'100%',marginTop:'auto'}} name="customerData" action="http://localhost:1338/payment/ccavRequestHandler">  
+              <form method="POST" style={{width:'100%',marginTop:'auto'}} name="customerData" action="https://themastersacademy.in/payment/ccavRequestHandler">  
 
 <button
   style={{
