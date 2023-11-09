@@ -181,7 +181,17 @@ exports.createPracticesExam = async (req, res, next) => {
     });
 
     const user = await User.findOne({ _id: id });
-    if (user) {
+  let checkCount = false
+
+  if(goal.plan == 'free') {
+  
+  if(  goal.practicesCount >= 5){
+   
+    checkCount = true 
+  }
+  }
+
+    if (user && !checkCount) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
 
       if (course) {
@@ -379,6 +389,12 @@ exports.createPracticesExam = async (req, res, next) => {
         });
       }
     }
+    else{
+      res.json({
+        status: "info",
+        message: "You have reached your limit",
+      });
+    }
   } catch (error) {
     throw error
   }
@@ -393,9 +409,15 @@ exports.createMockExam = async (req, res, next) => {
       courseId: selectGoal.courseId,
       userId: userId,
     });
+    let checkCount = false 
     const user = await User.findOne({ _id: userId });
-
-    if (user) {
+    if(goal.plan == 'free') {
+  
+      if(  goal.mockCount >= 3){
+        checkCount = true 
+      }
+      }
+    if (user && !checkCount) {
       const course = await Course.findOne({ _id: selectGoal.courseId });
 
       if (course) {
@@ -517,6 +539,11 @@ exports.createMockExam = async (req, res, next) => {
         });
       }
     }
+    else
+    res.json({
+      status: "info",
+      message: "You have reached your limit",
+    });
   } catch (error) {
     throw error
   }

@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SvgIcon from '@mui/material/SvgIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
-export default function TopNavBar({user}) {
+export default function TopNavBar({user,goal}) {
 
    const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
@@ -61,6 +61,10 @@ export default function TopNavBar({user}) {
           </h1>
         </Stack>
         <Stack direction="row" spacing={4} alignItems="center">
+
+          {
+            goal.plan == 'free' ?
+          
           <Button
             variant="contained"
             sx={{
@@ -76,8 +80,25 @@ export default function TopNavBar({user}) {
           >
             Upgrade to PRO
           </Button>
+          :
+          null
+          // <Button 
+          // variant="contained"
+          // sx={{
+          //   textTransform: "none",
+          //   backgroundColor: "#187163",
+          //   color: "#fff",
+          //   "&:hover": {
+          //     backgroundColor: "#187163",
+          //     color: "#fff",
+          //   },
+          // }}
+          // >        
+          //    Subscribe
+          // </Button>
+}
 
-          <PlanChip plan="Free" />
+          <PlanChip plan={goal.plan == 'free' ? 'Free' : goal.plan == 'pro' ? 'Pro' : goal.plan == 'standard' ? 'Standard' : null } />
           <Button
             d="basic-button"
             aria-controls={open ? "basic-menu" : undefined}

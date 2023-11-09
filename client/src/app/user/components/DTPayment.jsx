@@ -53,7 +53,7 @@ export default function DTPayment() {
     msUserSelect: "none",
     userSelect: "none",
     width: "100%",
-    height: "100%",
+    height: "100vh",
     overFlow: "hidden",
     background: "#C5CFD3",
   };
@@ -126,6 +126,7 @@ export default function DTPayment() {
                   style={{
                     width: width > 1000 ?  "40%" : "60%",
                     padding:'20px',
+                    marginBottom:'10px',
                     borderRadius: "11px",
                     backgroundColor:
                       selectPlan == false ? "rgba(2, 201, 79, 0.10)" : "white",
@@ -139,6 +140,7 @@ export default function DTPayment() {
                 <div
                   style={{
                     width: width > 1000 ? "40%" : "60%",
+                    marginBottom:'10px',
                    padding:'20px',
                     borderRadius: "11px",
                     backgroundColor:
@@ -236,7 +238,10 @@ export default function DTPayment() {
          
             </Stack>
           </Stack>
+          <Stack marginTop='auto'>
           <Footer />
+          </Stack>
+       
         </Stack>
         <Notification
         setNotification={setNotification}

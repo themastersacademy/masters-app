@@ -14,7 +14,7 @@ function Notification({ setNotification, notificate, message, severity }) {
     <Collapse in={notificate}>
       <Alert
         sx={{
-          position: "absolute",
+          position: "fixed",
           top: 80,
           right: 40,
           zIndex: 9999,

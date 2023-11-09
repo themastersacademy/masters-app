@@ -110,7 +110,7 @@ function GoalListCard({ goal, plan, onClick }) {
           {goal}
         </h3>
       </Stack>
-      <PlanChip plan={plan} />
+      <PlanChip plan={plan == 'free' ? 'Free' : plan == 'pro' ? 'Pro' : plan == 'standard' ? 'Standard' : null } />
     </Button>
   );
 }

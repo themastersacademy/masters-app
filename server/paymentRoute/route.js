@@ -1,14 +1,11 @@
 
 const router = require('express').Router()
+
 fs = require('fs'),
 ccav = require('../controller/paymet/ccavutil'),
 qs = require('querystring'),
 ccavReqHandler = require('../controller/paymet/ccavRequestHandler'),
 ccavResHandler = require('../controller/paymet/ccavResponseHandler');
-
-router.get('/about', function (req, res){
-        res.send('dataFrom.html');
-});
 
 router.post('/ccavRequestHandler',function(request, response){
         

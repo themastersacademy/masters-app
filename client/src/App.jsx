@@ -8,7 +8,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DTPayment from "./app/user/components/DTPayment";
 import CheckOut from "./app/user/components/CheckOut";
 import Team from "./util/TeamAndCon.jsx";
-import Error from './util/ErrorPage'
+import Error from './util/ErrorPage';
+import Failure from './app/user/components/FailurePage'
+import Success from './app/user/components/SuccessPage'
 function App() {
   return (
     <div style={{ fontFamily: "DM Sans" }}>
@@ -64,7 +66,11 @@ function App() {
 
     {/* Error Page */}
           <Route path="/error" element={<Error />} />
+        {/* Policy */}
           <Route path="/policy" element={<Team />} />
+        {/* Success and Faliure */}
+        <Route path="/success"  element={<Success />} />
+        <Route path="/failure"  element={<Failure />} />
         </Routes>
       </Router>
     </div>

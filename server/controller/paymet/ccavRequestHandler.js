@@ -1,19 +1,22 @@
 const User = require('../../models/user.js')
     ccav = require('./ccavutil.js'),
-    qs = require('querystring');
-
+    qs = require('querystring')
+    const {PaymentStatus} = require('../../util/paymentStatus.js')
 exports.postReq = async function(req,res){
     try {
         const user = await User.findOne({_id:req.session.userID})
+        const getID = await PaymentStatus(req)       
         if(user){
+          req.session.payStatus = true
         var body = '',
           workingKey = '8A68D22226A1E903513F0052E902F52D',//Put in the 32-Bit key shared by CCAvenues.
           accessCode = 'AVNM05KJ28BL35MNLB',//Put in the Access Code shared by CCAvenues.
           encRequest = '',
           formbody = '';
+          console.log(getID)
               body = qs.stringify({
                   merchant_id: '2895903',
-                  order_id: '1234',
+                  order_id:getID.valueOf(),
                   currency: 'INR',
                   amount:req.session.totalAmount,
                   redirect_url: 'http://localhost:1338/payment/ccavResponseHandler',
@@ -30,35 +33,12 @@ exports.postReq = async function(req,res){
                   delivery_zip: '641001',
                   delivery_country: 'India',
                   delivery_tel: '0123456789',
-                // merchant_id: '2895903',
-                // order_id: '1234',
-                // currency: 'INR',
-                // amount: '9.00',
-                // redirect_url: 'http://localhost:1338/payment/ccavResponseHandler',
-                // cancel_url: 'http://localhost:1338/payment/ccavResponseHandler',
-                // language: 'EN',
-                // billing_name: 'Peter',
-                // billing_address: 'Santacruz',
-                // billing_city: 'Mumbai',
-                // billing_state: 'MH',
-                // billing_zip: '400054',
-                // billing_country: 'India',
-                // billing_tel: '9876543210',
-                // billing_email: 'testing@domain.com',
-                // delivery_name: 'Sam',
-                // delivery_address: 'Vile Parle',
-                // delivery_city: 'Mumbai',
-                // delivery_state: 'Maharashtra',
-                // delivery_zip: '400038',
-                // delivery_country: 'India',
-                // delivery_tel: '0123456789',
-                // merchant_param1: 'additional Info.',
-                // merchant_param2: 'additional Info.',
-                // merchant_param3: 'additional Info.',
-                // merchant_param4: 'additional Info.',
-                // merchant_param5: 'additional Info.',
-                // promo_code: '',
-                // customer_identifier: ''
+          
+                 billing_address: user.address,
+                 billing_city: user.city,
+                 billing_state: user.state,
+                 billing_zip: user.pincode,
+            
                 })
                
               encRequest = ccav.encrypt(body,workingKey); 

@@ -7,14 +7,13 @@ const path = req.path;
 const userID = req.session.userID;
 const examID = path.split("/")[2];
 const examInfo = await Exam.findOne({_id:examID})
-if(examInfo) {
+if(examInfo && examInfo.type !== 'schedule') {
    const getQuestionID = []
    const questions = []
    const userID = req.session.userID;
    const user = await User.findOne({_id:userID})
    examInfo.questionCategory.map(task => task.questionList.map(task =>  getQuestionID.push(task.id)))
       for(let i = 0; i < getQuestionID.length; i++) {
-       
         const ques = await getQuestion(getQuestionID[i]);
         questions.push(ques);
       }

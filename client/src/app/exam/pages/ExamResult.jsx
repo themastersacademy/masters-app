@@ -19,6 +19,7 @@ export default function ExamResult() {
     fetch(`/api/exam/get-exam-result/${examID}`)
       .then((res) => res.json())
       .then((data) => {
+       
         setExamResult(data.examResult);
         setUser(data.userdetails);
       });
@@ -70,7 +71,7 @@ const DtView = ({ leaderBoardList, examResult, examID, user }) => {
   return (
     <Stack direction="column" spacing={2} width={"100%"}>
       <ExamHeader user={user} />
-      <ExamResultAction examID={examID} />
+      <ExamResultAction examID={examID}  type={examResult.type} />
       <Paper
         sx={{
           borderRadius: "20px",

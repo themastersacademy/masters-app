@@ -78,6 +78,18 @@ const Schema = mongoose.Schema({
   avatar:{
     type:String,
   },
+  city:{
+    type:String,
+  },
+  address:{
+    type:String,
+  },
+  state:{
+    type:String,
+  },
+  pincode:{
+    type:String,
+  },
   goal: [
     {
       type: mongoose.Schema.Types.ObjectId,

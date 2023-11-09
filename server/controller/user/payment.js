@@ -1,5 +1,6 @@
 
 const Course = require("../../models/course.js");
+const User = require('../../models/user.js')
 exports.getPlan = async(req,res) =>{
     try {
       if(req.session.Plan)
@@ -89,3 +90,40 @@ exports.getPlan = async(req,res) =>{
         throw error
     }
   }
+
+
+ exports.getUserAddress = async (req,res) =>{
+try {
+const user = await User.findOne({_id:req.session.userID})
+if(user){
+  const address = {
+    city:user.city == undefined ? null : user.city,
+    pincode:user.pincode == undefined ? null : user.pincode,
+    state:user.state == undefined ? null : user.state,
+    address:user.address == undefined ? null : user.address,
+
+  }
+  return res.json({address})
+}  
+} catch (error) {
+  throw error
+}
+ }
+
+ exports.createAddress = async (req,res) =>{
+  try {
+    const {address,city,state,pincode} = req.body
+    const user = await User.findOne({_id:req.session.userID})
+    if(user){
+    
+      user.address = address
+      user.city = city
+      user.state = state
+      user.pincode = pincode
+      user.save()
+      return res.json({status:'success',message:'your address created successfully'})
+    }
+  } catch (error) {
+    throw error
+  }
+ }

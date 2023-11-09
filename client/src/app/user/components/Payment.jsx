@@ -153,7 +153,7 @@ useEffect(() =>{setValue('')},[Payment])
   return (
     <FormControl sx={{ width: "180px" }}>
       <InputLabel id="my-select-label" sx={{ fontWeight: "700" }}>
-        Select Pakage
+        Select Package
       </InputLabel>
       <Select
         variant="outlined"

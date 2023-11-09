@@ -14,11 +14,11 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Notification from "../../util/Alert";
-import Footer from '../../util/Footer'
+import Footer from "../../util/Footer";
 import Loader from "../../util/Loader";
 import Payment from "./components/Payment";
 export default function Layout() {
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const navigator = useNavigate();
   const { search } = useLocation();
   const id = search.split("=")[1];
@@ -29,9 +29,9 @@ export default function Layout() {
   const [getGoalId, setGoalId] = useState("");
   const [isChange, setChange] = useState(false);
   const [selectGoal, setSelectGoal] = useState("");
-  const [analysis,setAnalysis] = useState('')
-  const [instituteDetails,setInstituteDetails] = useState([])
-  const [studentsPerformance,setStudentsPerformance] = useState([])
+  const [analysis, setAnalysis] = useState("");
+  const [instituteDetails, setInstituteDetails] = useState([]);
+  const [studentsPerformance, setStudentsPerformance] = useState([]);
   const [details, setDetails] = useState({
     userID: id,
     instituteName: "",
@@ -53,11 +53,11 @@ export default function Layout() {
     fetch("/api/user/getInstitute")
       .then((res) => res.json())
       .then((data) => {
-        if (data.status == "ok") setInstitue(data.message)
+        if (data.status == "ok") setInstitue(data.message);
       });
   };
   const getUserDetails = () => {
-    setLoading(true)
+    setLoading(true);
     fetch("/api/user/getUserData", {
       method: "POST",
       headers: {
@@ -67,23 +67,20 @@ export default function Layout() {
     })
       .then((res) => res.json())
       .then((data) => {
-       
         if (data.status == "ok") {
-        
-         setInstituteDetails(data.instuteDetails)
-         setStudentsPerformance(data.studentsPerformance.score)
-         setAnalysis(data.studentsPerformance.Analysis)
+          setInstituteDetails(data.instuteDetails);
+          setStudentsPerformance(data.studentsPerformance.score);
+          setAnalysis(data.studentsPerformance.Analysis);
           setUser(data.message);
           setGoal(data.data);
           if (data.topic.courseId !== "") setSelectGoal(data.topic);
         }
-        setLoading(false)
+        setLoading(false);
       })
       .catch(() => {
-        setLoading(false)
-     })
+        setLoading(false);
+      });
   };
- 
 
   const addGoal = (goal) => {
     fetch("/api/user/addGoal", {
@@ -100,7 +97,6 @@ export default function Layout() {
       });
   };
   const createPracticesExam = (value, selectGoal) => {
- 
     fetch("/api/exam/createPracticesExam", {
       method: "POST",
       headers: {
@@ -110,30 +106,31 @@ export default function Layout() {
     })
       .then((res) => res.json())
       .then((data) => {
+        if (data.status == "info") Notifications(data.status, data.message);
         if (data.status == "success") {
           navigator(`/exam/info?=${data.examId}`);
         }
       });
   };
-  const createMockExam =(data)=>{
-  fetch("/api/exam/createMockExam",{
-    method:"POST",
-    headers:{
-      "Content-type":"application/json"
-    },
-    body:JSON.stringify({selectGoal})
-  })
-  .then(res => res.json())
-  .then(data => {
-  
-    if (data.status == "success") {
-      navigator(`/exam/info?=${data.examId}`);
-    }
-  
-  })
-  }
+  const createMockExam = (data) => {
+    fetch("/api/exam/createMockExam", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ selectGoal }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == "info") Notifications(data.status, data.message);
+        if (data.status == "success") {
+          navigator(`/exam/info?=${data.examId}`);
+        }
+      });
+  };
   useEffect(() => {
     if (getGoalId !== "") {
+      setLoading(true);
       fetch("/api/user/getViewGoal", {
         method: "POST",
         headers: {
@@ -143,14 +140,25 @@ export default function Layout() {
       })
         .then((res) => res.json())
         .then((data) => {
-         setAnalysis(data.studentsPerformance[0].Analysis)
-          setStudentsPerformance(data.goal)
+          setAnalysis(data.studentsPerformance[0].Analysis);
+          setStudentsPerformance(data.goal);
           setSelectGoal(data.topic);
+          setLoading(false);
         });
     }
-  
-  }, [getGoalId]);
 
+    fetch("/handleStatus")
+      .then((res) => res.json())
+      .then((data) => {});
+    fetch("/api/user/checkIsValid")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status == true) {
+          getInstitute();
+          getUserDetails();
+        }
+      });
+  }, [getGoalId]);
   useEffect(() => {
     fetch("/isLogin")
       .then((res) => res.json())
@@ -158,26 +166,28 @@ export default function Layout() {
         if (data.status == "goal") navigator(`/login/goal`);
         if (data.status == "userDetails") navigator(`/login/create`);
         if (data.status == "isLogout") navigator("/login");
-        if (data.status == "isExam" ) navigator(`/exam/state?=${data.examID}`)
+        if (data.status == "isExam") navigator(`/exam/state?=${data.examID}`);
         if (id == undefined) navigator("/login");
         if (data.status == "isLogin" && data.roll == "student")
-        navigator(`/?=${data.id}`);
-      if (
-        (data.status == "isLogin" && data.roll == "admin") ||
-        (data.status == "isLogin" && data.roll == "teacher") ||
-        (data.status == "isLogin" && data.roll == "institution")
-      )
-   {   if(data.roll == "teacher" || data.roll == "institution") return navigator(`/institution?=${data.institutionID}`)
-     
-    return navigator(`/admin/dashboard?=${data.id}`);}
+          navigator(`/?=${data.id}`);
+        if (
+          (data.status == "isLogin" && data.roll == "admin") ||
+          (data.status == "isLogin" && data.roll == "teacher") ||
+          (data.status == "isLogin" && data.roll == "institution")
+        ) {
+          if (data.roll == "teacher" || data.roll == "institution")
+            return navigator(`/institution?=${data.institutionID}`);
+
+          return navigator(`/admin/dashboard?=${data.id}`);
+        }
       });
     getInstitute();
     getUserDetails();
-    
-  }, [isChange,id]);
+  }, [isChange, id]);
 
-  return loading == true ? (<Loader />) :(
-
+  return loading == true ? (
+    <Loader />
+  ) : (
     <div>
       {width > 1024 ? (
         <DTView
@@ -249,13 +259,12 @@ function DTView({
   createMockExam,
   studentsPerformance,
   analysis,
-  instituteDetails
+  instituteDetails,
 }) {
   return (
     <Stack
       direction="column"
       alignItems="center"
-
       sx={{
         width: "100%",
         padding: "30px 0px",
@@ -263,18 +272,17 @@ function DTView({
         minHeight: "100vh",
       }}
     >
-      
       <Stack
         direction="column"
         alignItems="center"
-        gap={'10px'}
+        gap={"10px"}
         sx={{
           width: "100%",
           padding: "0px 20px",
           maxWidth: "1240px",
         }}
       >
-        <TopNavBar user={user} />
+        <TopNavBar user={user} goal={selectGoal} />
         <Grid
           container
           width={"100%"}
@@ -293,7 +301,7 @@ function DTView({
               setSelectGoal={setSelectGoal}
               id={id}
             />
-            {selectGoal  && 
+            {selectGoal && (
               <TestCard
                 selectGoal={selectGoal}
                 setSelectGoal={setSelectGoal}
@@ -301,7 +309,7 @@ function DTView({
                 createMockExam={createMockExam}
                 createPracticesExam={createPracticesExam}
               />
-             }
+            )}
           </Grid>
           <Grid item xs={6} paddingLeft="10px">
             <InstitutionCard
@@ -312,8 +320,10 @@ function DTView({
               instituteDetails={instituteDetails}
             />
 
-          { studentsPerformance.length !== 0 &&<ScoreCard  studentsPerformance={studentsPerformance}/> }              
-         {  analysis !=='' && <AnalysisCard analysis={analysis} />}
+            {studentsPerformance.length !== 0 && (
+              <ScoreCard studentsPerformance={studentsPerformance} />
+            )}
+            {analysis !== "" && <AnalysisCard analysis={analysis} />}
           </Grid>
         </Grid>
         <Footer />
@@ -367,7 +377,7 @@ function MoView({
   studentsPerformance,
   analysis,
   width,
-  instituteDetails
+  instituteDetails,
 }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -378,8 +388,8 @@ function MoView({
       sx={{
         width: "100%",
         minHeight: "100vh",
-        display:"flex",
-        flexDirection:'column'
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <MDNavBar
@@ -427,8 +437,9 @@ function MoView({
           <Tab label="Scorecard" {...a11yProps(1)} />
           <Tab label="Analysis" {...a11yProps(2)} />
           <Tab label="Institute" {...a11yProps(3)} />
-          {width > 600 ? null :  <Tab label="Subscribe" {...a11yProps(4)} />}
-         
+          {width > 600 ? null : selectGoal.plan == "free" ? (
+            <Tab label="Subscribe" {...a11yProps(4)} />
+          ) : null}
         </Tabs>
       </Stack>
       <CustomTabPanel value={value} index={0}>
@@ -451,10 +462,12 @@ function MoView({
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-      {studentsPerformance  && <ScoreCard MD={true}  studentsPerformance={studentsPerformance} />  }
+        {studentsPerformance && (
+          <ScoreCard MD={true} studentsPerformance={studentsPerformance} />
+        )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-       { analysis !== '' && <AnalysisCard MD={true} analysis={analysis} /> }
+        {analysis !== "" && <AnalysisCard MD={true} analysis={analysis} />}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
         <InstitutionCard
@@ -467,13 +480,14 @@ function MoView({
         />
       </CustomTabPanel>
 
-      <CustomTabPanel value={value} index={4}>
-        <Payment Payment={selectGoal.Payment} Notificate={Notificate} />
-      </CustomTabPanel>
-      <div style={{ marginTop:'auto',}}>
-      <Footer/>
+      {selectGoal.plan == "free" ? (
+        <CustomTabPanel value={value} index={4}>
+          <Payment Payment={selectGoal.Payment} Notificate={Notificate} />
+        </CustomTabPanel>
+      ) : null}
+      <div style={{ marginTop: "auto" }}>
+        <Footer />
       </div>
-    
     </Paper>
   );
 }

@@ -19,11 +19,11 @@ const {
 } = require("../../controller/admin/course/courses.js");
 const {  getPlan,sendPlan,getCheckout} = require('../../controller/user/payment.js')
 const {getUserDetails } = require("../../controller/admin/user/user.js");
-
+const {checkIsValid} = require('../../controller/user/getGoalAnalysis.js')
 const {
   getInstituteName
 } = require("../../controller/admin/institute/institute.js");
-
+const {getUserAddress,createAddress} = require('../../controller/user/payment.js')
 const {userRouterControl} = require('../../auth/auth.js')
 const { isExam } = require("../../util/checkLogin.js")
 //get
@@ -33,7 +33,15 @@ router.get("/getUserDetails",getUserDetails)
 router.get('/getPlan',getPlan)
 router.get('/getCheckout',getCheckout)
 router.get('/getCourse',getCourse)
+router.get('/getUserAddress',getUserAddress)
+getUserAddress
+//check goal valid
+router.get('/checkIsValid',checkIsValid)
+
 //post
+
+//add user address
+router.post("/createAddress",createAddress)
 //sendPlan
 router.post('/sendPlan',sendPlan)
 // login

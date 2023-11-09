@@ -63,9 +63,9 @@ exports.userVerify = (req, res, next) => {
     if (req.session.userRoll == "student") return next();
     if (req.session.userRoll == "teacher" || req.session.userRoll == "admin" ||  req.session.userRoll == " institution")
     if(req.session.userRoll == "teacher" || req.session.userRoll == "institution"  ) return res.redirect(`/institution?=${req.session.institutionID}`)
-      res.redirect(`/admin/dashboard?=${req.session.userID}`);
+    return res.redirect(`/admin/dashboard?=${req.session.userID}`);
   } else {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
 };
 
@@ -208,7 +208,7 @@ exports.routerControl = async (req,res,next) =>{
         const isDelete = await sessions.deleteMany({
           expires: getVerify[0].expires,
         }).then(function () {
-          console.log("Data deleted"); //  Success
+          console.log("Data deleted routerControl")  //  Success
         })
         .catch(function (error) {
           console.log(error) // Failure
@@ -259,7 +259,7 @@ exports.institutionControl = async (req,res,next) =>{
         const isDelete = await sessions.deleteMany({
           expires: getVerify[0].expires,
         }).then(function () {
-          console.log("Data deleted"); //  Success
+          console.log("Data deleted institutionControl"); //  Success
         })
         .catch(function (error) {
           console.log(error) // Failure
@@ -300,3 +300,8 @@ try {
   throw error
 }
 }
+
+
+//PayMent
+
+

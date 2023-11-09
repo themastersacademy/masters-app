@@ -1,6 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-export default function ExamResultAction({examID}) {
+export default function ExamResultAction({examID,type}) {
   const navigate = useNavigate()
   return (
     <Paper sx={{
@@ -28,6 +28,9 @@ export default function ExamResultAction({examID}) {
             color: "#787486",
           }}>Exam Result</p>
         </Stack>
+        {
+          type == 'schedule' ? 
+        null:
         <Button
           variant="contained"
           sx={{
@@ -44,6 +47,8 @@ export default function ExamResultAction({examID}) {
         >
           View Solutions
         </Button>
+
+}
       </Stack>
     </Paper>
   );

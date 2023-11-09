@@ -11,6 +11,7 @@ const fs = require("fs");
 const {examEndTime,examStartTime} = require('../../util/time.js')
 exports.getExamInfo = async function (req, res) {
   try {
+    
     const path = req.path;
     const examId = path.split("/")[2];
     const examInfo = await exam.findOne({ _id: examId });
@@ -195,6 +196,19 @@ exports.startExam = async function (req, res) {
       }
     }
     if (examInfo.type === "practice" || examInfo.type === "mock") {
+
+      const goal = await Goal.findOne({
+        courseId: req.session.Plan,
+        userId: req.session.userID,
+      });
+      if(examInfo.type === "practice" && goal.plan == 'free')
+ {     goal.practicesCount = goal.practicesCount == undefined ? 1 : goal.practicesCount+1
+      goal.save()
+    }
+    if( examInfo.type === "mock" && goal.plan == 'free')
+    {     goal.mockCount = goal.mockCount == undefined ? 1 : goal.mockCount+1
+         goal.save()
+       }
       let time = DateTime.local().setZone("Asia/Kolkata").toFormat("HH:mm:ss");
       const getSecond = DateTime.now().setZone("Asia/Kolkata");
 
@@ -901,6 +915,7 @@ exports.getExamResult = async (req, res, next) => {
       );
       if (get.length !== 0) {
         const examResult = {
+          type:examInfo.type,
           mark: get[0].mark - get[0].negativeMark,
           topics: get[0].topics,
           totalMarks: examInfo.mark * examInfo.actualAnswerList.length,

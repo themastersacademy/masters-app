@@ -17,10 +17,11 @@ const {
   isSignIn,
   checkExamInfo,
   sessionDistroy,
-  verifyGoal
-
+  verifyGoal,
+ payStatus
 } = require("./auth/auth.js");
 const connectDB = require("./util/connectDB.js");
+const { invoiceEmail } = require("./controller/email/invoiceEmail.js");
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -44,8 +45,13 @@ app.use('/payment',paymentRouter)
 app.use(cors())
 //Application Route
 
-
 // application
+
+// app.get('/pdf',(req,res)=>{
+//   invoiceEmail('muthu17don@gmail.com')
+//   res.send('send')
+// })
+
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
    { 
@@ -79,6 +85,37 @@ app.get("/isLogin", (req, res) => {
   }
   else return res.json({ status: "isLogout" });
 });
+
+
+//Payment 
+app.get("/handleStatus",userVerify,(req, res) => {
+  if(req.session.isAuth) {
+    delete req.session.plan
+    delete req.session.courseName;
+    delete req.session.payStatus;
+    delete req.session.planMonth;
+    delete req.session.amount;
+    delete req.session.discount;
+    delete req.session.totalAmount
+    delete req.session.validDay
+    delete req.session.validMonth
+    delete req.session.validYear
+    delete req.session.payStatus
+    delete req.session.paymentID
+
+   return res.json({status:'success'})
+  }
+   else  res.json({status:'failed'}) 
+});
+app.get("/payMent",userVerify,(req,res)=>{
+  try {
+    if(req.session.payStatus) return res.json({status:true})
+    else return res.json({status:false})
+   } catch (error) {
+     throw error
+   }
+})
+
 
 app.get("/",examInfo,userVerify, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
@@ -172,25 +209,43 @@ app.get('/institution/batch',(req,res)=>{
 
 //payment Pages
 
-app.get('/checkout',(req,res) => {
+app.get('/checkout',userVerify,(req,res) => {
   res.sendFile(path.join(__dirname, "../client/build","index.html"))
 })
-app.get('/plan',(req,res) => {
+app.get('/plan',userVerify,(req,res) => {
   res.sendFile(path.join(__dirname, "../client/build","index.html"))
 })
 
+
+// Payment Status
+app.get('/success',userVerify,(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
+
+app.get('/failure',userVerify,(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
+
+
+
 // Error Page
+
 app.get('/error',(req,res) => {
   res.sendFile(path.join(__dirname, "../client/build","index.html"))
 })
+
 
 //Policy
 app.get('/policy',(req,res) => {
   res.sendFile(path.join(__dirname, "../client/build","index.html"))
 })
+
+
+
+
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
-
+app.use("/", express.static(path.join(__dirname, "../invoice")));
 
 app.use((err, req, res, next) => {
 

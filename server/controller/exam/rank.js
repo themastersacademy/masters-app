@@ -101,12 +101,17 @@ alignRank(rank);
   }
 };
 
-
 const getUserList = async (id) => {
   const user = await User.findOne({ _id: id });
-
+  if(user)
   return {
     name: user.name,
     avatar: user.avatar,
   };
+  else{
+    return {
+      name: '',
+      avatar: '',
+    };
+  }
 };

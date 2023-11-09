@@ -345,7 +345,8 @@ exports.getUserData = async (req, res, next) => {
         duration: "",
         noOfQuestion: "",
         totalMArk: "",
-        Payment:[]
+        Payment:[],
+        plan:""
       };
       let instuteDetails = {};
 
@@ -506,6 +507,7 @@ exports.getUserData = async (req, res, next) => {
           (topic.noOfQuestion = calcTolalQues),
           (topic.totalMArk = get[0].mark * calcTolalQues);
           topic.Payment = get[0].Payment
+          topic.plan = getUserGoal[0].plan
           req.session.Plan = get[0]._id
       }
 
@@ -554,7 +556,9 @@ exports.getGoal = async (req, res, next) => {
       });
       res.json({ status: "ok", message: goalID });
     }
-  } catch (error) {}
+  } catch (error) {
+    throw error
+  }
 };
 
 exports.addGoal = async (req, res, next) => {
@@ -627,7 +631,8 @@ const studentsPerformance = await getGoalAnalysis(getGoalId.courseId,userID)
         duration: "",
         noOfQuestion: "",
         totalMArk: "",
-        Payment:[]
+        Payment:[],
+        plan:""
       };
 
       course.collections.map((collection, index) => {
@@ -700,6 +705,7 @@ const studentsPerformance = await getGoalAnalysis(getGoalId.courseId,userID)
         (topic.noOfQuestion = calcTolalQues),
         (topic.totalMArk = course.mark * calcTolalQues);
         topic.Payment=course.Payment
+        topic.plan = goal.plan 
         req.session.Plan =course._id
       res.json({ staus: "ok", topic: topic, goal: goal.examHistory,studentsPerformance});
     }

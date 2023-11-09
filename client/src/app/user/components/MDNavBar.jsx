@@ -72,7 +72,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
   
   <Stack direction='row' alignItems='center' gap='20px' >
  
- { width > 600 ?  <Button
+ { width > 600   ? selectGoal.plan == 'free' ?  <Button
             variant="contained"
             sx={{
               height:'35px',
@@ -87,7 +87,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
             onClick={()=> navigete('/plan')}
           >
             Upgrade to PRO
-          </Button> : null }
+          </Button> :null : null }
          <Button
             d="basic-button"
             aria-controls={open ? "basic-menu" : undefined}
@@ -162,6 +162,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
             </div>
           ))}
           <Stack direction="column" width={"100%"} alignItems="center" margin={"20px 0"}>
+            
             <AddGoal isChange={isChange}  addGoal={addGoal} id={id} />
          
           </Stack>
@@ -198,7 +199,7 @@ function GoalListCard({ goal, plan, onClick }) {
           {goal}
         </h3>
       </Stack>
-      <PlanChip plan={plan} />
+      <PlanChip plan={plan == 'free' ? 'Free' : plan == 'pro' ? 'Pro' : plan == 'standard' ? 'Standard' : null } />
     </Button>
   );
 }

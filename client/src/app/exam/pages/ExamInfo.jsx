@@ -1,12 +1,14 @@
 import { Paper, Stack, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useWindowDimensions from "../../../util/useWindowDimensions";
 import ExamHeader from "./components/ExamHeader";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ExamComplete from "./components/ExamComplete"
 import Footer from "../../../util/Footer";
 export default function ExamInfo() {
   const { search } = useLocation();
+   const {width} = useWindowDimensions()
   const examId = search.split("=")[1];
   const navigator = useNavigate();
   const [examInfo, setExamInfo] = useState(null);
@@ -49,8 +51,8 @@ export default function ExamInfo() {
       <Stack
         sx={{
           width: "100%",
-          height:'95vh',
-          padding: "0px 20px",
+          height:  width > 450 ? '100vh' : '100%',
+          padding: width > 600  ? "0px 20px" : "0px 10px",
           marginTop: "20px",
           maxWidth: "1240px",
           display:'flex',
