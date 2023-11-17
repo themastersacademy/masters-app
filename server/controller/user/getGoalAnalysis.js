@@ -77,13 +77,13 @@ exports.checkIsValid = async (req, res) => {
             goal[i].planValidTime
           )
           if (get) {
-      
             check.push(get);
             goal[i].plan = "free";
             goal[i].practicesCount = 0;
             goal[i].mockCount = 0;
             goal[i].save();
           }
+    
         }
       }
       if (check.length > 0) return res.json({ status: true })

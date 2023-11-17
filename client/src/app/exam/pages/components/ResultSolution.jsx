@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Paper, Stack } from "@mui/material";
 import ExamHeader from "./ExamHeader";
+import Loader from "../../../../util/Loader";
 import Choose from "./Choose";
 import "../../../../App.css";
 import useWindowDimensions from "../../../../util/useWindowDimensions";
@@ -10,20 +11,24 @@ export default function ResultSolution() {
   const examID = search.split("=")[1];
   const [user, setUser] = useState([]);
   const [result, setResult] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
- 
+  setLoading(true)
     fetch(`/api/exam/solution/${examID}`)
       .then((res) => res.json())
       .then((data) => {
         setResult(data);
         setUser(data.userdetails);
+        setLoading(false)
       });
   }, []);
-  return (
+  return loading == true ? (
+    <Loader />) :
+  (
     <div
       style={{
         width: "90%",
-        height: "100vh",
+        height: "95vh",
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
@@ -33,7 +38,7 @@ export default function ResultSolution() {
     >
       <ExamHeader user={user} />
       <div
-        className="scrollHide"
+        // className="scrollHide"
         style={{
           width: "100%",
           height: "80vh",
