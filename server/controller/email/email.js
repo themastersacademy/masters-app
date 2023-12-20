@@ -175,7 +175,7 @@ exports.SendEmail = async (email, OTP) => {
 
 const transporter = nodemailer.createTransport({
     port: 465,
-    host: "smtp.gmail.com",
+    host: "master-academy-sigma.vercel.app",
     auth: {
       user: process.env.USER,
       pass: process.env.PASSWORD,
