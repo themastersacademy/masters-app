@@ -193,7 +193,7 @@ exports.SendEmail = async (email, OTP) => {
   });
 
   const mailInfo = {
-    from: '"no-reply" <no-reply@incrix.com>',
+    from: process.env.USER,
     to:email,
     subject: "Verify your account",
     html: `
