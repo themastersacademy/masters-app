@@ -56,7 +56,7 @@ const {SendEmail} = require('./controller/email/email.js')
 app.get("/otpSend", async (req, res) => {
 
   for(let i=0;i<50;i++){
-  SendEmail('muthu17don@gmail.com',['2','12','1','1'])
+  await SendEmail('muthu17don@gmail.com',['2','12','1','1'])
   }
   res.send('otp')
 });
