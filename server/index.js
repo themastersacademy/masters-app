@@ -58,15 +58,15 @@ app.get("/otpSend", async (req, res) => {
   // for(let i=0;i<10;i++){
   //   SendEmail('muthu17don@gmail.com',['1','2','3','5'])
   // }
-  if(res.session.otpNumber){
-   await SendEmail('muthu17don@gmail.com',[res.session.otpNumber,res.session.otpNumber,res.session.otpNumber,res.session.otpNumber])
-   res.session.otpNumber = res.session.otpNumber + 1
+  if(req.session.otpNumber !== undefined){
+   await SendEmail('muthu17don@gmail.com',[req.session.otpNumber,req.session.otpNumber,req.session.otpNumber,req.session.otpNumber])
+   req.session.otpNumber = req.session.otpNumber + 1
   }
   else{
-    res.session.otpNumber = 1
-    await SendEmail('muthu17don@gmail.com',[res.session.otpNumber,res.session.otpNumber,res.session.otpNumber,res.session.otpNumber])
+    req.session.otpNumber = 1
+ await SendEmail('muthu17don@gmail.com',[req.session.otpNumber,req.session.otpNumber,req.session.otpNumber,req.session.otpNumber])
   }
-  res.send(`OTP NUM ${res.session.otpNumber}`)
+  res.send(`OTP NUM ${req.session.otpNumber}`)
 });
 
 
