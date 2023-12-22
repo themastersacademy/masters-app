@@ -202,6 +202,7 @@ exports.SendEmail = async (email, OTP) => {
             <div style="text-align: center;">
                 <h1>Verify your email address</h1>
                 <p style="padding: 10px 20px;">Click the button below to verify your email address.</p>
+                <P> ${OTP[0]},${OTP[1]},${OTP[2]},${OTP[3]} </p>
             </div>
         `,
   };
