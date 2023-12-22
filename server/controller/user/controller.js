@@ -132,7 +132,7 @@ exports.create = async (req, res, next) => {
 }
 };
 
-exports.resendOtp = (req, res, next) => {
+exports.resendOtp = async (req, res, next) => {
   try {
     const otp = generateOtp();
     if(req.session.wrongCountOtp ) req.session.wrongCountOtp = 0
