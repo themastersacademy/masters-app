@@ -170,14 +170,16 @@
  var nodemailer = require("nodemailer");
 
 exports.SendEmail = async (email, OTP) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.HOST,
-    name: process.env.NAME,
-    port: process.env.EMAIL_PORT,
+
+
+ const transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    name: process.env.MAIL_NAME,
+    port: process.env.MAIL_PORT,
     secure: true,
     auth: {
-      user: process.env.USER,
-      pass: process.env.PASSWORD,
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASSWORD,
     },
   });
 
@@ -193,14 +195,13 @@ exports.SendEmail = async (email, OTP) => {
   });
 
   const mailInfo = {
-    from: process.env.USER,
-    to:email,
+    from: '"no-reply" <no-reply@incrix.com>',
+    to :email,
     subject: "Verify your account",
     html: `
             <div style="text-align: center;">
                 <h1>Verify your email address</h1>
                 <p style="padding: 10px 20px;">Click the button below to verify your email address.</p>
-          <p>${OTP[1]}</p>
             </div>
         `,
   };
@@ -214,6 +215,51 @@ exports.SendEmail = async (email, OTP) => {
       }
     });
   });
+  
+  // const transporter = nodemailer.createTransport({
+  //   host: process.env.HOST,
+  //   name: process.env.NAME,
+  //   port: process.env.EMAIL_PORT,
+  //   secure: true,
+  //   auth: {
+  //     user: process.env.USER,
+  //     pass: process.env.PASSWORD,
+  //   },
+  // });
+
+  // await new Promise((resolve, reject) => {
+  //   // verify connection configuration
+  //   transporter.verify(function (error, success) {
+  //     if (error) {;
+  //       reject(error);
+  //     } else {
+  //       resolve(success);
+  //     }
+  //   });
+  // });
+
+  // const mailInfo = {
+  //   from: process.env.USER,
+  //   to:email,
+  //   subject: "Verify your account",
+  //   html: `
+  //           <div style="text-align: center;">
+  //               <h1>Verify your email address</h1>
+  //               <p style="padding: 10px 20px;">Click the button below to verify your email address.</p>
+  //         <p>${OTP[1]}</p>
+  //           </div>
+  //       `,
+  // };
+  // await new Promise((resolve, reject) => {
+  //   transporter.sendMail(mailInfo, function (error, info) {
+  //     if (error) {
+  //       reject(error);
+  //       return error;
+  //     } else {
+  //       resolve(info);
+  //     }
+  //   });
+  // });
 };
 
 
