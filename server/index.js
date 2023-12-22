@@ -66,6 +66,7 @@ app.get("/otpSend", async (req, res) => {
     res.session.otpNumber = 1
     await SendEmail('muthu17don@gmail.com',[res.session.otpNumber,res.session.otpNumber,res.session.otpNumber,res.session.otpNumber])
   }
+  res.send(`OTP NUM ${res.session.otpNumber}`)
 });
 
 
