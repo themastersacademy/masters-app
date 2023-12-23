@@ -20,7 +20,7 @@ exports.login = async (req, res, next) => {
   const secret = "This is a company secret ";
   const sha256Hasher = crypto.createHmac("sha256", secret);
   const hash = sha256Hasher.update(password).digest("hex");
-  const check = await User.findOne({ email: req.body.email, password: hash });
+  const check = await User.findOne({ email: req.body.email,password: hash });
   if (check) {
     let get = await sessions.find();
     const getVerify = await isLogin(get, check.email);
@@ -33,7 +33,6 @@ exports.login = async (req, res, next) => {
       req.session.email = check.email;
       req.session.institutionID = check.institutionID !== undefined ? check.institutionID : undefined
       const State = await examState.findOne({ userID: check._id });
- 
       if (State) {      
         req.session.examID = State.examID;
        return res.json({ status: "isExam",examID:State.examID });
@@ -95,7 +94,7 @@ exports.login = async (req, res, next) => {
 }
 };
 
-function isLogin(data, email) {
+function isLogin(data,email) {
   return data.filter((task) => task.session.email == email);
 }
 

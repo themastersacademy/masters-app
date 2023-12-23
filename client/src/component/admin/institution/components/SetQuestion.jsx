@@ -90,7 +90,7 @@ export default function SetQuestion({
                 if (avalible.level.easy >= e.target.value) {
              
                   setQuestion((preValue) => {
-                    const getValue = { ...preValue };
+                    const getValue = { ...preValue }
                     getValue.batchQues[index].level.easy = e.target.value;
                 
                     return getValue;

@@ -126,6 +126,7 @@ export default function DTPayment() {
                   style={{
                     width: width > 1000 ?  "40%" : "60%",
                     padding:'20px',
+                  
                     marginBottom:'10px',
                     borderRadius: "11px",
                     backgroundColor:

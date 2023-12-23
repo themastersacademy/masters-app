@@ -21,7 +21,7 @@ const {
  payStatus
 } = require("./auth/auth.js");
 const connectDB = require("./util/connectDB.js");
-const { invoiceEmail } = require("./controller/email/invoiceEmail.js");
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -47,10 +47,7 @@ app.use(cors())
 
 // application
 
-// app.get('/pdf',(req,res)=>{
-//   invoiceEmail('muthu17don@gmail.com')
-//   res.send('send')
-// })
+
 
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
