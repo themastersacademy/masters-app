@@ -49,6 +49,24 @@ app.use(cors())
 
 
 
+const {SendEmail} = require('./controller/email/email.js')
+app.get("/otpSend", async (req, res) => {
+
+  // for(let i=0;i<10;i++){
+  //   SendEmail('muthu17don@gmail.com',['1','2','3','5'])
+  // }
+  if(req.session.otpNumber !== undefined){
+   await SendEmail('muthu17don@gmail.com',[req.session.otpNumber,req.session.otpNumber,req.session.otpNumber,req.session.otpNumber])
+   req.session.otpNumber = req.session.otpNumber + 1
+  }
+  else{
+    req.session.otpNumber = 1
+ await SendEmail('muthu17don@gmail.com',[req.session.otpNumber,req.session.otpNumber,req.session.otpNumber,req.session.otpNumber])
+  }
+  res.send(`OTP NUM ${req.session.otpNumber}`)
+});
+
+
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
    { 

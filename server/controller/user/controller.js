@@ -121,7 +121,7 @@ exports.create = async (req, res, next) => {
     const otp = generateOtp();
 
     req.session.Otp = otp;
-    SendEmail(req.body.email, otp);
+  await  SendEmail(req.body.email, otp);
     res.json({ status: "success", message: "Verify your account" });
   } else {
     res.json({ status: "error", message: "Account already exists " });
@@ -131,17 +131,17 @@ exports.create = async (req, res, next) => {
 }
 };
 
-exports.resendOtp = (req, res, next) => {
+exports.resendOtp = async (req, res, next) => {
   try {
     const otp = generateOtp();
     if(req.session.wrongCountOtp ) req.session.wrongCountOtp = 0
     req.session.Otp = otp;
     if (req.session.email !== undefined) {
-      SendEmail(req.session.email, otp);
+     await SendEmail(req.session.email, otp);
       res.json({ status: "success", message: "Resend OTP successfully" });
     } else if(req.session.changeEmail) 
     {
-      SendEmail(req.session.changeEmail, otp);
+     await SendEmail(req.session.changeEmail, otp);
       res.json({ status: "success", message: "Resend OTP successfully" });
     }
     else
