@@ -17,6 +17,7 @@ import Notification from "../../util/Alert";
 import Footer from "../../util/Footer";
 import Loader from "../../util/Loader";
 import Payment from "./components/Payment";
+import { callInstitutionUrl, callProfileUrl } from "../../util/callImageUrl";
 export default function Layout() {
   const [loading, setLoading] = useState(false);
   const navigator = useNavigate();
@@ -66,11 +67,15 @@ export default function Layout() {
       body: JSON.stringify({ id: id }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.status == "ok") {
+          data.message.avatar = await callProfileUrl(data.message.avatar) 
+          data.message.changeName = data.message.name.length > 7 ? `${data.message.name.slice('0','5')}...` : data.message.name
+          data.instuteDetails.avatar = await callInstitutionUrl(data.instuteDetails.avatar) 
           setInstituteDetails(data.instuteDetails);
           setStudentsPerformance(data.studentsPerformance.score);
           setAnalysis(data.studentsPerformance.Analysis);
+          
           setUser(data.message);
           setGoal(data.data);
           if (data.topic.courseId !== "") setSelectGoal(data.topic);
@@ -480,11 +485,11 @@ function MoView({
         />
       </CustomTabPanel>
 
-      {selectGoal.plan == "free" ? (
+      {/* {selectGoal.plan == "free" ? (
         <CustomTabPanel value={value} index={4}>
           <Payment Payment={selectGoal.Payment} Notificate={Notificate} />
         </CustomTabPanel>
-      ) : null}
+      ) : null} */}
       <div style={{ marginTop: "auto" }}>
         <Footer />
       </div>

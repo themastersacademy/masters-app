@@ -10,6 +10,7 @@ import QuestionCollections from "./components/QuestionCollections";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 import ExamEndDialog from "./components/ExamEndDialog";
 import WarningComp from "./components/WarningComp";
+import { callProfileUrl } from "../../../util/callImageUrl";
 
 export default function ExamState() {
   const { search } = useLocation();
@@ -89,7 +90,10 @@ export default function ExamState() {
       });
     fetch("/api/user/getUserDetails")
       .then((res) => res.json())
-      .then((data) => setuser(data));
+      .then(async (data) => {
+        data.avatar = await callProfileUrl(data.avatar)
+        setuser(data)
+      });
 
     fetch("/isValueExam")
       .then((res) => res.json())

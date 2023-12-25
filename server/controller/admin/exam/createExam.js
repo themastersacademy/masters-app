@@ -412,7 +412,6 @@ exports.createMockExam = async (req, res, next) => {
     let checkCount = false 
     const user = await User.findOne({ _id: userId });
     if(goal.plan == 'free') {
-  
       if(  goal.mockCount >= 3){
         checkCount = true 
       }

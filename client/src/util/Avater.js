@@ -22,6 +22,9 @@ import Red from '../public/image/icon.png'
 import Free from '../public/image/icon (1).png'
 import coomingSoon from '../public/image/Screenshot 2023-10-11 200030 1.png'
 import Error from '../public/image/404.png'
+import successImg from '../public/image/image 25.svg'
+import failureImg from '../public/image/image_processing20200108-11051-3zkuew 1.svg'
+import institutionImage from '../public/image/search 1 (1).png'
  const Image = {
     student: profileOne,
     LOGO,
@@ -46,7 +49,10 @@ import Error from '../public/image/404.png'
     badge2: Badge2,
     badge3: Badge3,
     WarningIcon,
-    coomingSoon
+    coomingSoon,
+    successImg,
+    failureImg,
+    institutionImage
 }
 
 export default Image

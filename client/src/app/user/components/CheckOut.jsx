@@ -5,6 +5,7 @@ import Footer from "../../../util/Footer";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
 import Address from '../../../util/Address'
+import { callProfileUrl } from "../../../util/callImageUrl";
 export default function CheckOut() {
   const { width } = useWindowDimensions();
   const navigator = useNavigate();
@@ -51,7 +52,10 @@ export default function CheckOut() {
 
     fetch("/api/user/getUserDetails")
       .then((res) => res.json())
-      .then((data) => setuser(data));
+      .then(async(data) =>{ 
+        data.avatar = await callProfileUrl(data.avatar)
+        setuser(data)
+      });
   },[isChange]);
 
   return width > 652 ? (
@@ -186,7 +190,7 @@ function DTCheckOut({ user, details, width, address ,isChange,setChange }) {
                 <form
                   method="POST"
                   name="customerData"
-                  action="https://themastersacademy.in/payment/ccavRequestHandler"
+                  action="http://localhost:1338/payment/ccavRequestHandler"
                 >
                   <button
                     style={{

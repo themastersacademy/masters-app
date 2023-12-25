@@ -30,7 +30,8 @@ export default function InstitutePage({ ControlNotification }) {
       body: JSON.stringify({ id: id }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
+   
         if (data.status == "success") setInstitute(data.message);
       });
   };
@@ -124,6 +125,7 @@ const Home = ({
     image: {
       width: " 40px",
       height: " 40px",
+      borderRadius:'30px'
     },
     name: {
       color: " #000",
@@ -165,7 +167,7 @@ const Home = ({
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" spacing="15px">
-          <img src={institute.avatar} style={style.image} alt="" />
+          <img src={Image.institutionImage} style={style.image} alt="" />
           <p style={style.name}>{institute.name}</p>
         </Stack>
         <Stack direction="row" alignItems="center" spacing="15px">

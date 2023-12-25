@@ -7,6 +7,7 @@ import Notification from "../../../util/Alert";
 import { useNavigate } from "react-router-dom";
 import useWindowDimensions from "../../../util/useWindowDimensions";
 import Footer from "../../../util/Footer";
+import { callProfileUrl } from "../../../util/callImageUrl";
 export default function DTPayment() {
   const {width} = useWindowDimensions()
   const navigator = useNavigate();
@@ -27,7 +28,10 @@ export default function DTPayment() {
       });
     fetch("/api/user/getUserDetails")
       .then((res) => res.json())
-      .then((data) => setuser(data));
+      .then(async (data) => {
+        data.avatar = await callProfileUrl(data.avatar)
+        setuser(data)
+      });
   }, []);
   const handleSubmit = () =>{
     fetch("/api/user/sendPlan",{

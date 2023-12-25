@@ -84,7 +84,6 @@ if(status == 'callInstitute') getInstitution()
 if(status == 'removeBatch') editTeacherAction('removeBatch',data)
 if(status == 'removeTeacher')  removeTeacher(data)
 
-
 if(status == 'success' ) {
   getInstitution()
   getTeacher()
@@ -136,8 +135,9 @@ if(status == 'success' ) {
 const Home = ({user, institute, id, ControlNotification, teacher,getTeacherAccess }) => {
   const style = {
     image: {
-      width: " 40px",
-      height: " 40px",
+      width: " 50px",
+      height: " 50px",
+      borderRadius:'30px'
     },
     name: {
       color: " #000",
@@ -179,7 +179,7 @@ const Home = ({user, institute, id, ControlNotification, teacher,getTeacherAcces
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" spacing="15px">
-          <img src={institute.avatar} style={style.image} alt="" />
+          <img src={Image.institutionImage} style={style.image} alt="" />
           <p style={style.name}>{institute.name}</p>
         </Stack>
         <Stack direction="row" alignItems="center" spacing="15px">

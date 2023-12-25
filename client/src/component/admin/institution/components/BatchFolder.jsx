@@ -14,6 +14,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Requests from './Requests'
 import Batch from "./Batch";
 import { useNavigate } from "react-router-dom";
+import { callProfileUrl } from "../../../../util/callImageUrl";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,7 +95,7 @@ export default function BatchFolder({}) {
       body: JSON.stringify({ id: id }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async(data) => {
       
         if (data.status == "ok") {
         setHistory(data.history)
@@ -142,6 +143,14 @@ export default function BatchFolder({}) {
           const clearduplicate = order.filter((task,index) => order.indexOf(task) == index)
           data.message.studentList = []
           data.message.studentList = clearduplicate
+          
+  /// change student images
+//   let listCount =[]
+for(let i=0;i<data.message.studentList.length;i++){
+  data.message.studentList[i].avatar = await callProfileUrl(data.message.studentList[i].avatar)
+
+}
+//  if(listCount.length == data.message.studentList.length)
           setBatch(data.message)
         }
       });

@@ -6,6 +6,7 @@ import ExamHeader from "./components/ExamHeader";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ExamComplete from "./components/ExamComplete"
 import Footer from "../../../util/Footer";
+import { callProfileUrl } from "../../../util/callImageUrl";
 export default function ExamInfo() {
   const { search } = useLocation();
    const {width} = useWindowDimensions()
@@ -29,7 +30,10 @@ export default function ExamInfo() {
       });
       fetch('/api/user/getUserDetails')
       .then(res => res.json())
-      .then(data => setuser(data)) 
+      .then(async (data) => {
+        data.avatar = await callProfileUrl(data.avatar)
+        setuser(data)
+      }) 
 
       fetch("/isLogin")
       .then((res) => res.json())

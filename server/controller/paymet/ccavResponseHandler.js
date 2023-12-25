@@ -8,7 +8,7 @@ exports.postRes = async function (request, response) {
 
   var ccavEncResponse = "",
     ccavResponse = "",
-    workingKey = "8A68D22226A1E903513F0052E902F52D", //Put in the 32-Bit key shared by CCAvenues.
+    workingKey = process.env.CCAVENUE_WORK_KEY, //Put in the 32-Bit key shared by CCAvenues.
     ccavPOST = "";
   
   request.on("data", function (data) {
@@ -26,19 +26,7 @@ exports.postRes = async function (request, response) {
     if (check.order_status == "Success") {
      
       await updatePlan(payment,check.order_id)
-      var pData = "";
-      // pData = "<table border=1 cellspacing=2 cellpadding=2><tr><td>";
-      // pData = pData + ccavResponse.replace(/=/gi, "</td><td>");
-      // pData = pData.replace(/&/gi, "</td></tr><tr><td>");
-      // pData = pData + "</td></tr></table>";
-      // htmlcode =
-      //   '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Response Handler</title></head><body><center><font size="4" color="blue"><b>Response Page</b></font><br>' +
-      //   pData +
-      //   "</center><br></body></html>";
-      // response.writeHeader(200, { "Content-Type": "text/html" });
-      // response.write(htmlcode);
-      // response.end();
-    
+      var pData = ""; 
       return response.redirect('/success')
     } else {
       payment.status = 'failed'
@@ -69,11 +57,11 @@ const updatePlan = async (data,orderID) =>{
         payment.validTime = time
         payment.status = 'success'
         payment.save()
-        invoiceEmail(user.email,payment)
+       // invoiceEmail(user.email,payment)
        goal.plan = 'pro'
        goal.planValidDate = month
        goal.planValidTime = time
-       goal.save()
+      // goal.save()
       }
   } catch (error) {
     throw error

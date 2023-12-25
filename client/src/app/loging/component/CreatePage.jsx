@@ -8,6 +8,7 @@ import Radio from "@mui/material/Radio";
 import Image from "../../../util/Avater";
 import useWindowDimensions from '../../../util/useWindowDimensions';
 export default function CreatePage({ controlNotification }) {
+  console.log(Image.MaleAvatar1);
   const navigator = useNavigate();
   const { width } = useWindowDimensions();
   const [gender, setGender] = useState([
@@ -55,16 +56,28 @@ export default function CreatePage({ controlNotification }) {
       }
     });
     if(Maleavatar.length !== check.length )  {
+
+     let setImageName = [    
+       { url: Image.MaleAvatar1, name: "Male1" },
+     { url: Image.MaleAvatar2,name: "Male2" },
+     { url: Image.MaleAvatar3,name: "Male3" },
+     { url: Image.MaleAvatar4,name: "Male4" },
+     { url: Image.FemaleAvatar1, name: "FeMale1" },
+     { url: Image.FemaleAvatar2, name: "FeMale2" },
+     { url: Image.FemaleAvatar3, name: "FeMale3" },
+     { url: Image.FemaleAvatar4, name: "FeMale4" },]
+
+     setImageName = [...setImageName.filter(task => task.url == getDetails[0].url)]
+     console.log(setImageName);
       fetch('/api/user/createDetails',{
         method:"POST",
         headers:{
           "Content-type":"application/json"
         },
-        body:JSON.stringify({name:details.name,phone:details.phone,gender:getDetails[0].gender,avatar:getDetails[0].url})
+        body:JSON.stringify({name:details.name,phone:details.phone,gender:getDetails[0].gender,avatar:setImageName[0].name})
       })
       .then(res => res.json())
       .then((data)=> {
-      
         controlNotification(data.status,data.message)
         if(data.status == 'success' && data.change == 'create')  navigator("/login/goal")
         if(data.status == 'success' && data.change == 'edit')  navigator("/login");
@@ -273,6 +286,7 @@ const ChooseGender = ({ task, index, setGender }) => {
 
 const ChooseAvatar = ({ task, index, setAvatar,width }) => {
   const change = () => {
+    console.log(task);
     setAvatar((preValue) => {
       const getValue = [...preValue];
       getValue[index].isSelect = true;

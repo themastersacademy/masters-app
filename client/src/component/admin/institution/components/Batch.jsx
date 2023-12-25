@@ -9,11 +9,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import '../../../../App.css'
 import { Stack,Button,SvgIcon } from "@mui/material";
+import { callProfileUrl } from "../../../../util/callImageUrl";
 
 export default function Batch({ batch,getRequestAccess }) {  
+
+ 
   const check = [];
   return (
-    <div  style={{overflow:'scroll',height:'65vh' }} >
+  <div  style={{overflow:'scroll',height:'65vh' }} >
        {batch.studentList.length > 0
         ? batch.studentList.map((task, index) => {
             if (task.request == true) {
@@ -36,7 +39,7 @@ export default function Batch({ batch,getRequestAccess }) {
             color: "#CACACA",
           }} >No request</div>
       )}
-    </div>
+    </div> 
   );
 }
 
@@ -106,7 +109,7 @@ const handleCancel =(data) =>{
         <TableBody >
           {task.map((row, index) => 
           { 
-            
+              
   if(row.request == true)
   return (
             <TableRow

@@ -61,6 +61,9 @@ const {
 const {downloadList} = require("../../controller/admin/institute/downloadList.js")
 //GET
 
+//reWriteModules
+const {clearAvatarAndHistory} = require("../../util/reWriteModule.js")
+
 //downloadList 
 router.get('/download',downloadList)
 
@@ -142,5 +145,9 @@ router.post("/editTeacherAction", editTeacherAction);
 //RemoveTeacher
 router.post('/removeTeacher',removeTeacher)
 
+
+
+//reWriteModelue API
+router.get('/clearAvatarAndHistory',clearAvatarAndHistory)
 
 module.exports = router;

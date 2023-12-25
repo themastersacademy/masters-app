@@ -33,10 +33,9 @@ const Schema = mongoose.Schema({
         required: true,
       },
       email: {
-        type: String,
+       type: String,
         required: true,
         index: true,
-        unique: true,
         sparse: true,
         trim: true,
         lowercase: true,

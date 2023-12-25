@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Stack, SvgIcon } from "@mui/material";
-
+import Image from "../../../../util/Avater";
 export default function AddNew({ changeRoll, isChange }) {
   const [open, setOpen] = useState(false);
   const [list, setList] = useState([]);
@@ -34,8 +34,9 @@ export default function AddNew({ changeRoll, isChange }) {
   };
 
   const submit = () => {
+  
     callList();
-    changeRoll(select);
+     changeRoll(select);
     setOpen(false);
   };
   const callList = async () => {
@@ -133,7 +134,7 @@ export default function AddNew({ changeRoll, isChange }) {
                   if (select.avatar == "")
                     selectOption((preValue) => {
                       const getValue = { ...preValue };
-                      getValue.avatar = e.target.src;
+                      getValue.avatar = 'institutionImage';
                       return getValue;
                     });
                   else
@@ -149,7 +150,7 @@ export default function AddNew({ changeRoll, isChange }) {
                   borderRadius: "30px",
                   border: select.avatar == "" ? undefined : "4px solid green",
                 }}
-                src="https://upload.incrix.com/search?url=/file/MasterAcademy/image/file-1697004168835.png"
+                src={Image.institutionImage}
                 alt="Image Not loading yet."
               />
             </div>

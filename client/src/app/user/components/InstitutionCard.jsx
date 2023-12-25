@@ -14,6 +14,7 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import ScheduleTestCard from "./ScheduleTestCard";
 import { useEffect, useState, } from "react";
 
+
 export default function InstitutionCard({
   MD,
   institute,
@@ -22,9 +23,12 @@ export default function InstitutionCard({
   Notificate,
   instituteDetails
 }) {
+ 
+
   const [expanded, setExpanded] = useState(false);
   const [isSubmit, setSubmit] = useState(false);
   const [isOpen,isClose] = useState(false)
+
   const handleClick = () => {
     setExpanded(!expanded);
   };
@@ -64,8 +68,11 @@ export default function InstitutionCard({
   };
 
   useEffect(()=>{
+
     if(instituteDetails.name !== undefined)
-    instituteDetails.collectBatch.map(task =>{ if(task.scheduleTest.length > 0) isClose(true) })
+  {  instituteDetails.collectBatch.map(task =>{ if(task.scheduleTest.length > 0) isClose(true) })}
+  
+ 
   },[instituteDetails])
   const handleSubmit = () =>{
     
@@ -183,7 +190,7 @@ export default function InstitutionCard({
         >
 
           <Stack  alignItems='center'   height='80px'  position='relative' spacing='10px' direction='row'>
-          <img src={instituteDetails.avatar} style={{maxWidth:'60px'}} alt="" />
+          <img src={instituteDetails.avatar} style={{maxWidth:'60px',borderRadius:'30px'}} alt="" />
           <h2
             style={{
               fontSize: MD ? "18px" : "20px",
@@ -234,14 +241,17 @@ export default function InstitutionCard({
        
         <Stack padding={3}>
           <Autocomplete
-            disablePortal
+             disablePortal
+        
             options={institute}
             onChange={handleSelect}
             renderInput={(params) => (
               <TextField
+           
                 fullWidth
                 {...params}
                 sx={{
+                  
                   "& label.Mui-focused": {
                     color: "#187163",
                   },

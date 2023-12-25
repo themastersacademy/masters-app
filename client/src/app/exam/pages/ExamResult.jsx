@@ -8,6 +8,7 @@ import LeaderBoard from "./components/LeaderBoard";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Footer from "../../../util/Footer";
+import { callProfileUrl } from "../../../util/callImageUrl";
 export default function ExamResult() {
   const { search } = useLocation();
   const examID = search.split("=")[1];
@@ -18,9 +19,10 @@ export default function ExamResult() {
   useEffect(() => {
     fetch(`/api/exam/get-exam-result/${examID}`)
       .then((res) => res.json())
-      .then((data) => {
+      .then(async(data) => {
        
         setExamResult(data.examResult);
+        data.userdetails.avatar = await callProfileUrl(data.userdetails.avatar)
         setUser(data.userdetails);
       });
     fetch(`/api/exam/rank/${examID}`)

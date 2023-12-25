@@ -13,6 +13,7 @@ import Notification from "../../util/Alert";
 import BatchFolder from "./User/components/BatchFolder";
 import { useNavigate } from "react-router-dom";
 import SvgIcon from '@mui/material/SvgIcon';
+import {callProfileUrl} from '../../util/callImageUrl'
 import LogoutIcon from '@mui/icons-material/Logout';
 import "../../App.css";
 
@@ -47,7 +48,9 @@ function Dashboard() {
       });
     fetch("/api/institution/getUserDetails")
       .then((res) => res.json())
-      .then((data) => {
+      .then( async(data) => {
+        data.avatar = await callProfileUrl(data.avatar)
+        data.name = data.name.length > 7 ? `${data.name.slice('0','5')}...` : data.name
         setUser(data);
       });
   }, []);
@@ -146,8 +149,8 @@ function Dashboard() {
             >
               <Avatar
                 sx={{
-                  width: "40px",
-                  height: "40px",
+                  width: "50px",
+                  height: "50px",
                 }}
                 src={user.avatar}
               />

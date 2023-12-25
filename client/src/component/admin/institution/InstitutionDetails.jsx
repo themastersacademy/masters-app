@@ -1,8 +1,10 @@
 import React from "react";
 import { Button, Paper, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const InstitutionDetails = ({ task }) => {
+import { callInstitutionUrl } from "../../../util/callImageUrl";
+const InstitutionDetails =  ({ task }) => {
 
+  task.avatar = callInstitutionUrl()
   const navigator = useNavigate()
 const RouteDirect = () =>{
   navigator(`/admin/institution/page?=${task.institutionID}`)
@@ -11,6 +13,7 @@ const RouteDirect = () =>{
     image: {
       width: " 40px",
       height: " 40px",
+      borderRadius:'30px'
     },
     name: {
       color: " #000",

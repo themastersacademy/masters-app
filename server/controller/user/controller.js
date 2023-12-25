@@ -37,7 +37,7 @@ exports.login = async (req, res, next) => {
         req.session.examID = State.examID;
        return res.json({ status: "isExam",examID:State.examID });
       } else {
-        if (check.avatar == undefined || check.name == undefined) {
+        if (check.avatar == undefined || check.name == undefined || check.avatar == '') {
           req.session.isCreate = true;
           req.session.checkPage = 'userDetails' 
           return res.json({ status: "userDetails" }) 
@@ -72,7 +72,7 @@ exports.login = async (req, res, next) => {
        return res.json({ status: "isExam" ,examID:State.examID });
       }
 
-      if (check.avatar == undefined || check.name == undefined) {
+      if (check.avatar == undefined || check.name == undefined || check.avatar == '') {
         req.session.isCreate = true;
         req.session.checkPage = 'userDetails' 
         return res.json({ status: "userDetails" });
@@ -165,7 +165,7 @@ exports.forgotPass = async (req, res, next) => {
        req.session.changePassword = hash
       const otp = generateOtp();
       req.session.Otp = otp;
-      SendEmail(email, otp);
+     await SendEmail(email, otp);
       res.json({ status: "success", message: '"Verify your account"' });
     }
     else res.json({ status: "error", message: "Email does not exist yet" });
@@ -191,7 +191,7 @@ exports.checkOtp = async (req, res, next) => {
         if(req.session.wrongCountOtp > 5) {
           const otp = generateOtp();
           req.session.Otp = otp;
-          SendEmail(req.session.email, otp);
+         await SendEmail(req.session.email, otp);
           req.session.wrongCountOtp = 0
          return res.json({ status: "info", message: "resend OTP successfully" })
         }
@@ -287,10 +287,13 @@ exports.chooseGoal = async (req, res, next) => {
 
 exports.request = async (req, res, next) => {
   const { userID, instituteID, rollNumber, Dept, batchCode } = req.body.data;
+ 
   try {
     const user = await User.findOne({ _id: userID });
+    console.log(user.email);
     if (user) {
       const institute = await Institution.findOne({ _id: instituteID });
+     
       if (institute) {
         const batch = await Batch.findOne({
           batchCode: batchCode,
@@ -298,11 +301,12 @@ exports.request = async (req, res, next) => {
         });
         if (batch) {
           const check = [];
-          batch.studentList.map((task) => {
+    if(batch.studentList){ if(batch.studentList.length > 0  )
+      {    batch.studentList.map((task) => {
             if (user.email == task.email) check.push(task);
-          });
-
-          if (check.length == 0) {
+          });}}
+          
+          if (check.length == 0 || batch.studentList == undefined) {
             batch.studentList.push({
               name: user.name,
               avatar: user.avatar,

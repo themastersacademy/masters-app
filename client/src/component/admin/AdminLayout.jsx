@@ -31,6 +31,7 @@ import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import avatar from "../../util/Avater";
 import SvgIcon from '@mui/material/SvgIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
+import  {callProfileUrl}  from "../../util/callImageUrl";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -135,8 +136,9 @@ export default function AsaidMenu() {
   useEffect(() => {
     fetch("/api/admin/getUserDetails")
       .then((res) => res.json())
-      .then((data) => {
-      
+      .then( async (data) => {
+       data.avatar = await callProfileUrl(data.avatar)
+       data.name = data.name.length > 7 ? `${data.name.slice('0','5')}...` : data.name
         setUser(data);
       });
   }, []);
@@ -191,7 +193,7 @@ export default function AsaidMenu() {
     },
   };
   return (
-    <Box sx={{ display: "flex" }} >
+     <Box sx={{ display: "flex" }} >
       <Notification
         setNotification={setNotification}
         notificate={notificate}
@@ -262,8 +264,8 @@ export default function AsaidMenu() {
               >
                 <Avatar
                   sx={{
-                    width: "40px",
-                    height: "40px",
+                    width: "50px",
+                    height: "50px",
                   }}
                   src={user.avatar}
                 />
@@ -275,6 +277,7 @@ export default function AsaidMenu() {
                 >
                   <Avatar src={user.avatar} />
                   {user.name}
+                  {/* {user.name.length > 2 ? `${user.name[0]}${user.name[1]}${user.name[2]}${user.name[3]}${user.name[4]}` : ''} */}
                 </MenuItem>
 
                 <MenuItem onClick={handleLogout}>

@@ -6,6 +6,7 @@ import Loader from "../../../../util/Loader";
 import Choose from "./Choose";
 import "../../../../App.css";
 import useWindowDimensions from "../../../../util/useWindowDimensions";
+import { callProfileUrl } from "../../../../util/callImageUrl";
 export default function ResultSolution() {
   const { search } = useLocation();
   const examID = search.split("=")[1];
@@ -16,8 +17,9 @@ export default function ResultSolution() {
   setLoading(true)
     fetch(`/api/exam/solution/${examID}`)
       .then((res) => res.json())
-      .then((data) => {
+      .then(async(data) => {
         setResult(data);
+        data.userdetails.avatar = await callProfileUrl(data.userdetails.avatar)
         setUser(data.userdetails);
         setLoading(false)
       });

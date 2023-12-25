@@ -13,8 +13,10 @@ import { useNavigate } from "react-router-dom";
 import SvgIcon from '@mui/material/SvgIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
 export default function TopNavBar({user,goal}) {
+  
+ 
 
-   const navigete = useNavigate()
+  const navigete = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -62,7 +64,7 @@ export default function TopNavBar({user,goal}) {
         </Stack>
         <Stack direction="row" spacing={4} alignItems="center">
 
-          {
+          {/* {
             goal.plan == 'free' ?
           
           <Button
@@ -82,21 +84,8 @@ export default function TopNavBar({user,goal}) {
           </Button>
           :
           null
-          // <Button 
-          // variant="contained"
-          // sx={{
-          //   textTransform: "none",
-          //   backgroundColor: "#187163",
-          //   color: "#fff",
-          //   "&:hover": {
-          //     backgroundColor: "#187163",
-          //     color: "#fff",
-          //   },
-          // }}
-          // >        
-          //    Subscribe
-          // </Button>
-}
+          
+} */}
 
           <PlanChip plan={goal.plan == 'free' ? 'Free' : goal.plan == 'pro' ? 'Pro' : goal.plan == 'standard' ? 'Standard' : null } />
           <Button
@@ -122,7 +111,7 @@ export default function TopNavBar({user,goal}) {
           <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem onClick={handleClose} sx={{display:'flex',gap:'10px'}}>
               <Avatar src={user.avatar} />
-                   {user.name}
+                   {user.changeName}
             </MenuItem>
             
             <MenuItem onClick={handleLogout}>

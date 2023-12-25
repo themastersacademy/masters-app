@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../../util/Footer";
 import useWindowDimensions from "../../../util/useWindowDimensions";
+import Image from "../../../util/Avater";
+import { callProfileUrl } from "../../../util/callImageUrl";
 export default function Success() {
   const navigator = useNavigate();
   const [user, setUser] = useState([]);
@@ -17,7 +19,9 @@ export default function Success() {
 
     fetch("/api/user/getUserDetails")
       .then((res) => res.json())
-      .then((data) => setUser(data));
+      .then(async(data) => {
+        data.avatar = await callProfileUrl(data.avatar)
+        setUser(data)});
   },[]);
 
   const handleSuccess = () => {
@@ -47,8 +51,8 @@ export default function Success() {
           alignItems="center"
         >
           <img
-            style={{ width: width < 650 ? "60%" : "30%" }}
-            src="https://s3-alpha-sig.figma.com/img/073e/0c13/6102dd539abec62af344d8a21089ed37?Expires=1699833600&Signature=qRCTS7~zkpHVgZ8SbqgBxBvuzJuPhnsOkxi19RAvW0OtIdwCbDD4FCSu2zA6JuI2fqZirGu9Hr6PPuKZuyeFKE8PjSLYyXtJxtmeTxABPQ7e4Q13t1-PATYfzw9P~QCv1h-fYf2NwJ9038ZiFNwOSMSuCtik1ABgn44ucyfR3FBpYrMOV07bpDIR04V6AXxKM18z6~CkI1aD5gHeise44nilpoZ5Y-S-99H-m3w1346Pb5bbxAsqGupSRKRHgkmm17RReSV5N9HZrbDknl2Ra2~pkhEBSBOErPoLbWp-gzlkIycPb1N3ot1NXcfRfz5bHZrgdfnTfyLTe7LGGQ8usg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+            style={{ width: width < 650 ? "130px" : "200px" }}
+            src={Image.successImg}
             alt=""
           />
           <p style={{ fontSize: "20px", color: " #187163", fontWeight: "700" }}>

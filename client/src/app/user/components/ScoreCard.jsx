@@ -3,13 +3,7 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import { useNavigate } from "react-router-dom";
-export default function ScoreCard({
-  studentsPerformance, MD
-}) 
-
-{
- 
-
+export default function ScoreCard({ studentsPerformance, MD }) {
   return (
     <Paper
       elevation={MD ? 0 : 2}
@@ -20,36 +14,54 @@ export default function ScoreCard({
         marginTop: "20px",
       }}
     >
-      {MD ? 
-      <h3
-        style={{
-          fontSize: "18px",
-          fontWeight: "400",
-          color: "#656565",
-          marginBottom: "10px",
-        }}
-      >
-        History
-      </h3>
-       :<h3>Scorecard</h3>}
+      {MD ? (
+        <h3
+          style={{
+            fontSize: "18px",
+            fontWeight: "400",
+            color: "#656565",
+            marginBottom: "10px",
+          }}
+        >
+          History
+        </h3>
+      ) : (
+        <h3>Scorecard</h3>
+      )}
       <Stack
         overflow={"scroll"}
-        height= {MD? "100%":"300px"}
+        height={MD ? "100%" : "300px"}
         direction="column"
         gap={2}
         p={0.5}
         marginTop={2}
         className="scrollHide"
       >
-        {studentsPerformance.map((item, index) => (
+        {
+        studentsPerformance.length > 0 ? 
+        studentsPerformance.map((item, index) => (
           <ScoreCardItem key={index} {...studentsPerformance[(studentsPerformance.length-1)-index]} />
-        ))}
+        ))
+        :
+        <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          fontSize:'20px',
+          color:'gray'
+        }}
+      >
+        No Exam History
+      </div>
+      }
       </Stack>
     </Paper>
   );
 }
 
-function ScoreCardItem({ examName , examId, score, totalMarks , date }) {
+function ScoreCardItem({ examName, examId, score, totalMarks, date }) {
   const scorePercentage = (score / totalMarks) * 100;
   const navigator = useNavigate();
   return (
@@ -76,7 +88,7 @@ function ScoreCardItem({ examName , examId, score, totalMarks , date }) {
             sx={{
               height: "10px",
               width: {
-                xs: "100px",                
+                xs: "100px",
                 sm: "300px",
                 md: "200px",
                 ml: "200px",
@@ -126,7 +138,6 @@ function ScoreCardItem({ examName , examId, score, totalMarks , date }) {
             },
             zIndex: "1",
           }}
-       
         >
           View Result
         </Button>
