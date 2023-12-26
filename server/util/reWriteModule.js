@@ -8,11 +8,12 @@ exports.clearAvatarAndHistory =  async (req,res)=>{
     try {
         const user = await User.find()
         if(user){
-            for(let i=0;i<user.length;i++){
+            for(let i=0;i<user.length;i++) {
                 if(user[i].type !== 'institution') user[i].avatar = ''
                 else if(user[i].type == 'institution') user[i].avatar = 'institutionImage'
                 user[i].batchID = []
-                if(user[i].type =='student' && user[i].type =='teacher' ) {
+                if(user[i].type =='student' && user[i].type =='teacher') 
+                {
                      user[i].institutionID = undefined
                 }
                 if(user[i].goal.length > 0){
@@ -25,7 +26,7 @@ exports.clearAvatarAndHistory =  async (req,res)=>{
             }
       const batch = await Batch.find()
       if(batch.length > 0){
-        for(let i=0;i<batch.length;i++){
+        for(let i=0;i<batch.length;i++) {
             batch[i].studentList  = []
             batch[i].scheduleTest = []
             batch[i].save()

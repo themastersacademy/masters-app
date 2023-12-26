@@ -65,7 +65,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
-  State.save();
+   //State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -133,6 +133,8 @@ exports.startExam = async function (req, res) {
             status: "started",
           });
           await examInfo.save();
+          //Exam Save State
+          await State.save();
           req.session.examID = examInfo._id;
           req.session.examName = examInfo.title;
           return res
@@ -296,6 +298,8 @@ exports.startExam = async function (req, res) {
         });
 
         await examInfo.save();
+         //Exam Save State
+         await State.save();
         req.session.examID = examInfo._id;
         req.session.examName = examInfo.title;
         return res
