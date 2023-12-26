@@ -23,7 +23,6 @@ export default function InstitutionCard({
   Notificate,
   instituteDetails
 }) {
- 
 
   const [expanded, setExpanded] = useState(false);
   const [isSubmit, setSubmit] = useState(false);

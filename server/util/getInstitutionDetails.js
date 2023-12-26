@@ -1,7 +1,7 @@
 
 const Batch = require("../models/batch.js");
 const Institution = require("../models/institution.js");
-const {examEndTime} = require('./time.js')
+const {examEndTime,getExamValid} = require('./time.js')
 exports.getInstitutionDetails = async (institutionID, batchs) => {
   try {
     const collectBatch = [];
@@ -12,7 +12,7 @@ exports.getInstitutionDetails = async (institutionID, batchs) => {
 
       for(let i=0 ;i<batch.scheduleTest.length ;i++){
       const isValue = await isValidExamEnd(batch.scheduleTest[i]);
-      if (batch.scheduleTest[i].status == "pending" && isValue) scheduleTest.push({ name: batch.scheduleTest[i].name, examID: batch.scheduleTest[i].examID });
+      if (batch.scheduleTest[i].status == "pending" && !isValue) scheduleTest.push({ name: batch.scheduleTest[i].name, examID: batch.scheduleTest[i].examID });
       }
       collectBatch.push({
         batchName: batch.name,
@@ -31,7 +31,7 @@ exports.getInstitutionDetails = async (institutionID, batchs) => {
 
 const isValidExamEnd = async function (examInfo) {
 
-  const End = examEndTime(examInfo.examDate,examInfo.examEndTime)
+  const End = getExamValid(examInfo.examDate,examInfo.examEndTime)
 
   return End
 

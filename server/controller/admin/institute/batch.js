@@ -2,6 +2,7 @@ const Batch = require("../../../models/batch");
 const institution = require("../../../models/institution");
 const questionBank = require("../../../models/questionBank");
 const User = require("../../../models/user");
+const {getExamValid} = require('../../../util/time')
 const crypto = require("crypto");
 exports.createBatch = async (req, res, next) => {
   const id = req.body.id;
@@ -44,7 +45,7 @@ exports.createBatch = async (req, res, next) => {
 };
 
 exports.getBatechTopic = async (req, res, next) => {
-  console.log(req.body);
+ 
 
   try {
     const batch = await Batch.findOne({ _id: req.body.id });
@@ -112,6 +113,7 @@ exports.getHistory = async (req, res, next) => {
           }
         }
       }
+  
       batch.save()
       
       res.json({ status: "ok", message: batch, history, head: details });
@@ -122,25 +124,31 @@ exports.getHistory = async (req, res, next) => {
 };
 
 const isValidExamEnd = async function (examInfo) {
-  let date = new Date();
-  let indianTime = date.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
+  // console.log('institionsss');
+  // let date = new Date();
+  // let indianTime = date.toLocaleString("en-US", {
+  //   timeZone: "Asia/Kolkata",
+  //   hour12: false,
+  // });
 
-  const currentTime = indianTime;
+  // const currentTime = indianTime;
 
-  let examDate = examInfo.examDate.split("/");
-  examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
+  // let examDate = examInfo.examDate.split("/");
+  // examDate = `${examDate[1]}/${examDate[0]}/${examDate[2]}`;
 
-  let examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
-  examEnd.setHours(examEnd.getHours()+2)
-  examEnd.setMinutes(examEnd.getMinutes()+30)
-  let indianTimeEnd = examEnd.toLocaleString("en-US", {
-    timeZone: "Asia/Kolkata",
-    hour12: false,
-  });
-  return currentTime > indianTimeEnd;
+  // let examEnd = new Date(examDate + " " + `${examInfo.examEndTime}:00`);
+  // examEnd.setHours(examEnd.getHours()+2)
+  // examEnd.setMinutes(examEnd.getMinutes()+30)
+  // let indianTimeEnd = examEnd.toLocaleString("en-US", {
+  //   timeZone: "Asia/Kolkata",
+  //   hour12: false,
+  // });
+  // return currentTime > indianTimeEnd;
+
+  const check = await getExamValid(examInfo.examDate,examInfo.examEndTime)
+
+  return check
+  
 };
 
 exports.getRequestAccess = async (req, res, next) => {

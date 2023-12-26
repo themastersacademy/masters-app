@@ -49,7 +49,7 @@ alignRank(rank);
           });
         }
        
-     res.json({rankList,userID})
+     res.json({rankList,userID,type:examInfo.type})
       }
     } 
     else if (examInfo.type == "schedule") {
@@ -93,9 +93,10 @@ alignRank(rank);
               });
             }
           
-         res.json({rankList,userID})
+         res.json({rankList,userID,type:examInfo.type})
           }
     }
+    else if(examInfo.type =='practice') return res.json({type:examInfo.type})
   } catch (error) {
     throw error
   }

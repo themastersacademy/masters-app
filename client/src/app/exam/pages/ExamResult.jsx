@@ -27,11 +27,16 @@ export default function ExamResult() {
       });
     fetch(`/api/exam/rank/${examID}`)
       .then((res) => res.json())
-      .then((data) => {
+      .then(async(data) => {
+       if(data.type !== 'practice')
+       { for(let i=0;i<data.rankList.length;i++){
+        if(data.rankList[i].avatar !== '')
+          data.rankList[i].avatar = await callProfileUrl(data.rankList[i].avatar)
+        }
         setLeaderBoardList({
           rankList: data.rankList,
           userID: data.userID,
-        });
+        });}
       });
   },[examID]);
 

@@ -8,7 +8,7 @@ const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
 const questionBank = require("../../models/questionBank.js");
 const fs = require("fs");
-const {examEndTime,examStartTime} = require('../../util/time.js')
+const {examEndTime,examStartTime,getExamStartTime,getExamExamEndTime,getExamValid} = require('../../util/time.js')
 exports.getExamInfo = async function (req, res) {
   try {
     
@@ -140,7 +140,7 @@ exports.startExam = async function (req, res) {
             .json({ message: "exam started", status: "success" });
         } else {
           const check = await isValidExamEnd(examInfo);
-          if (!check ) {
+          if (check ) {
             delete req.session.examID;
             const batch = await Batch.findOne({ _id: examInfo.batchID });
             batch.scheduleTest.map((task) => {
@@ -313,7 +313,7 @@ exports.startExam = async function (req, res) {
 
 const isValidExamEnd = async function (examInfo) {
 
-   const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
+   const End = await getExamValid(examInfo.examDate,examInfo.examEndTime)
 
   return  End;
 
@@ -327,8 +327,10 @@ const isValidExamStart = async function (examInfo) {
   const getTime = indianTime.split(",");
   const getDate = getTime[0].split("/");
 
-const Start = await  examStartTime(examInfo.examDate,examInfo.examStartTime) 
- const End = await examEndTime(examInfo.examDate,examInfo.examEndTime)
+// const Start = await  trailTime(examInfo.examDate,examInfo.examStartTime) 
+//  const End = await goalValid(examInfo.examDate,examInfo.examEndTime)
+const Start = await  getExamStartTime(examInfo.examDate,examInfo.examStartTime) 
+const End = await getExamExamEndTime(examInfo.examDate,examInfo.examEndTime)
 
   return (
     examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
@@ -476,11 +478,10 @@ exports.examStateUpdate = async (req, res, next) => {
     studentAnswerList,
     bookmarkedQuestionList,
     currentIndex,
-    windowCloseWarning,
-    windowResizedWarning,
+    // windowCloseWarning,
+    // windowResizedWarning,
   } = req.body;
 
-  
     const User = await user.findOne({ _id: userID });
     const examState = await exam.findOne({ _id: examID });
 
@@ -498,11 +499,15 @@ exports.examStateUpdate = async (req, res, next) => {
           }
         });
         examState.save();
-        res.json({
+       return res.json({
           status: "success",
           message: "Update exam state successfully",
         });
       }
+      return res.json({
+        status: "something went wrong",
+        message: " exam state not Update",
+      });
       // else {
       //   examState.studentsPerformance.map((task) => {
       //     if (User._id.valueOf() == task.id.valueOf()) {
