@@ -26,6 +26,8 @@ export default function Layout() {
   const { width } = useWindowDimensions();
   const [institute, setInstitue] = useState([]);
   const [user, setUser] = useState([]);
+  const [isWaitingPra,setWaitPra] = useState(false)
+  const [isWaitingMock,setWaitMock] = useState(false)
   const [goal, setGoal] = useState([]);
   const [getGoalId, setGoalId] = useState("");
   const [isChange, setChange] = useState(false);
@@ -102,6 +104,7 @@ export default function Layout() {
       });
   };
   const createPracticesExam = (value, selectGoal) => {
+    setWaitPra(true)
     fetch("/api/exam/createPracticesExam", {
       method: "POST",
       headers: {
@@ -114,10 +117,12 @@ export default function Layout() {
         if (data.status == "info") Notifications(data.status, data.message);
         if (data.status == "success") {
           navigator(`/exam/info?=${data.examId}`);
+          setWaitPra(false)
         }
       });
   };
   const createMockExam = (data) => {
+    setWaitMock(true)
     fetch("/api/exam/createMockExam", {
       method: "POST",
       headers: {
@@ -130,6 +135,7 @@ export default function Layout() {
         if (data.status == "info") Notifications(data.status, data.message);
         if (data.status == "success") {
           navigator(`/exam/info?=${data.examId}`);
+          setWaitMock(false)
         }
       });
   };
@@ -213,6 +219,8 @@ export default function Layout() {
           studentsPerformance={studentsPerformance}
           createMockExam={createMockExam}
           instituteDetails={instituteDetails}
+          isWaitingPra={isWaitingPra}
+          isWaitingMock={isWaitingMock}
         />
       ) : (
         <MoView
@@ -234,6 +242,8 @@ export default function Layout() {
           Notificate={Notifications}
           width={width}
           instituteDetails={instituteDetails}
+          isWaitingPra={isWaitingPra}
+          isWaitingMock={isWaitingMock}
         />
       )}
 
@@ -265,6 +275,8 @@ function DTView({
   studentsPerformance,
   analysis,
   instituteDetails,
+  isWaitingPra,
+  isWaitingMock
 }) {
   return (
     <Stack
@@ -312,6 +324,8 @@ function DTView({
                 setSelectGoal={setSelectGoal}
                 Notificate={Notificate}
                 createMockExam={createMockExam}
+                isWaitingPra={isWaitingPra}
+                isWaitingMock={isWaitingMock}
                 createPracticesExam={createPracticesExam}
               />
             )}
@@ -383,6 +397,8 @@ function MoView({
   analysis,
   width,
   instituteDetails,
+  isWaitingPra,
+  isWaitingMock
 }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -456,6 +472,8 @@ function MoView({
             setSelectGoal={setSelectGoal}
             Notificate={Notificate}
             createPracticesExam={createPracticesExam}
+            isWaitingPra={isWaitingPra}
+           
           />
         ) : null}
         <MockTest
@@ -464,6 +482,8 @@ function MoView({
           selectGoal={selectGoal}
           setSelectGoal={setSelectGoal}
           createMockExam={createMockExam}
+    
+          isWaitingMock={isWaitingMock}
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>

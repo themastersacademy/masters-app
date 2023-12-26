@@ -113,7 +113,7 @@ const DtView = ({ leaderBoardList, examResult, examID, user }) => {
 const MobileView = ({ leaderBoardList, examResult, examID, user }) => {
   return (
     <Stack direction="column" spacing={2}>
-      <ExamHeader isMobileView={true} user={user} />
+      <ExamHeader isMobileView={true} user={user} type={examResult.type} />
       <ExamResultAction examID={examID} />
       <Paper
         sx={{

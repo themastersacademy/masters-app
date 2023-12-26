@@ -10,7 +10,7 @@ import {
   Select,
   Button,
 } from "@mui/material";
-
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useEffect, useState } from "react";
 import PracticeGroup from './practiceGroup'
 export default function PracticeTest({
@@ -19,6 +19,7 @@ export default function PracticeTest({
   setSelectGoal,
   Notificate,
   createPracticesExam,
+  isWaitingPra
 }) {
   const [isSelect, setSelect] = useState(false);
   const [questionCount, setQuestionCount] = useState([]);
@@ -320,9 +321,13 @@ export default function PracticeTest({
           </Select>
         </FormControl>
       </Stack>
+     { isWaitingPra  ? 
+      <LoadingButton loading   sx={{ width:'100%',height:'40px' ,backgroundColor:"#187163", "& .MuiCircularProgress-root": { color: "white", } }} />
+      :
       <Button
         variant="contained"
         fullWidth
+        onLoad
         sx={{
           textTransform: "none",
           backgroundColor: "#187163",
@@ -336,7 +341,7 @@ export default function PracticeTest({
         onClick={handleAttempt}
       >
         Attempt Test
-      </Button>
+      </Button>}
     </Paper>
   );
 }

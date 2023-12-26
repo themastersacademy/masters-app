@@ -1,6 +1,6 @@
 import { Paper, Stack, Button } from "@mui/material";
-
-export default function MockTest({ MD,selectGoal,createMockExam }) {
+import LoadingButton from '@mui/lab/LoadingButton';
+export default function MockTest({ MD,selectGoal,createMockExam, isWaitingMock} ) {
 
    
   const handleStartMock = () =>{
@@ -101,6 +101,9 @@ export default function MockTest({ MD,selectGoal,createMockExam }) {
           </div>
         </div>
       </Stack>
+      {
+        isWaitingMock ? <LoadingButton loading   sx={{ width:'100%',height:'40px' ,backgroundColor:"#187163", "& .MuiCircularProgress-root": { color: "white", } }} />
+     :
       <Button
         variant="contained"
         fullWidth
@@ -118,6 +121,7 @@ export default function MockTest({ MD,selectGoal,createMockExam }) {
       >
         Start Mock
       </Button>
+       }
     </Paper>
   );
 }

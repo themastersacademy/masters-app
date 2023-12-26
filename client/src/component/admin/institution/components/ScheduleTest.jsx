@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import AddTopic from "./AddTopic";
 import dayjs from "dayjs";
 import "../../../../App.css";
+import LoadingButton from "@mui/lab/LoadingButton";
 export default function ScheduleTest({
   setQuestion,
   question,
@@ -21,11 +22,11 @@ export default function ScheduleTest({
   isChange,
   Notificate,
   isCall,
-  setCall
+  setCall,
 }) {
-
   const [task, setTask] = useState([]);
   const { search } = useLocation();
+  const [isWaitCreShedule, setWaitCreShedule] = useState(false);
   const id = search.split("=")[1];
   const getBank = () => {
     fetch("/api/admin/getBatechTopic", {
@@ -37,13 +38,11 @@ export default function ScheduleTest({
     })
       .then((res) => res.json())
       .then((data) => {
-        
         if (data.status == "success") {
           const check = [];
           const send = [];
           if (question.batchQues == 0) setTask(data.message);
           else {
-           
             question.batchQues.map((task) => check.push(task._id.valueOf()));
             data.message.map((task) => {
               if (check.indexOf(task._id.valueOf()) == -1) send.push(task);
@@ -57,8 +56,7 @@ export default function ScheduleTest({
   const saveChangeBatch = () => {
     const check = [];
     if (question.batchQues !== undefined) {
-      if( details.setNegativeMark !== "" ){
-    
+      if (details.setNegativeMark !== "") {
         if (details.setExamTitle !== "") {
           question.batchQues.map((task) => {
             if (
@@ -77,22 +75,27 @@ export default function ScheduleTest({
             else if (check.length !== 0)
               Notificate("info", "Please fill the level");
             else {
-              
+              setWaitCreShedule(true);
               fetch("/api/admin/createScheduleExam", {
                 method: "POST",
                 headers: {
                   "Content-type": "application/json",
                 },
-                body: JSON.stringify({ type:'schedule',id: id, data:question.batchQues,details:details}),
+                body: JSON.stringify({
+                  type: "schedule",
+                  id: id,
+                  data: question.batchQues,
+                  details: details,
+                }),
               })
                 .then((res) => res.json())
                 .then((data) => {
-                  if (data.status == "success"){
-                    setCall(!isCall)
+                  if (data.status == "success") {
+                    setCall(!isCall);
                     setQuestion({
                       avalibleQues: [],
                       batchQues: [],
-                    })
+                    });
                     setDetails({
                       setDate: new Date(),
                       setTimeFrom: "0:0",
@@ -101,23 +104,19 @@ export default function ScheduleTest({
                       setNegativeMark: "0",
                       setExamTitle: "",
                       examDuration: "0",
-                    
-                    })
+                    });
+                    setWaitCreShedule(false);
                     Notificate(data.status, data.message);
                   }
                 });
             }
           } else Notificate("info", "Please check from time and to time");
         } else Notificate("info", "Please type exam title");
-    
-    }
-    else Notificate("info", "Please enter negative mark duration");
+      } else Notificate("info", "Please enter negative mark duration");
     }
   };
 
   const createBank = (data) => {
-  
-
     setQuestion((preValue) => {
       const getValue = { ...preValue };
       const avalibleQues = getValue.avalibleQues;
@@ -135,36 +134,45 @@ export default function ScheduleTest({
       return getValue;
     });
     getBank();
-
   };
-
-
 
   useEffect(() => {
     getBank();
   }, [isChange]);
 
   return (
-    <div className="scrollHide" style={{overflow:'scroll', height:'70vh' }} >
+    <div className="scrollHide" style={{ overflow: "scroll", height: "70vh" }}>
       <Stack direction="row" sx={{ marginTop: "10px" }}>
-        <Button
-          sx={{
-            width: "100px",
-            height: "30px",
-            fontSize: "14px",
-            background: "#187163",
-            color: "white",
-            marginLeft: "auto",
-            transformText: "lowercase",
-            "&:hover": {
-              backgroundColor: "#185C52",
-            },
-            
-          }}
-          onClick={saveChangeBatch}
-        >
-          Save
-        </Button>
+        {isWaitCreShedule ? (
+          <LoadingButton
+            loading
+            sx={{
+              width: "100px",
+              height: "30px",
+              marginLeft: "auto",
+              backgroundColor: "#187163",
+              "& .MuiCircularProgress-root": { color: "white" },
+            }}
+          />
+        ) : (
+          <Button
+            sx={{
+              width: "100px",
+              height: "30px",
+              fontSize: "14px",
+              background: "#187163",
+              color: "white",
+              marginLeft: "auto",
+              transformText: "lowercase",
+              "&:hover": {
+                backgroundColor: "#185C52",
+              },
+            }}
+            onClick={saveChangeBatch}
+          >
+            Save
+          </Button>
+        )}
       </Stack>
       {details.setMark !== undefined ? (
         <SetDetailsExam setDetails={setDetails} details={details} />
@@ -217,14 +225,10 @@ export default function ScheduleTest({
 }
 
 const SetDetailsExam = ({ setDetails, details }) => {
-  const from  = dayjs(`2022-04-17T${details.setTimeFrom}`)
-  const to = dayjs(`2022-04-17T${details.setTimeTo}`)
-  const date  = new Date()
+  const from = dayjs(`2022-04-17T${details.setTimeFrom}`);
+  const to = dayjs(`2022-04-17T${details.setTimeTo}`);
+  const date = new Date();
   const handleChange = (e) => {
-   
-    
-  
-    
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setDate = e.$d;
@@ -232,30 +236,25 @@ const SetDetailsExam = ({ setDetails, details }) => {
     });
   };
 
-
   const handleFromTimeChange = (e) => {
     const date = new Date(e.$d);
- 
+
     var setTimeFrom = date.getHours() + ":" + date.getMinutes();
-   
+
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setTimeFrom = setTimeFrom;
-     
+
       return getValue;
     });
-    
-  
-  
-  const getTime = diff(setTimeFrom,details.setTimeTo)
-  setDetails((preValue) => {
-    const getValue = { ...preValue };
-    getValue.examDuration = getTime
-    return getValue;
-  });
- 
-  };
 
+    const getTime = diff(setTimeFrom, details.setTimeTo);
+    setDetails((preValue) => {
+      const getValue = { ...preValue };
+      getValue.examDuration = getTime;
+      return getValue;
+    });
+  };
 
   function diff(start, end) {
     start = start.split(":");
@@ -268,30 +267,34 @@ const SetDetailsExam = ({ setDetails, details }) => {
     var minutes = Math.floor(diff / 1000 / 60);
 
     // If using time pickers with 24 hours format, add the below line get exact hours
-    if (hours < 0)
-       hours = hours + 24;
+    if (hours < 0) hours = hours + 24;
 
-    return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
-}
+    return (
+      (hours <= 9 ? "0" : "") +
+      hours +
+      ":" +
+      (minutes <= 9 ? "0" : "") +
+      minutes
+    );
+  }
 
   const handleToTimeChange = (e) => {
     const date = new Date(e.$d);
-    
+
     var setTimeTo = date.getHours() + ":" + date.getMinutes();
 
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setTimeTo = setTimeTo;
-     
+
       return getValue;
     });
-    const getTime = diff(details.setTimeFrom,setTimeTo)
+    const getTime = diff(details.setTimeFrom, setTimeTo);
     setDetails((preValue) => {
       const getValue = { ...preValue };
-      getValue.examDuration = getTime
+      getValue.examDuration = getTime;
       return getValue;
     });
-    
   };
 
   const handleMark = (e) => {
@@ -303,7 +306,6 @@ const SetDetailsExam = ({ setDetails, details }) => {
       });
   };
   const handleNegative = (e) => {
-   
     if (e.target.value >= 0)
       setDetails((preValue) => {
         const getValue = { ...preValue };
@@ -451,11 +453,10 @@ const SetDetailsExam = ({ setDetails, details }) => {
           />
 
           <TextField
-            type='text'
+            type="text"
             disabled
             value={details.examDuration}
             sx={{
-            
               background: "#FFF",
               "&:hover fieldset": {
                 border: "1px solid #187163!important",

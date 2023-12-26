@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import PasswordChecklist from "react-password-checklist"
 import useWindowDimensions from '../../../util/useWindowDimensions';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -17,11 +17,12 @@ function FirstPage({controlNotification}) {
   const { width } = useWindowDimensions();
   const [passValidation,setpassValidation] = useState(false)
   const [getDetails,setDetails] = useState({email:'',password:''})
+  const [isWaitCreate,setWaitCreate] = useState(false)
     const navigator = useNavigate()
     const signup = () =>{
       if(getDetails.email !== '' && getDetails.password !== '' && passValidation == true){ 
       if (validator.isEmail(getDetails.email)) {
-     
+        setWaitCreate(true)
       fetch('/api/user/create',{
         method:"POST",
         headers:{
@@ -32,7 +33,10 @@ function FirstPage({controlNotification}) {
       .then(res => res.json())
       .then((data) => {
         controlNotification(data.status,data.message)
-        if(data.status == 'success') navigator('/login/verify')
+        if(data.status == 'success') {
+          navigator('/login/verify')
+          setWaitCreate(false)
+      }
       })
 
     }     
@@ -151,6 +155,9 @@ const handleMouseDownPassword = (event) => {
 			/>
         
                   </Stack>
+                  {
+                    isWaitCreate ?  <LoadingButton loading   sx={{ width:'100%',height:'40px' ,backgroundColor:"#187163", "& .MuiCircularProgress-root": { color: "white", } }} />
+                  :
                   <Button
                     style={{
                       borderRadius: "4px",
@@ -162,6 +169,7 @@ const handleMouseDownPassword = (event) => {
                   >
                     Sign up
                   </Button>
+}
                 </Stack>
               </Paper>
   

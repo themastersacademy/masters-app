@@ -96,7 +96,7 @@ const options = {
         direction="column"
         alignItems="center"
         sx={{
-          maxHeight: MD ? "300px" : "500px",
+          maxHeight: MD ? "300px" : "400px",
         }}
       >
         {/* <Radar data={data} /> */}

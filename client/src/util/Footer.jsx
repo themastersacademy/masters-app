@@ -40,7 +40,7 @@ export default function Footer() {
             href="https://themastersacademy.in/Contact.html"
             style={{ ...style.footer }}
           >
-            Contect Us
+            Contact Us
           </a>
           <p style={{ ...style.footer }}>
             {" "}
@@ -104,7 +104,7 @@ export default function Footer() {
             href="https://themastersacademy.in/Contact.html"
             style={{ ...style.footer }}
           >
-            Contect Us
+            Contact Us
           </a>
         </div>
         <p style={style.footer}>
