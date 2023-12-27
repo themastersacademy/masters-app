@@ -36,10 +36,10 @@ exports.changeRoll = async (req, res, next) => {
       avatar:req.body.list.avatar,
     });
    
-    institution.save();
+    await institution.save();
     user.avatar = req.body.list.avatar
     user.institutionID = institution._id;
-    user.save();
+    await user.save();
 
     res.json({ status: "success", message: "Change details successfully" });
   } else res.json({ status: "error", message: "something wrong" });

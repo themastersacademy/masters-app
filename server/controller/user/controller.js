@@ -182,7 +182,7 @@ exports.checkOtp = async (req, res, next) => {
         password: req.session.password,
       });
       req.session.userID = createAccount._id;
-      createAccount.save();
+      await createAccount.save();
       res.json({ status: "success", change : 'create' , message: "Account create successfully" });
     } else {
       if(req.session.wrongCountOtp == undefined) req.session.wrongCountOtp = 1
@@ -204,7 +204,7 @@ exports.checkOtp = async (req, res, next) => {
      
       if (user) { 
          user.password = req.session.changePassword   
-         user.save()
+         await user.save()
 
         res.json({
           change:'edit',
@@ -240,7 +240,7 @@ exports.createDetails = async (req, res, next) => {
     user.phoneNumber = req.body.phone;
     user.gender = req.body.gender;
     user.avatar = req.body.avatar;
-    user.save();
+    await user.save();
     if(req.session.checkPage == 'userDetails') req.session.checkPage  = undefined
     if(user.goal.length == 0) return res.json({ status: "success" , change:'create', message: "Save the details successfully" });
     else res.json({ status: "success", change:'edit', message: "Save the details successfully" });
@@ -275,11 +275,11 @@ exports.chooseGoal = async (req, res, next) => {
         topics: collectTopic,
       });
 
-      createGoal.save();
+       createGoal.save();
       user.goal.push(createGoal._id);
     });
 
-    user.save();
+    await user.save();
 
     res.json({ status: "success", message: "Save the details successfully" });
   } else res.json({ status: "error", message: "Something wrong" });
@@ -315,7 +315,7 @@ exports.request = async (req, res, next) => {
               rollNumber: rollNumber,
               dept: Dept,
             });
-            batch.save();
+            await batch.save();
             res.json({
               status: "success",
               message: "institute join request successfully",
@@ -514,7 +514,7 @@ exports.getUserData = async (req, res, next) => {
           req.session.Plan = get[0]._id
       }
 
-      getUserGoal[0].save();
+      await getUserGoal[0].save();
       res.json({
         status: "ok",
         message: user,
@@ -553,11 +553,16 @@ exports.getGoal = async (req, res, next) => {
         (task) => goalID.indexOf(task._id.valueOf()) == -1
       );
       goalID = [];
-      getGoal.map((task) => {
-        if (task.status == "publish")
-          goalID.push({ label: task.title, id: task._id });
-      });
-      res.json({ status: "ok", message: goalID });
+      // getGoal.map((task) => {
+      //   if (task.status == "publish")
+      //     goalID.push({ label: task.title, id: task._id });
+      // });
+  for(let i=0;i<getGoal.length;i++){
+    if (getGoal[i].status == "publish")
+     {     await goalID.push({ label: getGoal[i].title, id:getGoal[i]._id });
+    }
+  }
+     return res.json({ status: "ok", message: goalID });
     }
   } catch (error) {
     throw error
@@ -598,10 +603,10 @@ exports.addGoal = async (req, res, next) => {
           topics: collectTopic,
         });
       
-         createGoal.save();
+        await createGoal.save();
         user.goal.push(createGoal._id);
       });
-      user.save();
+      await user.save();
       res.json({ status: "success", message: "Add goal successfully" });
     }
   } catch (error) {

@@ -31,7 +31,7 @@ exports.PaymentStatus = async (req) => {
         state:user.state,
         planMonth:req.session.planMonth,
       });
-      payment.save();
+      await payment.save();
       req.session.paymentID = payment._id;
       return payment._id
     }

@@ -20,7 +20,7 @@ exports.deleteCourseCollection = async (req, res, next) => {
       Delete.collections = [];
       get.map((task) => Delete.collections.push(task));
       get2.map((task) => Delete.collections.push(task));
-      Delete.save();
+      await Delete.save();
 
       res.json({
         status: "success",
@@ -29,7 +29,7 @@ exports.deleteCourseCollection = async (req, res, next) => {
     } else {
       Delete.collections = [];
       get2.map((task) => Delete.collections.push(task));
-      Delete.save();
+      await Delete.save();
       res.json({ status: "success", message: "Topic deleted successfully" });
     }
   }
@@ -44,7 +44,7 @@ exports.deleteGroupCourseCollection = async (req,res,next) =>{
   const get = Delete.collections.filter(task => task.title !== req.body.title)
   Delete.collections=[]
   Delete.collections=get
-  Delete.save()
+  await Delete.save()
   res.json({ status: "success", message: "Deleted Group successfully" });
   }
   else{

@@ -153,7 +153,7 @@ exports.startExam = async function (req, res) {
                 task.status = "complete";
               }
             });
-            batch.save();
+            await batch.save();
             examState
               .deleteOne({ examID, userID })
               .then(function () {
@@ -205,11 +205,11 @@ exports.startExam = async function (req, res) {
       });
       if(examInfo.type === "practice" && goal.plan == 'free')
  {     goal.practicesCount = goal.practicesCount == undefined ? 1 : goal.practicesCount+1
-      goal.save()
+  await goal.save()
     }
     if( examInfo.type === "mock" && goal.plan == 'free')
     {     goal.mockCount = goal.mockCount == undefined ? 1 : goal.mockCount+1
-         goal.save()
+      await  goal.save()
        }
       let time = DateTime.local().setZone("Asia/Kolkata").toFormat("HH:mm:ss");
       const getSecond = DateTime.now().setZone("Asia/Kolkata");
@@ -401,7 +401,7 @@ exports.getExamState = async function (req, res) {
         (task) => task.id.valueOf() == User._id.valueOf()
       );
 
-      getExam.save();
+      await getExam.save();
 
       if (studentPerform.length > 0)
         if (studentPerform[0].status == "started") {
@@ -502,7 +502,7 @@ exports.examStateUpdate = async (req, res, next) => {
             // task.status = status;
           }
         });
-        examState.save();
+       await examState.save();
        return res.json({
           status: "success",
           message: "Update exam state successfully",
@@ -696,7 +696,7 @@ exports.submitExam = async (req, res, next) => {
               let mark = get[0].mark - get[0].negativeMark;
               if (mark < 0) mark = 0;
               rank.mark = mark;
-              rank.save();
+              await rank.save();
             } else {
               let mark = get[0].mark - get[0].negativeMark;
               if (mark < 0) mark = 0;
@@ -707,11 +707,11 @@ exports.submitExam = async (req, res, next) => {
                 type: "mock",
                 mark,
               });
-              rank.save();
+              await rank.save();
             }
 
-            goal.save();
-            examInfo.save();
+            await goal.save();
+            await examInfo.save();
 
             // delete Exam State
 
@@ -839,7 +839,7 @@ exports.submitExam = async (req, res, next) => {
             let mark = get[0].mark - get[0].negativeMark;
             if (mark < 0) mark = 0;
             rank.mark = mark;
-            rank.save();
+            await rank.save();
           } else {
             let mark = get[0].mark - get[0].negativeMark;
             if (mark < 0) mark = 0;
@@ -850,9 +850,9 @@ exports.submitExam = async (req, res, next) => {
               type: "schedule",
               mark,
             });
-            rank.save();
+            await rank.save();
           }
-          examInfo.save();
+          await examInfo.save();
 
           // institute
 

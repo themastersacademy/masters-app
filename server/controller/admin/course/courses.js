@@ -21,7 +21,7 @@ exports.getCourseDetails = async (req, res, next) => {
     task.title = bank[check.indexOf(task.id.valueOf())].title
    }
   }))
-  get.save()
+ await get.save()
   if (get) res.json({ status: "ok", message: get });
   else {
     res.json({ status: "not found", message: "something wrong" });
@@ -105,7 +105,7 @@ exports.editGroupNameCourseCollection = async (req, res, next) => {
       }
     });
 
-    editName.save();
+   await editName.save();
     res.json({ status: "success", message: "Edit  group name successfully" });
   }
 };
@@ -120,7 +120,7 @@ exports.publishCourse = async (req, res, next) => {
     ) {
       if (publish.mockUpdate == true) {
         publish.status = "publish";
-        publish.save();
+        await publish.save();
         res.json({
           status: "success",
           message: `Published  successfully ${publish._id}`,
@@ -148,7 +148,7 @@ exports.checkPublish = async (req, res, next) => {
       publish.lowPercentage = [0,0]
       publish.highPercentage = [0,0]
       publish.mediumPercentage = [0,0]
-      publish.save();
+      await publish.save();
     }
   }
 };
@@ -157,7 +157,7 @@ exports.callDraft = async (req,res,next) =>{
   const Draft = await Course.findOne({ _id: req.body.id });
 if(Draft){
   Draft.status = 'draft'
-  Draft.save()
+  await Draft.save()
   res.json({ status: "success", message: "Course change Draft " });
 }
 else{

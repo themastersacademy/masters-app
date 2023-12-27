@@ -9,7 +9,7 @@ exports.deleteBatchTopic = async(req,res,next) =>{
            
           
             batch.scheduleTest = get
-            batch.save()
+            await batch.save()
             res.json({status:'success',message:'Topic delete successfully'})
         }
     } catch (error) {

@@ -15,7 +15,7 @@ exports.EditQuestions = async (body) => {
     check.QuesbankID = body.questionBankId;
     check.updatedAt = new Date()
 
-    check.save();
+    await check.save();
 
     return { status: "success", message: "Question updated successfully ID : " + check._id };
   } else {

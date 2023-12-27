@@ -58,7 +58,7 @@ exports.getGoalAnalysis = async (courseID, userID) => {
         topicAnalysis,
       },
     });
-    getUserGoal.save();
+    await getUserGoal.save();
     return studentsPerformance;
   } catch (error) {
     throw error
@@ -81,7 +81,7 @@ exports.checkIsValid = async (req, res) => {
             goal[i].plan = "free";
             goal[i].practicesCount = 0;
             goal[i].mockCount = 0;
-            goal[i].save();
+            await goal[i].save();
           }
     
         }

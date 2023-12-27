@@ -8,7 +8,7 @@ exports.createCourse = async (req, res, next) => {
       title: req.body.title,
     });
     if (create) {
-      create.save();
+      await create.save();
 
       res.json({
         status: "success",
@@ -36,7 +36,7 @@ exports.createCourseTopic = async (req, res, next) => {
         },
       ],
     });
-    edit.save();
+    await edit.save();
    
 
     res.json({
@@ -55,7 +55,7 @@ exports.createCourseGroup = async (req, res, next) => {
       topicID,
       title: req.body.groupName,
     });
-    edit.save();
+    await edit.save();
 
     res.json({
       status: "success",
@@ -77,7 +77,7 @@ exports.createGroupTopic = async (req, res, next) => {
         });
       }
     });
-    edit.save();
+    await edit.save();
     res.json({
       status: "success",
       message: `Group topic create successfully  ${edit._id} `,
@@ -92,7 +92,7 @@ exports.createCourseMock = async (req, res, next) => {
     create.collections = [];
     create.collections = req.body.course;
     create.mockUpdate = true;
-    create.save();
+    await create.save();
     res.json({
       status: "success",
       message: `Create mock test successfully  ${create._id}`,
@@ -115,7 +115,7 @@ exports.createCourseDuration = async (req, res, next) => {
     create.mediumPercentage = req.body.course.mediumPercentage;
     create.highPercentage = req.body.course.highPercentage;
     create.Payment = req.body.course.Payment
-    create.save();
+    await create.save();
     res.json({
       status: "success",
       message: `Create test setting successfully  ${create._id} `,

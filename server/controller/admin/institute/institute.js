@@ -66,11 +66,11 @@ exports.createTeacher = async (req, res, next) => {
             avatar: user.avatar,
             id: user._id,
           });
-          institute.save();
+          await institute.save();
           user.institutionID = institute._id;
           user.type = "teacher";
           user.batchID = []
-          user.save();
+          await user.save();
 
           // Delete session
           const getSession = await sessions.find()
@@ -127,8 +127,8 @@ exports.addTeacherBatch = async (req, res, next) => {
       });
       if (check.length !== 0) {
         user.batchID.push(teacherName.batchID);
-        institute.save();
-        user.save();
+        await institute.save();
+        await user.save();
         res.json({ status: "success", message: "Add batch successfully" });
       } else if (check.length == 0)
         res.json({ status: "already", message: "batch already exists" });
@@ -153,14 +153,14 @@ exports.editTeacherAction = async (req, res, next) => {
         task.batchList = get;
       });
 
-      institute.save();
+      await institute.save();
       const get = user.batchID.filter(
         (task) => task.valueOf() !== removeBatch.batchID.valueOf()
       );
      
 
       user.batchID = get;
-      user.save();
+      await user.save();
      
       res.json({ status: "success", message: "Remove batch successfully" });
     } else res.json({ status: "error", message: "Something wrong" });
@@ -185,7 +185,7 @@ exports.removeTeacher = async (req, res, next) => {
         (task) => task.id.valueOf() !== data.id.valueOf()
       );
       institute.teacherList = get;
-      institute.save();
+      await institute.save();
       const getUserID = user.batchID.filter(
         (task) => collectBatch.indexOf(task.valueOf()) == -1
       );
@@ -207,7 +207,7 @@ exports.removeTeacher = async (req, res, next) => {
       user.batchID=[]
       user.type = 'student'
       user.institutionID = undefined
-      user.save();
+      await user.save();
  
       res.json({status:'success',message:'Remove teacher successfully'})
     }

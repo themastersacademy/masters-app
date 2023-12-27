@@ -71,7 +71,7 @@ exports.deleteQues = async (req,res,next) =>{
     if(req.body.level == 'Easy') count.level.easy = count.level.easy-1
     if(req.body.level == 'Medium') count.level.medium = count.level.medium-1
     if(req.body.level == 'Hard') count.level.hard = count.level.hard-1
-    count.save()
+    await count.save()
     res.json({status:'success',message:'Question Deleted Successfully ID : '+req.body.id})
   }
   else{

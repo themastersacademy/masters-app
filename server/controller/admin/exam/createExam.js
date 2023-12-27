@@ -151,7 +151,7 @@ exports.createScheduleExam = async (req, res, next) => {
         questionCategory: questionCategory,
       });
       
-      exam.save();
+      await exam.save();
 
       batch.scheduleTest.push({
         examDate:`${date}/${month}/${year}`,
@@ -160,7 +160,7 @@ exports.createScheduleExam = async (req, res, next) => {
         examEndTime: details.setTimeTo,
         examStartTime: details.setTimeFrom,
       });
-      batch.save();
+      await batch.save();
       res.json({
         status: "success",
         message: "Create schedule text successfully",
@@ -381,7 +381,7 @@ exports.createPracticesExam = async (req, res, next) => {
           negativeMark: course.negativeMark,
         });
 
-        createExam.save();
+        await createExam.save();
         res.json({
           status: "success",
           message: "Create practice exam successfully",
@@ -530,7 +530,7 @@ exports.createMockExam = async (req, res, next) => {
           mark: course.mark,
           negativeMark: course.negativeMark,
         });
-        createExam.save();
+        await createExam.save();
         res.json({
           status: "success",
           message: "Create practice exam successfully",

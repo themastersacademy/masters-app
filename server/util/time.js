@@ -245,15 +245,13 @@ exports.getExamExamEndTime = (date, time) => {
     const month = indianTime.split(",")[0].split("/");
     const time1 = indianTime.split(",")[1].split(":");
 
-   
-
     function hoursAndMinutesToMilliseconds(hours, minutes) {
+
       var millisecondsInAnHour = 60 * 60 * 1000;
       var millisecondsInAMinute = 60 * 1000;
-    
       var totalMilliseconds = hours * millisecondsInAnHour + minutes * millisecondsInAMinute;
-      
       return totalMilliseconds;
+
     }
     
     const examHours = hoursAndMinutesToMilliseconds(getTime[0],getTime[1]);

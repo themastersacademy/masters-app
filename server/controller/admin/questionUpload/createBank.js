@@ -8,7 +8,7 @@ exports.createBank = async (body) => {
       title: body.title,
     });
     if (create) {
-      create.save();
+      await create.save();
       return {
         status: "success",
         message: "Question bank created successfully ID : " + create._id,
@@ -40,7 +40,7 @@ exports.createCollection = async (body) => {
       QuesbankID: body.questionBankId,
     });
 
-    check.save();
+    await check.save();
 
     const count = await questionBank.findOne({ _id: body.questionBankId})
       
@@ -48,7 +48,7 @@ exports.createCollection = async (body) => {
     if(body.level == 'Easy') count.level.easy = 1+count.level.easy
     if(body.level == 'Medium') count.level.medium = 1+count.level.medium
     if(body.level == 'Hard') count.level.hard = 1+count.level.hard
-    count.save()
+    await count.save()
 
     return {
       status: "success",

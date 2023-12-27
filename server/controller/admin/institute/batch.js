@@ -22,11 +22,11 @@ exports.createBatch = async (req, res, next) => {
           batchCode: `#${batchCode}`,
         });
         if (createBatch) {
-          createBatch.save();
+          await createBatch.save();
           institute.batch.push({ name: batchName, batchID: createBatch._id });
           institute.updatedAt = Date();
           try {
-            institute.save();
+            await institute.save();
           } catch (error) {
             throw error
           }
@@ -114,7 +114,7 @@ exports.getHistory = async (req, res, next) => {
         }
       }
   
-      batch.save()
+      await batch.save()
       
       res.json({ status: "ok", message: batch, history, head: details });
     }
@@ -162,10 +162,10 @@ exports.getRequestAccess = async (req, res, next) => {
         batch.studentList.map((task) => {
           if (task.userID == data.userID) task.request = true;
         });
-        batch.save();
+        await batch.save();
         user.batchID.push(batch._id);
         user.institutionID = batch.institutionID;
-        user.save();
+        await user.save();
 
         res.json({
           status: "success",
@@ -176,7 +176,7 @@ exports.getRequestAccess = async (req, res, next) => {
           (task) => task.userID.valueOf() !== data.userID.valueOf()
         );
         batch.studentList = get;
-        batch.save();
+        await batch.save();
         res.json({ status: "success", message: "Cancle request successfully" });
       } else if (status == "remove") {
         const get = batch.studentList.filter(
@@ -184,7 +184,7 @@ exports.getRequestAccess = async (req, res, next) => {
         );
 
         batch.studentList = get;
-        batch.save();
+        await  batch.save();
         const getBatchID = user.batchID.filter(
           (task) => task.valueOf() !== batch._id.valueOf()
         );
@@ -192,7 +192,7 @@ exports.getRequestAccess = async (req, res, next) => {
         // user.institutionID = ""
         user.institutionID = undefined;
 
-        user.save();
+        await user.save();
         res.json({
           status: "success",
           message: "Remaove student successfully",

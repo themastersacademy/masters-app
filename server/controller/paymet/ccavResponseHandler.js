@@ -30,7 +30,7 @@ exports.postRes = async function (request, response) {
       return response.redirect('/success')
     } else {
       payment.status = 'failed'
-      payment.save()
+      await payment.save()
      return response.redirect('/failure')
     }
   });
@@ -56,7 +56,7 @@ const updatePlan = async (data,orderID) =>{
         payment.validDate = month
         payment.validTime = time
         payment.status = 'success'
-        payment.save()
+        await payment.save()
        // invoiceEmail(user.email,payment)
        goal.plan = 'pro'
        goal.planValidDate = month

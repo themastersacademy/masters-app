@@ -120,7 +120,7 @@ if(user){
       user.city = city
       user.state = state
       user.pincode = pincode
-      user.save()
+      await user.save()
       return res.json({status:'success',message:'your address created successfully'})
     }
   } catch (error) {
