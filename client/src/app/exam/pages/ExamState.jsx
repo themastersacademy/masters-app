@@ -110,9 +110,9 @@ export default function ExamState() {
     }
   }, [examInfo]);
   useEffect(() => {
-    
+
     // if (isTimeOver) {
- 
+      
     if (studentAnswers.length !== 0) {
       fetch("/api/exam/stateUpdate", {
         method: "POST",
@@ -128,7 +128,7 @@ export default function ExamState() {
         .then((res) => res.json())
         .then((data) => {})
     }
-  }, [studentAnswers, isBookmarked, currentQuestionIndex]);
+  }, [studentAnswers, isBookmarked]);
 
   useEffect(() => {
     if (isTimeOver) {

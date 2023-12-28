@@ -50,7 +50,7 @@ useEffect(()=>{
       :
       <Button
       variant="contained"
-      onClick={ handleNextQuestion}
+      onClick={handleNextQuestion}
       sx={{
         textTransform: "none",
         backgroundColor: "#187163",
