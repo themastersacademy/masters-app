@@ -1,42 +1,47 @@
 const ExcelJS = require("exceljs");
 const Batch = require("../../../models/batch.js");
+const { unSubmit } = require("../../../util/unSubmittedExam.js");
 exports.downloadList = async (req, res) => {
   try {
     const { batchid, examid } = req.headers;
-    const batch = await Batch.findOne({ _id: batchid });
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Sheet 1");
-   
-    const list = batch.scheduleTest.filter(
-      (task) => task.examID.valueOf() == examid.valueOf()
-    );
 
-    worksheet.columns = [
-      { header: "Name", key: "name", width: 50 },
-      { header: "Roll Number", key: "roll", width: 20 },
-      { header: "Department", key: "dept", width: 10 },
-      { header: "Email", key: "email", width: 50 },
-      { header: "Mark", key: "mark", width: 10 },
-    ];
+    await unSubmit(examid);
+    // if (callSubmit) {
+      const batch = await Batch.findOne({ _id: batchid });
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Sheet 1");
 
-    list[0].studentPerformance.map((task, index) => {
-      worksheet.addRow({ 
-        name: task.name,
-        roll: task.rollNumber,
-        dept: task.dept,
-        email: task.email,
-        mark: task.mark,
+      const list = batch.scheduleTest.filter(
+        (task) => task.examID.valueOf() == examid.valueOf()
+      );
+
+      worksheet.columns = [
+        { header: "Name", key: "name", width: 50 },
+        { header: "Roll Number", key: "roll", width: 20 },
+        { header: "Department", key: "dept", width: 10 },
+        { header: "Email", key: "email", width: 50 },
+        { header: "Mark", key: "mark", width: 10 },
+      ];
+
+      list[0].studentPerformance.map((task, index) => {
+        worksheet.addRow({
+          name: task.name,
+          roll: task.rollNumber,
+          dept: task.dept,
+          email: task.email,
+          mark: task.mark,
+        });
       });
-    });
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader("Content-Disposition", 'attachment; filename=example.xlsx');
-    res.setHeader("filename",`${list[0].name}.xlsx`);
-    workbook.xlsx.write(res).then(function () {
-      res.end();
-    });
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader("Content-Disposition", "attachment; filename=example.xlsx");
+      res.setHeader("filename", `${list[0].name}.xlsx`);
+      workbook.xlsx.write(res).then(function () {
+        res.end();
+      });
+    
   } catch (error) {
     throw error;
   }

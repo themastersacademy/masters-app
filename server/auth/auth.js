@@ -126,7 +126,7 @@ exports.examInfo = async (req, res, next) => {
 
       const State = await examState.findOne({ userID: req.session.userID });
       if (State) {
-       
+        
         req.session.examID = State.examID;
        return res.redirect(`/exam/state?=${req.session.examID}`);
       } else if (req.session.examID) {

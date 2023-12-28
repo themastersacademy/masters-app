@@ -47,14 +47,14 @@ app.use(cors())
 
 // application
 
-
-
 const {SendEmail} = require('./controller/email/email.js')
+
 app.get("/otpSend", async (req, res) => {
 
   // for(let i=0;i<10;i++){
   //   SendEmail('muthu17don@gmail.com',['1','2','3','5'])
   // }
+  
   if(req.session.otpNumber !== undefined){
    await SendEmail('muthu17don@gmail.com',[req.session.otpNumber,req.session.otpNumber,req.session.otpNumber,req.session.otpNumber])
    req.session.otpNumber = req.session.otpNumber + 1
@@ -139,9 +139,23 @@ app.get("/",examInfo,userVerify, (req, res) => {
 /// user route
 
 app.get("/logout",(req, res) => {
+try {
   req.session.destroy();
+  
   res.json({ status: "logout" });
+} catch (error) {
+  throw error
+}
 });
+app.get("/clear",(req, res) => {
+  try {
+    req.session.destroy();
+    
+   res.redirect('/')
+  } catch (error) {
+    throw error
+  }
+  });
 app.get("/login", isLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });

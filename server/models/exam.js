@@ -73,6 +73,7 @@ const examSchema = new Schema({
     },
     studentsPerformance:[
         {
+            _id:false,
             id:{
                 type: Schema.Types.ObjectId,
                 ref: 'User',
@@ -155,6 +156,8 @@ const examSchema = new Schema({
         type: Date,
         default: Date.now
     }
+},{
+    versionKey: false
 });
 
 module.exports = model('exam', examSchema);

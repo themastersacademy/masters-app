@@ -8,20 +8,25 @@ const { DateTime } = require("luxon");
 const examRank = require("../../models/examRank.js");
 const questionBank = require("../../models/questionBank.js");
 const fs = require("fs");
-const {examEndTime,examStartTime,getExamStartTime,getExamExamEndTime,getExamValid} = require('../../util/time.js')
+const {
+  examEndTime,
+  examStartTime,
+  getExamStartTime,
+  getExamExamEndTime,
+  getExamValid,
+} = require("../../util/time.js");
 exports.getExamInfo = async function (req, res) {
   try {
-    
     const path = req.path;
     const examId = path.split("/")[2];
     const examInfo = await exam.findOne({ _id: examId });
     if (!examInfo) {
       return res.status(404).send("exam not found");
     }
-    const NoOfquestion = [];
+    let NoOfquestion = 0;
     examInfo.questionCategory.map((task) =>
       task.questionList.map((task) => {
-        NoOfquestion.push(task);
+        NoOfquestion++;
       })
     );
     // const examDate = new Date();
@@ -29,10 +34,10 @@ exports.getExamInfo = async function (req, res) {
     //   timeZone: "Asia/Kolkata",
     //   hour12: false,
     // });
-   
+
     // const getDate = changeTime.split(',')[0].split('/')
     // const getTime =  changeTime.split(',')[1].split(':')
-    
+
     // const indianTime = {
     //    date : getDate[1],
     //    month : getDate[0],
@@ -41,16 +46,16 @@ exports.getExamInfo = async function (req, res) {
     //    minutes:getTime[1],
     //    sec:getTime[2]
     // }
+    console.log(NoOfquestion);
     res.status(200).json({
-      totalMark: NoOfquestion.length * examInfo.mark,
-      NoOfquestion: NoOfquestion.length,
+      totalMark: NoOfquestion * examInfo.mark,
+      NoOfquestion,
       title: examInfo.title,
       examDate: examInfo.examDate,
       examDuration: examInfo.examDuration,
       examEndTime: examInfo.examEndTime,
       examStartTime: examInfo.examStartTime,
       type: examInfo.type,
-    
     });
   } catch (error) {
     console.error(error);
@@ -65,7 +70,7 @@ exports.startExam = async function (req, res) {
   const userName = req.session.userName;
 
   const State = await examState({ examID, userID });
-   //State.save();
+  //State.save();
   try {
     const examInfo = await exam.findOne({ _id: examID });
     if (!examInfo) {
@@ -96,7 +101,7 @@ exports.startExam = async function (req, res) {
               bookmarkedQuestionList.push(false);
             });
           });
-          const actualAnswerList = [];
+          // const actualAnswerList = [];
           const getQuestionID = [];
           examInfo.questionCategory.map((task) =>
             task.questionList.map(async (task) => {
@@ -104,24 +109,25 @@ exports.startExam = async function (req, res) {
             })
           );
           //generate Actual Answer
-          const getQuesAnswer = async (task) => {
-            const getQues = await questionCollection.findOne({ _id: task });
-            let answer = "";
-            getQues.options.map((option, index1) => {
-              if (option.isCorrect == true) {
-                answer = index1;
-              }
-            });
-            return answer;
-          };
-          for (let i = 0; i < getQuestionID.length; i++) {
-            const get = await getQuesAnswer(getQuestionID[i]);
+          // const getQuesAnswer = async (task) => {
+          //   const getQues = await questionCollection.findOne({ _id: task });
+          //   let answer = "";
+          //   getQues.options.map((option, index1) => {
+          //     if (option.isCorrect == true) {
+          //       answer = index1;
+          //     }
+          //   });
+          //   return answer;
+          // };
 
-            actualAnswerList.push(get);
-          }
+          // for (let i = 0; i < getQuestionID.length; i++) {
+          //   const get = await getQuesAnswer(getQuestionID[i]);
+
+          //   actualAnswerList.push(get);
+          // }
 
           examInfo.totalQuestion = totalQuestion;
-          examInfo.actualAnswerList = actualAnswerList;
+          // examInfo.actualAnswerList = actualAnswerList;
           examInfo.studentsPerformance.push({
             id: userID,
             name: userName,
@@ -142,7 +148,7 @@ exports.startExam = async function (req, res) {
             .json({ message: "exam started", status: "success" });
         } else {
           const check = await isValidExamEnd(examInfo);
-          if (check ) {
+          if (check) {
             delete req.session.examID;
             const batch = await Batch.findOne({ _id: examInfo.batchID });
             batch.scheduleTest.map((task) => {
@@ -166,19 +172,19 @@ exports.startExam = async function (req, res) {
             return res
               .status(400)
               .json({ status: "info", message: "exam was completed" });
-          }
-          else
-          {
-                examState
-                       .deleteOne({ examID, userID })
-                       .then(function () {
-                         console.log("Data deleted"); //  Success
-                       })
-                       .catch(function (error) {
-                         console.log(error); // Failure
-                       });
-                       delete req.session.examID;
-                return res.status(400).json({status: "info", message: "exam not started yet" });
+          } else {
+            examState
+              .deleteOne({ examID, userID })
+              .then(function () {
+                console.log("Data deleted"); //  Success
+              })
+              .catch(function (error) {
+                console.log(error); // Failure
+              });
+            delete req.session.examID;
+            return res
+              .status(400)
+              .json({ status: "info", message: "exam not started yet" });
           }
         }
       } else {
@@ -198,19 +204,19 @@ exports.startExam = async function (req, res) {
       }
     }
     if (examInfo.type === "practice" || examInfo.type === "mock") {
-
       const goal = await Goal.findOne({
         courseId: req.session.Plan,
         userId: req.session.userID,
       });
-      if(examInfo.type === "practice" && goal.plan == 'free')
- {     goal.practicesCount = goal.practicesCount == undefined ? 1 : goal.practicesCount+1
-  await goal.save()
-    }
-    if( examInfo.type === "mock" && goal.plan == 'free')
-    {     goal.mockCount = goal.mockCount == undefined ? 1 : goal.mockCount+1
-      await  goal.save()
-       }
+      if (examInfo.type === "practice" && goal.plan == "free") {
+        goal.practicesCount =
+          goal.practicesCount == undefined ? 1 : goal.practicesCount + 1;
+        await goal.save();
+      }
+      if (examInfo.type === "mock" && goal.plan == "free") {
+        goal.mockCount = goal.mockCount == undefined ? 1 : goal.mockCount + 1;
+        await goal.save();
+      }
       let time = DateTime.local().setZone("Asia/Kolkata").toFormat("HH:mm:ss");
       const getSecond = DateTime.now().setZone("Asia/Kolkata");
 
@@ -247,9 +253,8 @@ exports.startExam = async function (req, res) {
       );
       if (get.length === 0) {
         const studentAnswerList = [];
-       
+
         examInfo.questionCategory.forEach((category) => {
-          
           category.questionList.forEach((question) => {
             studentAnswerList.push(null);
           });
@@ -298,8 +303,8 @@ exports.startExam = async function (req, res) {
         });
 
         await examInfo.save();
-         //Exam Save State
-         await State.save();
+        //Exam Save State
+        await State.save();
         req.session.examID = examInfo._id;
         req.session.examName = examInfo.title;
         return res
@@ -310,17 +315,14 @@ exports.startExam = async function (req, res) {
       }
     }
   } catch (error) {
-   
     throw error;
   }
 };
 
 const isValidExamEnd = async function (examInfo) {
+  const End = await getExamValid(examInfo.examDate, examInfo.examEndTime);
 
-   const End = await getExamValid(examInfo.examDate,examInfo.examEndTime)
-
-  return  End;
-
+  return End;
 };
 const isValidExamStart = async function (examInfo) {
   let date = new Date();
@@ -331,26 +333,28 @@ const isValidExamStart = async function (examInfo) {
   const getTime = indianTime.split(",");
   const getDate = getTime[0].split("/");
 
-// const Start = await  trailTime(examInfo.examDate,examInfo.examStartTime) 
-//  const End = await goalValid(examInfo.examDate,examInfo.examEndTime)
-const Start = await  getExamStartTime(examInfo.examDate,examInfo.examStartTime) 
-const End = await getExamExamEndTime(examInfo.examDate,examInfo.examEndTime)
+  // const Start = await  trailTime(examInfo.examDate,examInfo.examStartTime)
+  //  const End = await goalValid(examInfo.examDate,examInfo.examEndTime)
+  const Start = await getExamStartTime(
+    examInfo.examDate,
+    examInfo.examStartTime
+  );
+  const End = await getExamExamEndTime(examInfo.examDate, examInfo.examEndTime);
 
   return (
     examInfo.examDate === `${getDate[1]}/${getDate[0]}/${getDate[2]}` &&
-     Start &&
+    Start &&
     End
   );
 };
 
 exports.getExamState = async function (req, res) {
   try {
-  const userID = req.session.userID;
+    const userID = req.session.userID;
 
-  const userName = req.session.userName;
-  const examId = req.session.examID;
+    const userName = req.session.userName;
+    const examId = req.session.examID;
 
- 
     const getExam = await exam.findOne({ _id: examId });
     const User = await user.findOne({ _id: userID });
     if (getExam && User) {
@@ -452,10 +456,13 @@ exports.getExamState = async function (req, res) {
           return res.json(examInfoData);
         } else {
           if (studentPerform[0].status == "submitted")
-            return res.json({
+         {  
+          
+           return res.json({
               status: "error",
               message: "exam already submitted",
             });
+          }
           if (studentPerform[0].status == "terminated")
             return res.json({ status: "error", message: "exam terminated" });
           if (studentPerform[0].status == "notStarted")
@@ -470,21 +477,21 @@ exports.getExamState = async function (req, res) {
       }
     }
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
 exports.examStateUpdate = async (req, res, next) => {
   try {
-  const userID = req.session.userID;
-  const examID = req.session.examID;
-  const {
-    studentAnswerList,
-    bookmarkedQuestionList,
-    currentIndex,
-    // windowCloseWarning,
-    // windowResizedWarning,
-  } = req.body;
+    const userID = req.session.userID;
+    const examID = req.session.examID;
+    const {
+      studentAnswerList,
+      bookmarkedQuestionList,
+      currentIndex,
+      // windowCloseWarning,
+      // windowResizedWarning,
+    } = req.body;
 
     const User = await user.findOne({ _id: userID });
     const examState = await exam.findOne({ _id: examID });
@@ -502,12 +509,13 @@ exports.examStateUpdate = async (req, res, next) => {
             // task.status = status;
           }
         });
-       await examState.save();
-       return res.json({
+        await examState.save();
+        return res.json({
           status: "success",
           message: "Update exam state successfully",
         });
       }
+      console.log("error");
       return res.json({
         status: "something went wrong",
         message: " exam state not Update",
@@ -523,7 +531,7 @@ exports.examStateUpdate = async (req, res, next) => {
       // }
     }
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
@@ -593,7 +601,6 @@ exports.submitExam = async (req, res, next) => {
           });
 
           if (goal) {
-         
             const questionCategoryList = [];
             examInfo.questionCategory.map((task) =>
               questionCategoryList.push({
@@ -814,11 +821,10 @@ exports.submitExam = async (req, res, next) => {
                 wrongQuestion += 1;
               }
             }),
-             
-            topics.push({
-              topicName: task.title,
-              accuracy: (correctQuestion / totalQuestion) * 100,
-            });
+              topics.push({
+                topicName: task.title,
+                accuracy: (correctQuestion / totalQuestion) * 100,
+              });
           });
 
           get[0].topics = topics;
@@ -871,7 +877,7 @@ exports.submitExam = async (req, res, next) => {
                 rollNumber: student[0].rollNumber,
                 dept: student[0].dept,
                 email: student[0].email,
-                mark:examMark
+                mark: examMark,
               });
             }
           });
@@ -894,20 +900,18 @@ exports.submitExam = async (req, res, next) => {
             status: "success",
             message: "exam submitted successfully",
           });
-          
         }
       } else {
         res.json({
-          status: "success",
+          status: "error",
           message: "something went wrong",
         });
       }
     }
   } catch (error) {
-    throw error
+    throw error;
   }
 };
-
 
 exports.getExamResult = async (req, res, next) => {
   try {
@@ -924,7 +928,7 @@ exports.getExamResult = async (req, res, next) => {
       );
       if (get.length !== 0) {
         const examResult = {
-          type:examInfo.type,
+          type: examInfo.type,
           mark: get[0].mark - get[0].negativeMark,
           topics: get[0].topics,
           totalMarks: examInfo.mark * examInfo.actualAnswerList.length,
@@ -943,25 +947,24 @@ exports.getExamResult = async (req, res, next) => {
       return res.status(404).send("exam not found");
     }
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
-
-exports.getChangeQues = async (req,res) =>{
+exports.getChangeQues = async (req, res) => {
   try {
-  
-   const Bank = await questionBank.find()
-fs.writeFile("myQuesBank.json", JSON.stringify(Bank, null, 4), (err) => {
-  if (err) {  console.error(err);  return; };
-  
-});
-    res.send('ok')
-
+    const Bank = await questionBank.find();
+    fs.writeFile("myQuesBank.json", JSON.stringify(Bank, null, 4), (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    });
+    res.send("ok");
   } catch (error) {
-    throw error
+    throw error;
   }
-} 
+};
 
 // exports.getChangeQues = async (req,res) =>{
 //   try {
@@ -982,17 +985,17 @@ fs.writeFile("myQuesBank.json", JSON.stringify(Bank, null, 4), (err) => {
 //       const changeBank = await questionCollection.find({QuesbankID:option[i].changeBankID})
 //       const bank = await questionCollection.find({QuesbankID:option[i].currentBankID})
 //     let fullBank = await questionCollection.find();
-   
+
 //   if(bank.length > 123456789)
-//  {   
+//  {
 //   bank.map(task => {
- 
+
 //       task.QuesbankID=option[i].changeBankID
 //       task.save()
 //     })
 
 //   fullBank = await questionCollection.find();
-  
+
 //     const quesBank = await questionBank.findOne({_id:option[i].changeBankID})
 
 //      quesBank.level.easy += option[i].easy
@@ -1007,7 +1010,7 @@ fs.writeFile("myQuesBank.json", JSON.stringify(Bank, null, 4), (err) => {
 //      quesBank1.level.hard =0
 //      quesBank1.totalQuestions = 0
 //      quesBank1.save()
-//   } 
+//   }
 //     else{
 //       console.log('complete')
 //     }
@@ -1018,4 +1021,3 @@ fs.writeFile("myQuesBank.json", JSON.stringify(Bank, null, 4), (err) => {
 //     console.log(error);
 //   }
 // }
-

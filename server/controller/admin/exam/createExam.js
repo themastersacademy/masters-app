@@ -112,21 +112,63 @@ exports.createScheduleExam = async (req, res, next) => {
           }
         }
       });
-
+      const actualAnswerList =[]
       const questionCategory = [];
-      finalQues.map((task, index) => {
-        const list = [];
-        if (task.easy) task.easy.map((easy) => list.push({ id: easy }));
-        if (task.medium) task.medium.map((medium) => list.push({ id: medium }));
-        if (task.hard) task.hard.map((hard) => list.push({ id: hard }));
 
-        questionCategory.push({
-          title: task.title,
-          id: task.id,
-          questionList: list,
+      const getQuesAnswer = async (task) => {
+        console.log(task);
+        const getQues = await questionCollection.findOne({ _id: task });
+        console.log(getQues);
+        let answer = "";
+        getQues.options.map((option, index1) => {
+
+          if (option.isCorrect == true) {
+            answer = index1;
+          }
         });
-      });
+        return answer;
+      };
+      
 
+
+      // finalQues.map((task, index) => {
+      //   const list = [];
+      //   if (task.easy) task.easy.map((easy) => list.push({ id: easy }));
+      //   if (task.medium) task.medium.map((medium) => list.push({ id: medium }));
+      //   if (task.hard) task.hard.map((hard) => list.push({ id: hard }));
+
+      //   questionCategory.push({
+      //     title: task.title,
+      //     id: task.id,
+      //     questionList: list,
+      //   });
+      //   const get = await getQuesAnswer(getQuestionID[i]);
+
+      //   actualAnswerList.push(get);
+
+      // });
+
+
+for(let i=0;i<finalQues.length;i++){
+  const list = [];
+  if (finalQues[i].easy) finalQues[i].easy.map((easy) => list.push({ id: easy }));
+  if (finalQues[i].medium) finalQues[i].medium.map((medium) => list.push({ id: medium }));
+  if (finalQues[i].hard) finalQues[i].hard.map((hard) => list.push({ id: hard }));
+
+  questionCategory.push({
+    title: finalQues[i].title,
+    id: finalQues[i].id,
+    questionList: list,
+  });
+  for(let j=0;j<list.length;j++){
+    const get = await getQuesAnswer(list[j].id);
+    actualAnswerList.push(get);
+  }
+
+}
+    
+
+      
       const examDate = new Date(details.setDate);
       let indianTime = examDate.toLocaleString("en-US", {
         timeZone: "Asia/Kolkata",
@@ -149,6 +191,7 @@ exports.createScheduleExam = async (req, res, next) => {
         mark: details.setMark,
         negativeMark: details.setNegativeMark,
         questionCategory: questionCategory,
+        actualAnswerList,
       });
       
       await exam.save();

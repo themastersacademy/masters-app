@@ -287,10 +287,10 @@ exports.chooseGoal = async (req, res, next) => {
 
 exports.request = async (req, res, next) => {
   const { userID, instituteID, rollNumber, Dept, batchCode } = req.body.data;
- 
+
   try {
-    const user = await User.findOne({ _id: userID });
-    console.log(user.email);
+    const user = await User.findOne({ _id: req.session.userID });
+  
     if (user) {
       const institute = await Institution.findOne({ _id: instituteID });
      
@@ -352,6 +352,65 @@ exports.getUserData = async (req, res, next) => {
         plan:""
       };
       let instuteDetails = {};
+
+
+//// change
+
+// for(let i=0;i<user.goal.length;i++){
+//   check.push(user.goal[i].valueOf())
+// }
+//     // get Goal
+//     // const getUserGoal = goal.filter(
+//     //   (task) => check.indexOf(task._id.valueOf()) !== -1
+//     // );
+//     const getUserGoal = goal.filter(
+//       (task) => check.indexOf(task._id.valueOf()) !== -1
+//     );
+//     check = [];
+//     const send = [];
+//     const studentsPerformance = [];
+//     let getCourseID =  [getUserGoal[0].courseId.valueOf()]
+
+//     //get Course
+//     const get = course.filter(
+//       (task) => getCourseID.indexOf(task._id.valueOf()) !== -1
+//     );
+//     const getTopicID = [];
+//     const createTopic = [];
+
+//     // get course collection topicID
+//    // get[0].collections.map((task) => getTopicID.push(task.topicID));
+
+// for(let i=0;i<get[0].collections.length;i++)
+// {
+// getTopicID.push(get[0].collections[i].topicID)
+// }
+
+//     // getUserGoal.map((task, index) => {
+//     //   task.topics.map((task) => {
+//     //     if (getTopicID.indexOf(task.topicID) !== -1) {
+//     //       createTopic.push(task.topicID);
+//     //     }
+//     //   });
+//     // });
+
+
+//     for(let i=0;i<getUserGoal.length;i++){
+//       for(let j=0;j<getUserGoal[i].topics.length;j++){
+//         if (getTopicID.indexOf(getUserGoal[i].topics[j].topicID) !== -1) {
+//           createTopic.push(getUserGoal[i].topics[j].topicID);
+//         }
+//       }
+//     }
+//     // getUserGoal.map((task, index) => {
+//     //   task.topics.map((task) => {
+//     //     if (getTopicID.indexOf(task.topicID) !== -1) {
+//     //       createTopic.push(task.topicID);
+//     //     }
+//     //   });
+//     // });
+
+
 
       if (user.institutionID !== undefined) {
         instuteDetails = await getInstitutionDetails(
