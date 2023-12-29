@@ -150,7 +150,7 @@ try {
 app.get("/clear",(req, res) => {
   try {
     req.session.destroy();
-    
+    res.clearCookie("connect.sid");
    res.redirect('/')
   } catch (error) {
     throw error
