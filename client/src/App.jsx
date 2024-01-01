@@ -14,7 +14,7 @@ import Success from './app/user/components/SuccessPage'
 function App() {
   return (
     <div style={{ fontFamily: "DM Sans" }}>
-      <Router>
+      <Router basename="/">
         <Routes>
           {
             // user and exam page
