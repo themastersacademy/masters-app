@@ -25,7 +25,7 @@ try {
     { num: 12, month: "December" },
   ];
   const getMonth = await month.filter((task) => task.num == eval(payment.validDate.split('/')[0]));
-console.log(getMonth)
+
   const date = payment.date.split('/')
 const text = `
 <!DOCTYPE html>

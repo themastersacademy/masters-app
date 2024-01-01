@@ -7,6 +7,7 @@ const path = req.path;
 const userID = req.session.userID;
 const examID = path.split("/")[2];
 const examInfo = await Exam.findOne({_id:examID})
+
 if(examInfo && examInfo.type !== 'schedule') {
    const getQuestionID = []
    const questions = []
@@ -17,7 +18,7 @@ if(examInfo && examInfo.type !== 'schedule') {
         const ques = await getQuestion(getQuestionID[i]);
         questions.push(ques);
       }
-      const student = examInfo.studentsPerformance.filter(task =>  task.id.valueOf() == userID.valueOf() )
+      const student = examInfo.studentsPerformance.filter(task =>  task.id.valueOf() == userID.valueOf())
       const userdetails = {
         avatar:user.avatar,
         id:user._id

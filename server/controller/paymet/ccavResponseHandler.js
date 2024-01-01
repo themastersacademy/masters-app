@@ -20,7 +20,7 @@ exports.postRes = async function (request, response) {
 
   request.on("end", async function () {
     const check = qs.parse(ccavResponse);
-    console.log(check)
+    
     const payment = await Payment.findOne({_id:check.order_id})
     
     if (check.order_status == "Success") {

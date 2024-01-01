@@ -1,8 +1,9 @@
 const User = require('../../models/user')
 exports.getInstitutions  = async (req,res,next) =>{
-const institute = await User.find()
+const institute = await User.find({type :'institution'})
 if(institute){
-  const list = await institute.filter(task => task.type == 'institution' )
-  if(list) res.json({status:'success',message:list})
+  // const list = await institute.filter(task => task.type == 'institution' )
+  //  if(list) 
+   res.json({status:'success',message:institute})
 }
 }

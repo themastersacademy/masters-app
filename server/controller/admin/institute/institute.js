@@ -30,17 +30,18 @@ exports.getInstituteName = async (req, res, next) => {
       institute.map((task) => data.push({ label: task.name, id: task._id }));
       res.json({ status: "ok", message: data });
     }
-  } catch (error) {}
+  } catch (error) {
+    throw error
+  }
 };
 
 exports.getTeacher = async (req, res, next) => {
   try {
-    const user = await User.find();
+    const user = await User.find({type :'student'});
     if (user) {
       const send = [];
-     
       user.map((task) => {
-   if('student' == task.type)
+   if( task.type == 'student')
         send.push({ label: task.email, id: task._id })
       });
       res.json({ status: "ok", message: send });

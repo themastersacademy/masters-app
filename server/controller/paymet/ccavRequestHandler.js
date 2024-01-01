@@ -13,7 +13,7 @@ exports.postReq = async function(req,res){
           accessCode = process.env.CCAVENUE_ACCESS_CODE,//Put in the Access Code shared by CCAvenues.
           encRequest = '',
           formbody = '';
-          console.log(getID,workingKey)
+          
               body = qs.stringify({
                   merchant_id: '2895903',
                   order_id:getID.valueOf(),

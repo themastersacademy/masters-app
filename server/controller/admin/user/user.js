@@ -7,11 +7,11 @@ exports.getUser = async (req, res, next) => {
 };
 exports.getUserID = async (req, res, next) => {
   try {
-    const user = await User.find();
+    const user = await User.find({type:'student'});
     if (user) {
       const get = [];
       user.map((task) => {
-        if ("student" == task.type) get.push(task);
+        if (task.type == "student") get.push(task);
       });
       res.json({ status: "succes", message: get });
     }

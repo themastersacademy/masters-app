@@ -6,12 +6,21 @@ exports.createPracticeExamQues = async (
   finalQuestion
 ) => {
   try {
-    const collection = await Collections.find();
+ 
+    // const collection = await Collections.find();
 
-    const getCollection = collection.filter(
-      (task) => bankID.indexOf(task.QuesbankID.valueOf()) !== -1
-    );
-    
+    // const getCollection = collection.filter(
+    //   (task) => bankID.indexOf(task.QuesbankID.valueOf()) !== -1
+    // );
+
+    let getCollection = []
+    for(let i=0;i<bankID.length;i++){
+      const getQuesBankCollection = await Collections.find({QuesbankID:bankID[i]})
+      for(let j=0;j<getQuesBankCollection.length;j++){
+        getCollection.push(getQuesBankCollection[j])
+      }
+    } 
+
     getCollection.map((task) => {
       if (bankID.indexOf(task.QuesbankID.valueOf()) !== -1) {
        
@@ -97,11 +106,19 @@ exports.createPracticeExamQues = async (
 };
 exports.createMockExamQues = async (bankID, collectQuestion, finalQuestion) => {
   try {
-    const collection = await Collections.find();
+   
+    // const collection = await Collections.find();
 
-    const getCollection = collection.filter(
-      (task) => bankID.indexOf(task.QuesbankID.valueOf()) !== -1
-    );
+    // const getCollection = collection.filter(
+    //   (task) => bankID.indexOf(task.QuesbankID.valueOf()) !== -1
+    // );
+    let getCollection = []
+    for(let i=0;i<bankID.length;i++){
+      const getQuesBankCollection = await Collections.find({QuesbankID:bankID[i]})
+      for(let j=0;j<getQuesBankCollection.length;j++){
+        getCollection.push(getQuesBankCollection[j])
+      }
+    } 
     getCollection.map((task) => {
       if (bankID.indexOf(task.QuesbankID.valueOf()) !== -1) {
         if (task.level == "Easy")

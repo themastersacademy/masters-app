@@ -46,7 +46,7 @@ exports.getExamInfo = async function (req, res) {
     //    minutes:getTime[1],
     //    sec:getTime[2]
     // }
-    console.log(NoOfquestion);
+    
     res.status(200).json({
       totalMark: NoOfquestion * examInfo.mark,
       NoOfquestion,
@@ -862,27 +862,28 @@ exports.submitExam = async (req, res, next) => {
 
           // institute
 
-          const batch = await Batch.findOne({ _id: examInfo.batchID });
-          const student = batch.studentList.filter(
-            (task) => task.userID.valueOf() == userID.valueOf()
-          );
+          // const batch = await Batch.findOne({ _id: examInfo.batchID });
+          // const student = batch.studentList.filter(
+          //   (task) => task.userID.valueOf() == userID.valueOf()
+          // );
 
-          let examMark = get[0].mark - get[0].negativeMark;
-          if (examMark < 0) examMark = 0;
+          // let examMark = get[0].mark - get[0].negativeMark;
+          // if (examMark < 0) examMark = 0;
 
-          batch.scheduleTest.map((task) => {
-            if (task.examID.valueOf() == examID.valueOf()) {
-              task.studentPerformance.push({
-                name: student[0].name,
-                rollNumber: student[0].rollNumber,
-                dept: student[0].dept,
-                email: student[0].email,
-                mark: examMark,
-              });
-            }
-          });
+          // batch.scheduleTest.map((task) => {
+          //   if (task.examID.valueOf() == examID.valueOf()) {
+          //     task.studentPerformance.push({
+          //       name: student[0].name,
+          //       rollNumber: student[0].rollNumber,
+          //       dept: student[0].dept,
+          //       email: student[0].email,
+          //       mark: examMark,
+          //     });
+          //   }
+          // });
 
-          batch.save();
+          // batch.save();
+          
           // delate Exam State
           examState
             .deleteOne({ examID, userID })
@@ -921,11 +922,20 @@ exports.getExamResult = async (req, res, next) => {
     const userID = req.session.userID;
 
     const examInfo = await exam.findOne({ _id: examID });
-    if (examInfo) {
+    const getExamStudentData = await exam.findOne({
+      "_id": examID                 
+    },{
+     "studentsPerformance":{
+        $elemMatch:{"id": userID }
+     },
+    })
+    
+    if (examInfo && getExamStudentData) {
       const User = await user.findOne({ _id: userID });
-      const get = examInfo.studentsPerformance.filter(
-        (task) => task.id.valueOf() == userID.valueOf()
-      );
+      // const get = examInfo.studentsPerformance.filter(
+      //   (task) => task.id.valueOf() == userID.valueOf()
+      // );
+      const get = [getExamStudentData.studentsPerformance[0]]
       if (get.length !== 0) {
         const examResult = {
           type: examInfo.type,

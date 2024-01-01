@@ -114,7 +114,10 @@ export default function Layout() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.status == "info") Notifications(data.status, data.message);
+        if (data.status == "info") {
+          Notifications(data.status, data.message);
+          setWaitPra(false)
+        }
         if (data.status == "success") {
           navigator(`/exam/info?=${data.examId}`);
           setWaitPra(false)
@@ -132,7 +135,10 @@ export default function Layout() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.status == "info") Notifications(data.status, data.message);
+        if (data.status == "info"){ 
+          Notifications(data.status, data.message);
+          setWaitMock(false)
+        }
         if (data.status == "success") {
           navigator(`/exam/info?=${data.examId}`);
           setWaitMock(false)

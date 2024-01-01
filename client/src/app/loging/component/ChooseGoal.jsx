@@ -5,28 +5,28 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Image from "../../../util/Avater";
+import LoadingButton from "@mui/lab/LoadingButton";
 import "../../../App.css";
-import useWindowDimensions from '../../../util/useWindowDimensions';
+import useWindowDimensions from "../../../util/useWindowDimensions";
 export default function ChooseGoal({ controlNotification }) {
   const { width } = useWindowDimensions();
+
   const navigator = useNavigate();
 
-
+  const [isWaitVerify, setWatiVerify] = useState(false);
   const [goal, setGoal] = useState([]);
 
   useEffect(() => {
     fetch("/api/user/getCourse")
       .then((res) => res.json())
       .then((data) => {
-       
         if (data.status == "ok") {
           setGoal(data.message);
-          setGoal((preValu)=>{
-            const getValue =[...preValu]
-            getValue.map(task => task.isSelect=false)
-            return getValue
-          })
-      
+          setGoal((preValu) => {
+            const getValue = [...preValu];
+            getValue.map((task) => (task.isSelect = false));
+            return getValue;
+          });
         }
       });
   }, []);
@@ -40,7 +40,7 @@ export default function ChooseGoal({ controlNotification }) {
     if (goal.length == check.length)
       controlNotification("info", "Please choose goal");
     else {
-     
+      setWatiVerify(true);
       fetch("/api/user/chooseGoal", {
         method: "POST",
         headers: {
@@ -51,15 +51,16 @@ export default function ChooseGoal({ controlNotification }) {
         .then((res) => res.json())
         .then((data) => {
           controlNotification(data.status, data.message);
-          if (data.status == "success") { 
-            fetch('/logout')
-            .then(res => res.json())
-            .then((data) =>{ 
-              if(data.status == 'logout')
-            navigator('/login')
-          })
-          
-        }
+          if (data.status == "success") {
+            fetch("/logout")
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.status == "logout") {
+                  navigator("/login");
+                  setWatiVerify(false);
+                }
+              });
+          }
         });
     }
   };
@@ -72,12 +73,10 @@ export default function ChooseGoal({ controlNotification }) {
       fontWeight: "700",
       lineHeight: " normal",
     },
-    scroll:{ 
-
-      overflowY:"scroll",
-    minHeight:width > 1000 ? "350px" : '310px'
-   
-  }
+    scroll: {
+      overflowY: "scroll",
+      minHeight: width > 1000 ? "350px" : "310px",
+    },
   };
   return (
     <Paper
@@ -93,17 +92,17 @@ export default function ChooseGoal({ controlNotification }) {
         ...(width < 1000 && {
           width: "80%",
           height: "443px",
-       
-        })
+        }),
       }}
     >
-      <Stack direction="column" spacing="15px" width={width > 1000 ? "80%" : '90%'} height={width > 1000 ? "90%" : '90%'}>
+      <Stack
+        direction="column"
+        spacing="15px"
+        width={width > 1000 ? "80%" : "90%"}
+        height={width > 1000 ? "90%" : "90%"}
+      >
         <h1 style={style.heading}>Select Goal</h1>
-
-        <div
-          className="scrollHide"
-         style={style.scroll}
-        >
+        <div className="scrollHide" style={style.scroll}>
           <Stack direction="column" spacing="10px">
             {goal.map((task, index) =>
               task.status == "publish" ? (
@@ -137,19 +136,31 @@ export default function ChooseGoal({ controlNotification }) {
           </Stack>
         </div>
 
-        <Button
-          style={{
-            borderRadius: "4px",
-            width: "100%",
-            color: "white",
-            background: "#187163",
-            color: width < 1000 ?"#187163" : 'white',
-            background: width > 1000 ?"#187163" : 'white',
-          }}
-          onClick={finish}
-        >
-          Finish
-        </Button>
+        {isWaitVerify ? (
+          <LoadingButton
+            loading
+            sx={{
+              width: "100%",
+              height: "40px",
+              backgroundColor: "#187163",
+              "& .MuiCircularProgress-root": { color: "white" },
+            }}
+          />
+        ) : (
+          <Button
+            style={{
+              borderRadius: "4px",
+              width: "100%",
+              color: "white",
+              background: "#187163",
+              color: width < 1000 ? "#187163" : "white",
+              background: width > 1000 ? "#187163" : "white",
+            }}
+            onClick={finish}
+          >
+            Finish
+          </Button>
+        )}
       </Stack>
     </Paper>
   );

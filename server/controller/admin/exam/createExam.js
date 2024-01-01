@@ -116,9 +116,9 @@ exports.createScheduleExam = async (req, res, next) => {
       const questionCategory = [];
 
       const getQuesAnswer = async (task) => {
-        console.log(task);
+     
         const getQues = await questionCollection.findOne({ _id: task });
-        console.log(getQues);
+        
         let answer = "";
         getQues.options.map((option, index1) => {
 

@@ -112,7 +112,7 @@ export default function MDNavBar({user,selectGoal,setSelectGoal,goal,isChange,ad
           <Menu anchorEl={anchorEl} open={openNav} onClose={handleClose}>
             <MenuItem onClick={handleClose}>
               <Avatar src={user.avatar} />
-                   {user.name}
+                   {user.changeName}
             </MenuItem>
             
             <MenuItem onClick={handleLogout}>

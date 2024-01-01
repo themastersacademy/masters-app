@@ -2,7 +2,6 @@ const Course = require("../../../models/course.js");
 const questionBank = require("../../../models/questionBank.js");
 exports.getCourse = async (req, res, next) => {
   const get = await Course.find();
-
   if (get) {
     res.json({ status: "ok", message: get });
   }
@@ -48,13 +47,20 @@ exports.getCourseAvalible = async (req, res, next) => {
       highPercentage: get.highPercentage,
       Payment:get.Payment == undefined ? undefined : get.Payment 
     });
-    const getBank = await questionBank.find();
+  //  const getBank = await questionBank.find();
 
-    const avalibleQues = getBank.filter((task) => {
-      if (getbanksID.indexOf(task._id.valueOf()) !== -1) {
-        return task;
-      }
-    });
+  //   const avalibleQues = getBank.filter((task) => {
+  //     if (getbanksID.indexOf(task._id.valueOf()) !== -1) {
+  //       return task;
+  //     }
+  //   });
+    let avalibleQues = []
+
+    for(let i=0;i<getbanksID.length;i++){
+      const getQuestBank = await questionBank.findOne({_id:getbanksID[i]}); 
+      avalibleQues.push(getQuestBank)
+    }
+
     res.json({
       status: "ok",
       message: avalibleQues,

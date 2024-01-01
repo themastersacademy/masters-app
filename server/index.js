@@ -138,6 +138,8 @@ app.get("/",examInfo,userVerify, (req, res) => {
 
 /// user route
 
+
+
 app.get("/logout",(req, res) => {
 try {
   req.session.destroy();
@@ -270,8 +272,6 @@ app.get('/policy',(req,res) => {
 })
 
 
-
-
 // Static Files
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 app.use("/", express.static(path.join(__dirname, "../invoice")));
@@ -290,6 +290,48 @@ app.use((err, req, res, next) => {
  res.redirect('/error')
 });
 
+const User = require('./models/user.js')
+const Batch = require('./models/batch.js')
+
+app.get('/checkStudentcreateAccount',async(req,res)=>{
+  try {
+   const user = await User.find({type:'student'})
+   const index = []
+   for(let i=0;i<user.length;i++){
+    if(user[i].goal.length > 1 ){
+      const getOneGoal = []
+      for(let j=0;j<user[i].goal.length;j++){
+        if(j !== 0){
+         
+        }else{
+          getOneGoal.push( user[i].goal[j])
+        }
+      }
+      user[i].goal = getOneGoal
+     // user[i].save()
+     console.log(user[i]);
+    }
+    if( user[i].batchID.length > 1){
+      const getOneBatch = []
+      for(let j=0;j<user[i].batchID.length;j++){
+        if(j !== 0){
+         
+        }else{
+          getOneBatch.push( user[i].batchID[j])
+        }
+      }
+      user[i].batchID = getOneBatch
+      //user[i].save()
+      console.log(user[i]);
+    }
+    
+   }
+ 
+    res.send('check')
+  } catch (error) {
+    throw error
+  }
+})
 
 
 app.use((req, res, next) => {

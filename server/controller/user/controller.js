@@ -50,7 +50,7 @@ exports.login = async (req, res, next) => {
         return res.json({ status: "success", id: check._id, roll: check.type,institutionID:check.institutionID !== undefined ? check.institutionID : '' });
       }
     } else {
-      const isDelete = await sessions.deleteMany({
+     await sessions.deleteMany({
         expires: getVerify[0].expires,
       }).then(function () {
         console.log("Data deleted"); //  Success
@@ -301,7 +301,8 @@ exports.request = async (req, res, next) => {
         });
         if (batch) {
           const check = [];
-    if(batch.studentList){ if(batch.studentList.length > 0  )
+    if(batch.studentList){ 
+      if(batch.studentList.length > 0  )
       {    batch.studentList.map((task) => {
             if (user.email == task.email) check.push(task);
           });}}
@@ -334,9 +335,10 @@ exports.getUserData = async (req, res, next) => {
   try {
     const userID = req.body.id;
     const user = await User.findOne({ _id: req.body.id });
-    const goal = await Goal.find();
-    const course = await Course.find();
-    const exam = await Exam.find();
+    const getUserGoal = await Goal.find({userId:req.session.userID});
+   
+    // const course = await Course.find();
+    // const exam = await Exam.find();
 
     if (user) {
       let check = [];
@@ -353,65 +355,6 @@ exports.getUserData = async (req, res, next) => {
       };
       let instuteDetails = {};
 
-
-//// change
-
-// for(let i=0;i<user.goal.length;i++){
-//   check.push(user.goal[i].valueOf())
-// }
-//     // get Goal
-//     // const getUserGoal = goal.filter(
-//     //   (task) => check.indexOf(task._id.valueOf()) !== -1
-//     // );
-//     const getUserGoal = goal.filter(
-//       (task) => check.indexOf(task._id.valueOf()) !== -1
-//     );
-//     check = [];
-//     const send = [];
-//     const studentsPerformance = [];
-//     let getCourseID =  [getUserGoal[0].courseId.valueOf()]
-
-//     //get Course
-//     const get = course.filter(
-//       (task) => getCourseID.indexOf(task._id.valueOf()) !== -1
-//     );
-//     const getTopicID = [];
-//     const createTopic = [];
-
-//     // get course collection topicID
-//    // get[0].collections.map((task) => getTopicID.push(task.topicID));
-
-// for(let i=0;i<get[0].collections.length;i++)
-// {
-// getTopicID.push(get[0].collections[i].topicID)
-// }
-
-//     // getUserGoal.map((task, index) => {
-//     //   task.topics.map((task) => {
-//     //     if (getTopicID.indexOf(task.topicID) !== -1) {
-//     //       createTopic.push(task.topicID);
-//     //     }
-//     //   });
-//     // });
-
-
-//     for(let i=0;i<getUserGoal.length;i++){
-//       for(let j=0;j<getUserGoal[i].topics.length;j++){
-//         if (getTopicID.indexOf(getUserGoal[i].topics[j].topicID) !== -1) {
-//           createTopic.push(getUserGoal[i].topics[j].topicID);
-//         }
-//       }
-//     }
-//     // getUserGoal.map((task, index) => {
-//     //   task.topics.map((task) => {
-//     //     if (getTopicID.indexOf(task.topicID) !== -1) {
-//     //       createTopic.push(task.topicID);
-//     //     }
-//     //   });
-//     // });
-
-
-
       if (user.institutionID !== undefined) {
         instuteDetails = await getInstitutionDetails(
           user.institutionID,
@@ -419,20 +362,23 @@ exports.getUserData = async (req, res, next) => {
         );
       }
     
-      user.goal.map((task) => check.push(task.valueOf()));
-      // get Goal
-      const getUserGoal = goal.filter(
-        (task) => check.indexOf(task._id.valueOf()) !== -1
-      );
+      // user.goal.map((task) => check.push(task.valueOf()));
+      // // get Goal
+      // const getUserGoal = goal.filter(
+      //   (task) => check.indexOf(task._id.valueOf()) !== -1
+      // );
+  
+
       check = [];
       const send = [];
       const studentsPerformance = [];
       let getCourseID =  [getUserGoal[0].courseId.valueOf()]
 
       //get Course
-      const get = course.filter(
-        (task) => getCourseID.indexOf(task._id.valueOf()) !== -1
-      );
+      // const get = course.filter(
+      //   (task) => getCourseID.indexOf(task._id.valueOf()) !== -1
+      // );
+      const get = await Course.find({_id:getCourseID})
       const getTopicID = [];
       const createTopic = [];
 
@@ -596,16 +542,16 @@ exports.getGoal = async (req, res, next) => {
 
     const course = await Course.find();
     const user = await User.findOne({ _id: id });
-    const goal = await Goal.find();
+    const getGoalID = await Goal.find({userId:req.session.userID});
     if (user) {
       let goalID = [];
-      user.goal.map((task) => goalID.push(task._id.valueOf()));
+      // user.goal.map((task) => goalID.push(task._id.valueOf()));
 
-      const getGoalID = goal.filter(
-        (task) => goalID.indexOf(task._id.valueOf()) !== -1
-      );
+      // const getGoalID = goal.filter(
+      //   (task) => goalID.indexOf(task._id.valueOf()) !== -1
+      // );
 
-      goalID = [];
+      // goalID = [];
       getGoalID.map((task) => goalID.push(task.courseId.valueOf()));
 
       const getGoal = course.filter(
@@ -618,7 +564,9 @@ exports.getGoal = async (req, res, next) => {
       // });
   for(let i=0;i<getGoal.length;i++){
     if (getGoal[i].status == "publish")
-     {     await goalID.push({ label: getGoal[i].title, id:getGoal[i]._id });
+     { 
+      
+      await goalID.push({ label: getGoal[i].title, id:getGoal[i]._id });
     }
   }
      return res.json({ status: "ok", message: goalID });

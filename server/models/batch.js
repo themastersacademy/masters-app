@@ -84,6 +84,7 @@ const Schema = mongoose.Schema({
       },
       studentPerformance: [
         {
+          _id:false,
           name: {
             type: String,
             required: true,
@@ -117,6 +118,8 @@ const Schema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+},{
+  versionKey: false
 });
 
 module.exports = mongoose.model("batch", Schema);

@@ -297,19 +297,6 @@ exports.getExamValid = (date, time) => {
     const examHours = hoursAndMinutesToMilliseconds(getTime[0],getTime[1]);
     const indianHours = hoursAndMinutesToMilliseconds(time1[0],time1[1]);
 
-
-    // if (
-    //   getDate[1] == month[0] &&
-    //   getDate[2] == month[2] &&
-    //   getDate[0] == month[1] &&
-    //   indianHours <= examHours
-    // )
-    //   return true;
-    // else return false;
-    console.log(month,getDate);
-   console.log(  eval(getDate[1]) == eval(month[0]) &&
-   eval(getDate[2]) == eval(month[2]) &&
-   eval(getDate[0]) == eval(month[1])  );
     if (
      eval(getDate[1]) <= eval(month[0]) &&
       eval(getDate[2]) <= eval(month[2]) &&

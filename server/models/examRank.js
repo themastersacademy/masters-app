@@ -26,6 +26,8 @@ const Schema = mongoose.Schema({
   rank: {
     type: Number,
   },
+},{
+  versionKey: false
 });
 
 module.exports = mongoose.model("examRank", Schema);
