@@ -144,7 +144,7 @@ app.get("/",examInfo,userVerify, (req, res) => {
 app.get("/logout",(req, res) => {
 try {
   req.session.destroy();
-  
+  res.setHeader('Cache-Control', 'no-store');
   res.json({ status: "logout" });
 } catch (error) {
   throw error
