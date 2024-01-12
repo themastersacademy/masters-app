@@ -10,7 +10,8 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { SvgIcon } from '@mui/material';
 import '../../../../App.css'
-export default function Requests({ batch,getRequestAccess }) {
+import LoadingButton from "@mui/lab/LoadingButton";
+export default function Requests({ batch,getRequestAccess, isLoading ,setLoading  }) {
   const check = [];
   return (
     <div className="scrollHide" style={{overflow:'scroll',height:'65vh' }} >
@@ -23,7 +24,7 @@ export default function Requests({ batch,getRequestAccess }) {
           })
         : null}
       {check.length > 0 ? (
-        <RequestList task={batch.studentList} getRequestAccess={getRequestAccess} />
+        <RequestList task={batch.studentList} getRequestAccess={getRequestAccess}  isLoading={isLoading} setLoading={setLoading} />
       ) : (
         <div  style={{
           width: "100%",
@@ -44,12 +45,22 @@ export default function Requests({ batch,getRequestAccess }) {
 
 
 
-function RequestList({ task,getRequestAccess }) {
+function RequestList({ task,getRequestAccess,isLoading ,setLoading }) {
   
 const handleOk = (data) =>{
+  setLoading((preValue) => {
+    let getValue = [...preValue]
+    getValue.push(data.userID)
+    return getValue
+  })
   getRequestAccess('ok',data)
 }
 const handleCancel =(data) =>{
+  setLoading((preValue) => {
+    let getValue = [...preValue]
+    getValue.push(data.userID)
+    return getValue
+  })
   getRequestAccess('not ok',data)
 }
 
@@ -143,12 +154,20 @@ const handleCancel =(data) =>{
                 <p style={style.email}>{row.email}</p>
               </TableCell>
               <TableCell align="center">
-                <Stack direction="row" spacing='10px' justifyContent='center' >
-                
+              { isLoading.indexOf(row.userID.valueOf()) !== -1 ? <LoadingButton
+            loading
+            sx={{
+              width: "100%",
+              height: "40px",
+              backgroundColor: "white",
+              "& .MuiCircularProgress-root": { color: "#187163" },
+            }}
+          /> : <Stack direction="row" spacing='10px' justifyContent='center' >
                   <SvgIcon onClick={()=>handleCancel(row)} style={style.deleteBtn} component={CloseIcon  } />
                   <SvgIcon onClick={()=>handleOk(row)} style={style.selectBtn} component={DoneIcon } />
                 
-                </Stack>
+                </Stack> 
+                }
               </TableCell>
             </TableRow>
   )

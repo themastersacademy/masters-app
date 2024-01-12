@@ -7,6 +7,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import useWindowDimensions from "./useWindowDimensions";
 function Notification({ setNotification, notificate, message, severity }) {
   const {width} = useWindowDimensions()
+  setTimeout(()=>{
+    setNotification(false)
+  },5000)
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }

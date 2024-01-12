@@ -1,7 +1,9 @@
 const questionCollection = require("../.././../models/questionCollection");
 
 exports.EditQuestions = async (body) => {
-  let check = await questionCollection.findOne({ _id: body.questionID });
+
+  try {
+    let check = await questionCollection.findOne({ _id: body.questionID });
   if (check) {
     check.title = body.title;
     check.options = body.options;
@@ -21,13 +23,36 @@ exports.EditQuestions = async (body) => {
   } else {
     return { status: "error", message: "Something went wrong" };
   }
+  } catch (error) {
+    throw error
+  }
+
 };
 
 exports.SearchQuestion = async (body) => {
-  const check = await questionCollection.findOne({ title: body.title });
-  if (check) {
+  try {
+    const check = await questionCollection.find({
+      $or: [
+        {
+          QuesbankID:body.quesID,
+          title: { $regex: body.title,
+            $options: "i"
+          },
+        
+        },
+      ],
+    })
+ 
+  if (check.length > 0) {
     return check;
   } else {
-    return { message: "no found" };
+    return { status:'info', message: "Question is not Found" };
   }
+  return []
+  } catch (error) {
+    throw error
+  }
+
 };
+
+

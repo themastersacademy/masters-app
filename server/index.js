@@ -292,47 +292,83 @@ app.use((err, req, res, next) => {
 
 const User = require('./models/user.js')
 const Batch = require('./models/batch.js')
-
+const Goal = require('./models/goal.js');
+const exam = require("./models/exam.js");
 app.get('/checkStudentcreateAccount',async(req,res)=>{
   try {
    const user = await User.find({type:'student'})
    const index = []
+   const getCount = []
    for(let i=0;i<user.length;i++){
     if(user[i].goal.length > 1 ){
       const getOneGoal = []
       for(let j=0;j<user[i].goal.length;j++){
-        if(j !== 0){
-         
-        }else{
+        if(j == 0){
           getOneGoal.push( user[i].goal[j])
+        }else{
+        
         }
       }
       user[i].goal = getOneGoal
-     // user[i].save()
-     console.log(user[i]);
+    // await user[i].save()
+     getCount.push(user[i])
+   //  console.log(user[i]);
     }
     if( user[i].batchID.length > 1){
       const getOneBatch = []
       for(let j=0;j<user[i].batchID.length;j++){
-        if(j !== 0){
-         
-        }else{
+        if(j == 0){
           getOneBatch.push( user[i].batchID[j])
+        }else{
+        
         }
       }
-      user[i].batchID = getOneBatch
-      //user[i].save()
-      console.log(user[i]);
+     user[i].batchID = getOneBatch
+    // await user[i].save()
+      getCount.push(user[i])
+     // console.log(user[i]);
     }
     
    }
- 
+   //658d6fb3ce97aff254f31608   sp.sharika@gmail.com
+ console.log(getCount);
     res.send('check')
   } catch (error) {
     throw error
   }
 })
 
+
+app.get('/checkUserGoal',async(req,res)=>{
+  try {
+     const goal = await Goal.find()
+     const user = await User.find()
+     if(goal && user){
+      const getGoalId = []
+     for(let i=0;i<goal.length;i++){
+       getGoalId.push(goal[i]._id.valueOf())
+     }
+     const getCount = []
+     const userNotGetGoal = []
+     for(let i=0;i<user.length;i++){
+      if(user[i].goal.length > 0)
+    { 
+      if(getGoalId.indexOf(user[i].goal[0].valueOf()) == -1){
+        getCount.push(user[i])
+      }
+    }
+    else userNotGetGoal.push(user[i])
+     }
+     console.log(getCount);
+     console.log(userNotGetGoal);
+     return res.send('check')
+     }
+  return res.send('wrong')
+  } catch (error) {
+    throw error
+  }
+})
+//rakshithashreyan@gmail.com
 
 app.use((req, res, next) => {
   res.redirect('/error')

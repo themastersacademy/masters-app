@@ -11,6 +11,7 @@ import Team from "./util/TeamAndCon.jsx";
 import Error from './util/ErrorPage';
 import Failure from './app/user/components/FailurePage'
 import Success from './app/user/components/SuccessPage'
+import DownloadPdf from "./util/downloadPdf.jsx";
 function App() {
   return (
     <div style={{ fontFamily: "DM Sans" }}>
@@ -71,6 +72,7 @@ function App() {
         {/* Success and Faliure */}
         <Route path="/success"  element={<Success />} />
         <Route path="/failure"  element={<Failure />} />
+        <Route path="/downloadPdf" element={<DownloadPdf />} />
         </Routes>
       </Router>
     </div>

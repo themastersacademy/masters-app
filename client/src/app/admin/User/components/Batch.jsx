@@ -10,10 +10,9 @@ import Paper from "@mui/material/Paper";
 import '../../../../App.css'
 import { Stack,Button,SvgIcon } from "@mui/material";
 
+import LoadingButton from "@mui/lab/LoadingButton";
 
-
-export default function Batch({ batch,getRequestAccess }) {
-  
+export default function Batch({ batch,getRequestAccess ,isLoading ,setLoading}) {
   
   const check = [];
   return (
@@ -27,7 +26,7 @@ export default function Batch({ batch,getRequestAccess }) {
           })
         : null}
       {check.length > 0 ? (
-        <RequestList task={batch.studentList} getRequestAccess={getRequestAccess} />
+        <RequestList task={batch.studentList} getRequestAccess={getRequestAccess} isLoading={isLoading} setLoading={setLoading} />
       ) : (
         <div  style={{
             width: "100%",
@@ -48,10 +47,15 @@ export default function Batch({ batch,getRequestAccess }) {
 
 
 
-function RequestList({ task,getRequestAccess }) {
+function RequestList({ task,getRequestAccess,isLoading ,setLoading  }) {
   
 
 const handleCancel =(data) =>{
+  setLoading((preValue) => {
+    let getValue = [...preValue]
+    getValue.push(data.userID)
+    return getValue
+  })
   getRequestAccess('remove',data)
 }
 
@@ -140,9 +144,18 @@ const handleCancel =(data) =>{
                 <p style={style.email}>{row.email}</p>
               </TableCell>
               <TableCell align="center">
-
-
+              { isLoading.indexOf(row.userID.valueOf()) !== -1 ? <LoadingButton
+            loading
+            sx={{
+              width: "100%",
+              height: "40px",
+              backgroundColor: "white",
+              "& .MuiCircularProgress-root": { color: "#187163" },
+            }}
+          />
+  :
                 <Button style={style.remove} onClick={()=>handleCancel(row)} >Remove</Button>
+          }
              
               </TableCell>
             </TableRow>

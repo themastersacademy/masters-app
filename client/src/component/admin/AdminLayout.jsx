@@ -32,6 +32,7 @@ import avatar from "../../util/Avater";
 import SvgIcon from '@mui/material/SvgIcon';
 import LogoutIcon from '@mui/icons-material/Logout';
 import  {callProfileUrl}  from "../../util/callImageUrl";
+import Loader from "../../util/Loader";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -110,6 +111,7 @@ export default function AsaidMenu() {
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
   const [isCall, setCall] = useState(false);
+  const [isLoading,setLoading] = useState(false)
   const [notificate, setNotification] = useState(false);
   const openNav = Boolean(anchorEl);
   const handleDrawerOpen = () => {
@@ -134,12 +136,14 @@ export default function AsaidMenu() {
   };
 
   useEffect(() => {
+    setLoading(true)
     fetch("/api/admin/getUserDetails")
       .then((res) => res.json())
       .then( async (data) => {
        data.avatar = await callProfileUrl(data.avatar)
        data.name = data.name.length > 7 ? `${data.name.slice('0','5')}...` : data.name
         setUser(data);
+        setLoading(false)
       });
   }, []);
 
@@ -193,6 +197,7 @@ export default function AsaidMenu() {
     },
   };
   return (
+    isLoading ? <Loader /> :
      <Box sx={{ display: "flex" }} >
       <Notification
         setNotification={setNotification}
@@ -277,7 +282,7 @@ export default function AsaidMenu() {
                 >
                   <Avatar src={user.avatar} />
                   {user.name}
-                  {/* {user.name.length > 2 ? `${user.name[0]}${user.name[1]}${user.name[2]}${user.name[3]}${user.name[4]}` : ''} */}
+ 
                 </MenuItem>
 
                 <MenuItem onClick={handleLogout}>

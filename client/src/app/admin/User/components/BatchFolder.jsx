@@ -8,15 +8,19 @@ import ScheduleTest from "./ScheduleTest";
 import { useLocation } from "react-router-dom";
 import History from "./History";
 import Notification from "../../../../util/Alert";
-import { Stack } from "@mui/material";
-import SvgIcon from '@mui/material/SvgIcon'
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import Requests from './Requests'
+import { IconButton ,Stack } from "@mui/material";
+import SvgIcon from "@mui/material/SvgIcon";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import Requests from "./Requests";
 import Batch from "./Batch";
 import { useNavigate } from "react-router-dom";
 import { callProfileUrl } from "../../../../util/callImageUrl";
 
+import LoadingButton from "@mui/lab/LoadingButton";
+import Tooltip from "@mui/material/Tooltip";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
+import Loader from "../../../../util/Loader";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -47,39 +51,38 @@ function a11yProps(index) {
 export default function BatchFolder() {
   const { search } = useLocation();
   const id = search.split("=")[1];
- 
+  const [isPageLoading,setIsPageLoading] = useState(false)
   const [head, setHead] = useState([]);
   const [question, setQuestion] = useState({
     avalibleQues: [],
     batchQues: [],
   });
- 
+
   let date = new Date();
   let indianTime = date.toLocaleString("en-US", {
     timeZone: "Asia/Kolkata",
     hour12: false,
   });
-  
 
   const [details, setDetails] = useState({
-
-    setDate:indianTime,
+    //setDate: indianTime,
+    setDate:date,
     setTimeFrom: "0:0",
     setTimeTo: "0:0",
     setMark: "",
     setNegativeMark: "0",
     setExamTitle: "",
     examDuration: "0",
-  
   });
-  const [batch,setBatch] = useState([])
+  const [batch, setBatch] = useState([]);
   const [value, setValue] = useState(0);
   const [isChange, setChange] = useState(false);
-  const [isCall,setCall] = useState(false)
+  const [isCall, setCall] = useState(false);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
-  const [history,setHistory] = useState([])
+  const [history, setHistory] = useState([]);
   const [notificate, setNotification] = useState(false);
+  const [isLoading, setLoading] = useState([]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -89,6 +92,7 @@ export default function BatchFolder() {
   };
 
   const getHistory = () => {
+    setIsPageLoading(true)
     fetch("/api/institution/getHistory", {
       method: "POST",
       headers: {
@@ -97,51 +101,64 @@ export default function BatchFolder() {
       body: JSON.stringify({ id: id }),
     })
       .then((res) => res.json())
-      .then(async(data) => {
-      
+      .then(async (data) => {
         if (data.status == "ok") {
-
- setHistory(data.history)
+          setHistory(data.history);
           setHead(data.head);
           let numArray = [];
-          let order = []
-          data.message.studentList.map(task => numArray.push(task.rollNumber))
-          const ascending = numArray.sort() 
-          ascending.map(task =>{
-            data.message.studentList.map(roll =>{
-              if(task == roll.rollNumber)
-              order.push(roll)
-            })
-          })
-          const clearduplicate = order.filter((task,index) => order.indexOf(task) == index)
-          data.message.studentList = []
-          data.message.studentList = clearduplicate
-          for(let i=0;i<data.message.studentList.length;i++){
-            data.message.studentList[i].avatar = await callProfileUrl(data.message.studentList[i].avatar)
+          let order = [];
+          data.message.studentList.map((task) =>
+            numArray.push(task.rollNumber)
+          );
+          const ascending = numArray.sort();
+          ascending.map((task) => {
+            data.message.studentList.map((roll) => {
+              if (task == roll.rollNumber) order.push(roll);
+            });
+          });
+          const clearduplicate = order.filter(
+            (task, index) => order.indexOf(task) == index
+          );
+          data.message.studentList = [];
+          data.message.studentList = clearduplicate;
+          for (let i = 0; i < data.message.studentList.length; i++) {
+            data.message.studentList[i].avatar = await callProfileUrl(
+              data.message.studentList[i].avatar
+            );
           }
-       setBatch(data.message)
+          setBatch(data.message);
+          setIsPageLoading(false)
         }
       });
   };
 
-  const getRequestAccess = (status,data) =>{
-fetch('/api/institution/getRequestAccess',{
-  method:"POST",
-  headers:{
-    "Content-type":"application/json"
-  },
-  body:JSON.stringify({ id,status,data})
-}).then(res => res.json())
-  .then(data => {
-    getHistory()
-    Notificate(data.status,data.message)
-
-  })
-  }
+  const getRequestAccess = (status, data) => {
+    fetch("/api/institution/getRequestAccess", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ id, status, data }),
+    })
+      .then((res) => res.json())
+      .then((data1) => {
+        getHistory();
+        setLoading((preValue) => {
+          let getValue = preValue;
+          getValue = [
+            ...getValue.filter(
+              (task) => task.valueOf() !== data.userID.valueOf()
+            ),
+          ];
+          return getValue;
+        });
+        Notificate(data1.status, data1.message);
+      });
+  };
 
   useEffect(() => {
     getHistory();
-  },[isCall]);
+  }, [isCall]);
 
   const Notificate = (status, message) => {
     setSeverity(status);
@@ -150,19 +167,27 @@ fetch('/api/institution/getRequestAccess',{
   };
 
   return (
+    isPageLoading ? <Loader /> :
     <Paper
       sx={{
         width: "100%",
-         height: "calc(100vh - 120px)",
+        height: "calc(100vh - 120px)",
         padding: "0 20px",
         margin: "20px 0",
-        overflow:"scroll",
+        overflow: "scroll",
         "::-webkit-scrollbar": {
           display: "none",
         },
       }}
     >
-      {head.avatar == undefined ? null : <BatchHead task={head} institionID={batch.institutionID} />}
+      {head.avatar == undefined ? null : (
+        <BatchHead
+          task={head}
+          institionID={batch.institutionID}
+          isCall={isCall}
+          setCall={setCall}
+        />
+      )}
 
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -181,10 +206,16 @@ fetch('/api/institution/getRequestAccess',{
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        {batch.length !== 0 ? <Batch batch={batch} getRequestAccess={getRequestAccess} /> : null }
-       
+        {batch.length !== 0 ? (
+          <Batch
+            batch={batch}
+            getRequestAccess={getRequestAccess}
+            isLoading={isLoading}
+            setLoading={setLoading}
+          />
+        ) : null}
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1} sx={{height:'100vh'}}  >
+      <CustomTabPanel value={value} index={1} sx={{ height: "100vh" }}>
         <ScheduleTest
           question={question}
           setChange={setChange}
@@ -199,10 +230,15 @@ fetch('/api/institution/getRequestAccess',{
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Requests batch={batch} getRequestAccess={getRequestAccess} />
+        <Requests
+          batch={batch}
+          getRequestAccess={getRequestAccess}
+          isLoading={isLoading}
+          setLoading={setLoading}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <History batch={batch}  history={history} />
+        <History  history={history}   setCall={setCall} isCall={isCall} Notificate={Notificate} />
       </CustomTabPanel>
       <Notification
         setNotification={setNotification}
@@ -214,14 +250,13 @@ fetch('/api/institution/getRequestAccess',{
   );
 }
 
-const BatchHead = ({ task,institionID }) => {
-  const  text = task.batchCode
-  const navigate = useNavigate()
-const clickCopy = () =>{
- 
+const BatchHead = ({ task, institionID, setCall, isCall }) => {
+  const text = task.batchCode;
+  const [refresh, setRefresh] = useState(false);
+  const navigate = useNavigate();
+  const clickCopy = () => {
     navigator.clipboard.writeText(text);
- 
-}
+  };
 
   const style = {
     image: {
@@ -235,44 +270,106 @@ const clickCopy = () =>{
       fontWeight: "700",
       lineHeight: "normal",
     },
-    batchName:{
-       marginLeft:'auto',
-        color: " #FEA800",
-        fontSize: "16px",
-        fontStyle: "normal",
-        fontWeight: "700",
-        lineHeight: "normal",
-      },
-    batchCode:{
+    batchName: {
+      marginLeft: "auto",
+      color: " #FEA800",
+      fontSize: "16px",
+      fontStyle: "normal",
+      fontWeight: "700",
+      lineHeight: "normal",
+    },
+    batchCode: {
       color: "#187163",
       fontSize: "14px",
       fontStyle: "normal",
       fontWeight: "700",
       lineHeight: "normal",
     },
-    copyIcon:{
-      width: '15px',
-height: '15px',
-color:'#187163'
-    }
+    copyIcon: {
+      width: "15px",
+      height: "15px",
+      color: "#187163",
+    },
   };
 
   return (
-    <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{padding:'10px',height:'80px'}}>
-      <Stack direction='row' alignItems='center' spacing='15px'>
-      <p style={{cursor:'pointer'}} onClick={()=>{navigate(`/institution?=${institionID}`)}} >Institution</p>
-         <p style={{fontSize:'20px'}}>{'>'}</p>
-        <p style={{...style.batchName,marginLeft:'20px'}}>{task.batchName}</p> 
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{ padding: "10px", height: "80px" }}
+    >
+      <Stack
+        display="flex"
+        gap="30px"
+        flexDirection="row"
+        justifyContent="center"
+      >
+        <Stack direction="row" alignItems="center" spacing="15px">
+          <p
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate(`/institution?=${institionID}`);
+            }}
+          >
+            Institution
+          </p>
+          <p style={{ fontSize: "20px" }}>{">"}</p>
+          <p style={{ ...style.batchName, marginLeft: "20px" }}>
+            {task.batchName}
+          </p>
+        </Stack>
+        {refresh ? (
+          <LoadingButton
+            loading
+            sx={{
+              width: "20px",
+              height: "40px",
+              margin: "0",
+              padding: "0",
+              minWidth: "20px",
+              backgroundColor: "white",
+              "& .MuiCircularProgress-root": { color: "#187163" },
+            }}
+          />
+        ) : (
+          <IconButton
+            onClick={() => {
+              setCall(!isCall);
+              setRefresh(true);
+              setTimeout(() => {
+                setRefresh(false);
+              }, 1000);
+            }}
+            sx={{
+              width: "20px",
+              height: "40px",
+              ":hover": {
+                background: "none",
+              },
+            }}
+          >
+            <Tooltip title="Refresh">
+              <RefreshIcon sx={{ color: "#187163" }} />
+            </Tooltip>
+          </IconButton>
+        )}
       </Stack>
-
-      <Stack direction='column' justifyContent='center' spacing='10px'>
-       
-        <Stack direction='row' alignItems='center'  spacing='5px'>
-        <div  ><span>Batch code :</span> <span style={style.batchCode} >{task.batchCode}</span> </div> 
-
-        <SvgIcon onClick={clickCopy}  sx={style.copyIcon} component={ FileCopyIcon  } />
+      <Stack direction="column" justifyContent="center" spacing="10px">
+        <Stack direction="row" alignItems="center" spacing="5px">
+          <div>
+            <span>Batch code :</span>{" "}
+            <span style={style.batchCode}>{task.batchCode}</span>{" "}
+          </div>
+          <SvgIcon
+            onClick={clickCopy}
+            sx={style.copyIcon}
+            component={FileCopyIcon}
+          />
         </Stack>
       </Stack>
     </Stack>
   );
 };
+
+

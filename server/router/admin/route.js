@@ -33,8 +33,9 @@ const {
 } = require("../../controller/admin/course/deleteCourse.js");
 
 const { getUser, changeRoll,getUserID,getUserDetails } = require("../../controller/admin/user/user.js");
-const { getInstitutions } = require("../../controller/admin/controller.js");
-
+const { getInstitutions,searchInstitution } = require("../../controller/admin/controller.js");
+const { examAnalysis,getTotalPaymentAndExam,getTotalUsers } = require('../../controller/admin/analystics/analysis.js')
+const {manageUser,nextPageManageUser,pageManageUserFilter,pageManageUserSeachEmail,manageUserBlock} = require('../../controller/admin/manage/manageUser')
 const {
   getInstitution,
   getInstituteName,
@@ -42,7 +43,8 @@ const {
   createTeacher,
   addTeacherBatch,
   editTeacherAction,
-  removeTeacher
+  removeTeacher,
+
 } = require("../../controller/admin/institute/institute.js");
 const {
   createBatch,
@@ -51,14 +53,14 @@ const {
   getRequestAccess,
 } = require("../../controller/admin/institute/batch.js");
 const {
-  deleteBatchTopic,
+  deleteBatchTopic,deleteExam
 } = require("../../controller/admin/institute/delete.js");
 
 const {
   createScheduleExam,
 } = require("../../controller/admin/exam/createExam.js");
 
-const {downloadList} = require("../../controller/admin/institute/downloadList.js")
+const {downloadList,examDownload} = require("../../controller/admin/institute/downloadList.js")
 //GET
 
 //reWriteModules
@@ -66,6 +68,21 @@ const {clearAvatarAndHistory} = require("../../util/reWriteModule.js")
 
 //downloadList 
 router.get('/download',downloadList)
+router.get('/examDownload/*',examDownload)
+
+
+// get analystic 
+router.get('/examAnalysis',examAnalysis)
+router.get('/getTotalPaymentAndExam',getTotalPaymentAndExam)
+router.get('/getTotalUsers',getTotalUsers)
+
+
+// get Manage User 
+router.get("/manageUser",manageUser);
+router.post("/pageManageUserSeachEmail",pageManageUserSeachEmail)
+router.post('/manageUserBlock',manageUserBlock)
+router.post("/nextPageManageUser",nextPageManageUser);
+router.post('/pageManageUserFilter',pageManageUserFilter)
 
 router.get("/getBank", getBank);
 router.get("/getCourse", getCourse);
@@ -104,6 +121,10 @@ router.post("/deleteQuestion", deleteQues);
 router.post("/deleteCourseCollection", deleteCourseCollection);
 router.post("/deleteGroupCourseCollection", deleteGroupCourseCollection);
 router.post("/deleteBatchTopic", deleteBatchTopic);
+
+// delete Schedule exam 
+router.post("/deleteExam",deleteExam)
+
 //getCollectionName
 
 router.post("/getCollectionName", getCollectionName);
@@ -121,7 +142,7 @@ router.post("/callDraft", callDraft);
 // Institute
 router.post("/changeRoll", changeRoll);
 router.post("/getInstitution", getInstitution);
-
+router.post('/searchInstitution',searchInstitution)
 //createBatch
 
 router.post("/createBatch", createBatch);

@@ -58,10 +58,9 @@ exports.getUserDetails = async (req, res, next) => {
         id:user._id
       };
       
-      res.json(userDetails)
+    return res.json(userDetails)
     }
     else res.json({status:'is not valid'})
-
   } catch (error) {
     throw error
   }

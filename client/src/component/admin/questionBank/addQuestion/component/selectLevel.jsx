@@ -7,10 +7,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useState,useEffect } from 'react';
 export default function SelectLevel({setQuestions,questions,change}) {
-
 const [level,setLevel] = useState('')
   const handleChange = (event) => {
- 
      setQuestions((preValue)=>{
       let newList = [...preValue];
       newList[0].level = event.target.value;

@@ -14,7 +14,7 @@ const loadingCircle = {
   backgroundColor: "#187163",
   borderRadius: "0.5rem",
 };
-
+ 
 const loadingContainerVariants = {
   start: {
     transition: {
@@ -43,8 +43,9 @@ const loadingCircleTransition = {
 }
 
 const Loader = () => {
+  const pathName = window.location.pathname;
   return (
-    <div style={{width:'100%',height:'100vh',display:'flex',alignItems:'center',justifyContent:'center',backgroundColor: "#C5CFD3"}}>
+    <div style={{width:'100%',height:'100vh',display:'flex',alignItems:'center',justifyContent:'center',backgroundColor:pathName === "/" || pathName === "/exam/solution" ?  "#C5CFD3" :  "white"}}>
       <div className="fixed  w-full min-h-screen z-50 bg-black opacity-30" />
       <div className="flex fixed w-full justify-center items-center h-screen">
         <motion.div

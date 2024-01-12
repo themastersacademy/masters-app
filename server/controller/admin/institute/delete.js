@@ -15,6 +15,19 @@ exports.deleteBatchTopic = async(req,res,next) =>{
     } catch (error) {
         throw error
     }
+}
 
-
+exports.deleteExam = async (req,res) => {
+    try {
+  const {examID,batchID} = req.body
+        const batch = await Batch.findOne({_id:batchID})
+        if(batch) {
+            batch.scheduleTest = [...batch.scheduleTest.filter(task => task.examID.valueOf() !== examID )]
+            batch.save()
+            res.json({status :'success',message:'Delete Exam Successfully'})
+        }
+        else res.status(404).send("Oh uh, something went wrong");
+    } catch (error) {
+        throw error
+    }
 }

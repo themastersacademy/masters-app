@@ -14,7 +14,8 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import { TabList } from "@mui/lab";
 import { TabPanel } from "@mui/lab";
-
+import {callProfileUrl} from '../../../util/callImageUrl'
+import Loader from '../../../util/Loader'
 export default function InstitutePage({ ControlNotification }) {
   const { search } = useLocation();
   const navigator = useNavigate();
@@ -22,7 +23,10 @@ export default function InstitutePage({ ControlNotification }) {
   const [user,setUser] = useState([])
   const [teacher, setTeacher] = useState([]);
   const [institute, setInstitute] = useState([]);
+  const [isLoading,setLoading] = useState([])
+  const [isPageLoading,setIsPageLoading] = useState(false)
   const getInstitution = () => {
+    setIsPageLoading(true)
     fetch("/api/institution/getInstitution",{
       method: "POST",
       headers: {
@@ -31,8 +35,21 @@ export default function InstitutePage({ ControlNotification }) {
       body: JSON.stringify({ id: id }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data.status == "success") setInstitute(data.message);
+      .then( async(data) => {
+        if (data.status == "success") {
+          console.log(data);
+           if(data.message.teacherList.length > 0) 
+           {
+            for(let i=0;i<data.message.teacherList.length;i++) {
+              data.message.teacherList[i].avatar = await callProfileUrl(data.message.teacherList[i].avatar)
+            }
+           }
+           for (let index = 0; index < data.message.batch.length; index++) {
+            data.message.batch[index] =data.createBatchList[index];
+          }
+          setIsPageLoading(false)
+          setInstitute(data.message)
+        };
       });
   };
 
@@ -40,6 +57,7 @@ export default function InstitutePage({ ControlNotification }) {
     fetch("/api/institution/getTeacher")
       .then((res) => res.json())
       .then((data) => {
+      
         setTeacher(data.message);
       });
   };
@@ -60,19 +78,24 @@ export default function InstitutePage({ ControlNotification }) {
       if(data.status == 'error')   ControlNotification(data.status,data.message)
     })
   } 
-  const removeTeacher = (data) =>{
+  const removeTeacher = (data1) =>{
     fetch('/api/institution/removeTeacher',{
       method:"POST",
       headers:{
         "Content-type":"application/json"
       },
-      body:JSON.stringify({data,id})
+      body:JSON.stringify({data:data1,id})
         })
         .then(res => res.json())
         .then((data) => {
           if(data.status == 'success'){
         getInstitution()
         getTeacher()
+        setLoading((preValue)=>{
+          let getValue = preValue
+          getValue = [...getValue.filter(task => task.valueOf() !== data1.id.valueOf())]
+          return getValue
+        })
         ControlNotification(data.status,data.message)
           }
           if(data.status == 'error')   ControlNotification(data.status,data.message)
@@ -112,6 +135,7 @@ if(status == 'success' ) {
     });
   },[]);
   return (
+    isPageLoading ? <Loader /> :
     <div>
       <SearchBar />
       <Stack sx={{ marginTop: "20px" }}>
@@ -125,6 +149,8 @@ if(status == 'success' ) {
             user={user}
             ControlNotification={ControlNotification}
             getTeacherAccess={getTeacherAccess}
+            isLoading ={isLoading}
+            setLoading = {setLoading}
           />
         )}
       </Stack>
@@ -132,7 +158,8 @@ if(status == 'success' ) {
   );
 }
 
-const Home = ({user, institute, id, ControlNotification, teacher,getTeacherAccess }) => {
+const Home = ({user, institute, id, ControlNotification, teacher,getTeacherAccess,isLoading,
+  setLoading }) => {
   const style = {
     image: {
       width: " 50px",
@@ -200,12 +227,13 @@ const Home = ({user, institute, id, ControlNotification, teacher,getTeacherAcces
      
         </Stack>
       </Stack>
-      <ChooseTab user={user} institute={institute} getTeacherAccess={getTeacherAccess} ControlNotification={ControlNotification}/>
+      <ChooseTab user={user} institute={institute} getTeacherAccess={getTeacherAccess} ControlNotification={ControlNotification}  isLoading={isLoading} 
+        setLoading={setLoading}  />
     </Paper>
   );
 };
 
-function ChooseTab({ user,institute,getTeacherAccess,ControlNotification }) {
+function ChooseTab({ user,institute,getTeacherAccess,ControlNotification,isLoading, setLoading }) {
 
   const [value, setValue] = React.useState("1");
 
@@ -252,7 +280,7 @@ function ChooseTab({ user,institute,getTeacherAccess,ControlNotification }) {
           <ActiveBatch institute={institute} />
         </TabPanel>
         <TabPanel value="2">
-       <TeacherList institute={institute} getTeacheAccess={getTeacherAccess} ControlNotification={ControlNotification} />    
+       <TeacherList institute={institute} getTeacheAccess={getTeacherAccess} ControlNotification={ControlNotification}  isLoading={isLoading}  setLoading={setLoading}  />    
         </TabPanel>
       </TabContext>
     </Box>
@@ -337,12 +365,14 @@ const Batch = ({ task }) => {
     <Paper
       sx={{
         width: "290px",
-        height: "70px",
+        height: "110px",
         borderRadius: "5px",
         background: "#FFF",
-        boxShadow: " 0px 15px 62px 0px rgba(0, 0, 0, 0.08)",
+        boxShadow: " 0px 15px 62px 0px rgba(0, 0, 0, 0.10)",
         cursor: "pointer",
-        padding:'10px'
+        padding: "10px",
+        display:'flex',
+       flexDirection:'column'
       }}
       onClick={RieDirect}
     >
@@ -353,6 +383,18 @@ const Batch = ({ task }) => {
         </Stack>
         <SvgIcon component={ArrowForwardIosIcon} sx={{ color: "#187163" }} />
       </Stack>
+      <Stack display='flex' justifyContent='space-around' alignItems='center' flexDirection='row'>
+        <center >
+         <p style={{fontWeight:'700',color:'#187163'}}>{task.studentList}</p>
+        <p style={{marginTop:'auto',color:'#187163'}}>Students</p>
+        </center>
+      <center>
+        <p style={{fontWeight:'700',color:'#FEA800'}}>{task.teacherList}</p>
+      <p style={{marginTop:'auto',color:'#FEA800'}}>Teachers</p>
+    </center>
+     
+      </Stack>
+    
     </Paper>
   );
 };

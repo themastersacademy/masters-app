@@ -20,12 +20,9 @@ function Collection() {
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
   const [notificate, setNotification] = useState(false);
-
-
-
   const [add, setAdd] = useState(true);
   const [print, setPrint] = useState([]);
-  const [searchQues, setSeach] = useState([]);
+  const [searchQues, setSeach] = useState('');
 
   const senData = (send) => {
     fetch("/api/admin/createQuestion", {
@@ -43,7 +40,7 @@ function Collection() {
         getPriQuestion();
       });
   };
-  const controlNotification = (status,message) =>{
+  const controlNotification = (status,message) => {
     setMessage(message)
     setSeverity(status)
     setNotification(true)
@@ -73,27 +70,30 @@ function Collection() {
       })
         .then((res) => res.json())
         .then((data) => {
-  
           setTitle(data.title)
         });
-
-      
   };
 
   const searchQuestion = () => {
-    if (search.length !== 0) {
+
+    if (search !== '' && searchQues !== '') {
       fetch("/api/admin/searchQues", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ title: searchQues }),
+        body: JSON.stringify({ title: searchQues,quesID:id }),
       })
         .then((res) => res.json())
         .then((data) => {
-          setPrint([data]);
-          // setPrint(data);
+          console.log(data);
+          if(data.status == 'info') return controlNotification(data.status,data.message)
+          setPrint(data);
+        
         });
+    }
+    else {
+      return controlNotification('info','Please Enter Question Title ')
     }
   };
 
@@ -154,6 +154,7 @@ function Collection() {
             placeholder="Search"
             onChange={(e) => {
               setSeach(e.target.value);
+             
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {

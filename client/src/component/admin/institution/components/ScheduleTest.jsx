@@ -228,7 +228,9 @@ const SetDetailsExam = ({ setDetails, details }) => {
   const from = dayjs(`2022-04-17T${details.setTimeFrom}`);
   const to = dayjs(`2022-04-17T${details.setTimeTo}`);
   const date = new Date();
+
   const handleChange = (e) => {
+    console.log(e.$d);
     setDetails((preValue) => {
       const getValue = { ...preValue };
       getValue.setDate = e.$d;
@@ -238,7 +240,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
 
   const handleFromTimeChange = (e) => {
     const date = new Date(e.$d);
-
+  
     var setTimeFrom = date.getHours() + ":" + date.getMinutes();
 
     setDetails((preValue) => {
@@ -376,7 +378,7 @@ const SetDetailsExam = ({ setDetails, details }) => {
           <MobileDatePicker
             label="select date"
             defaultValue={
-              details.setDate == "0" ? dayjs(date) : dayjs(details.setDate)
+               details.setDate == "0" ? dayjs(date) : dayjs(details.setDate)
             }
             sx={{
               background: "#FFF",

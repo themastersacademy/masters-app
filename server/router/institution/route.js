@@ -37,18 +37,19 @@ const {
   getRequestAccess,
 } = require("../../controller/admin/institute/batch.js");
 const {
-  deleteBatchTopic,
+  deleteBatchTopic,deleteExam
 } = require("../../controller/admin/institute/delete.js");
 
 const {
   createScheduleExam,
 } = require("../../controller/admin/exam/createExam.js");
 
-const {downloadList} = require("../../controller/admin/institute/downloadList.js")
+const {downloadList,examDownload} = require("../../controller/admin/institute/downloadList.js")
 //GET
 
 //downloadList 
 router.get('/download',downloadList)
+router.get('/examDownload/*',examDownload)
 
 router.get("/getBank", getBank);
 router.get("/getCourse", getCourse);
@@ -69,18 +70,12 @@ router.post("/getCourseAvalible", getCourseAvalible);
 
 
 
-
-
-
-
-
-
-
-
 // Institute
 router.post("/changeRoll", changeRoll);
 router.post("/getInstitution", getInstitution);
 
+// delete schedule exam 
+router.post("/deleteExam",deleteExam)
 //createBatch
 
 router.post("/createBatch", createBatch);

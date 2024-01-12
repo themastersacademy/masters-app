@@ -14,7 +14,7 @@ import BatchFolder from "../../component/admin/institution/components/BatchFolde
 import { useNavigate } from "react-router-dom";
 import  '../../App.css'
 import InstitutePage from "../../component/admin/institution/components/institutePage";
-
+import Loader from '../../util/Loader'
 function Dashboard({menu,isCall,handleDrawerClose}) {
   const navigator = useNavigate();
   const pathName = window.location.pathname;
@@ -24,7 +24,7 @@ function Dashboard({menu,isCall,handleDrawerClose}) {
   const [courseList, setCourseList] = useState([]);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
-
+const [isloading,setLoading] = useState(false)
   const [notificate, setNotification] = useState(false);
 
   useEffect(() => {
@@ -54,6 +54,7 @@ function Dashboard({menu,isCall,handleDrawerClose}) {
   }, []);
 
   const getBank = () => {
+   
     fetch("/api/admin/getBank")
       .then((res) => res.json())
       .then((data) => {
@@ -64,11 +65,13 @@ function Dashboard({menu,isCall,handleDrawerClose}) {
   };
 
   const getCourse = () => {
+    setLoading(true)
     fetch("/api/admin/getCourse")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "ok") {
           setCourseList(data.message);
+          setLoading(false)
         }
       });
   };
@@ -127,6 +130,7 @@ function Dashboard({menu,isCall,handleDrawerClose}) {
         <div style={{ display: "flex", justifyContent: "center" }}  >
           <div style={{ width: "100%" }} onMouseLeave={handleDrawerClose}>
             {pathName === "/admin/dashboard" ? (
+              isloading ? <Loader /> :
               <Courses
                 courseList={courseList}
                 isNotify={isNotify}
@@ -135,9 +139,10 @@ function Dashboard({menu,isCall,handleDrawerClose}) {
             ) : null}
             {pathName === "/admin/bank" ? <QuestionBank bank={bank} /> : null}
             {pathName === "/admin/analytics" ? <Analytics /> : null}
-            {pathName === "/admin/institution" ? (
-              <Institution ControlNotification={ControlNotification} />
-            ) : null}
+            {
+            pathName === "/admin/institution" ? (
+              <Institution ControlNotification={ControlNotification} /> ) : null 
+            }
             {pathName === "/admin/manage" ? <Manage /> : null}
             {pathName === "/admin/dashboard/course" ? (
               <Course

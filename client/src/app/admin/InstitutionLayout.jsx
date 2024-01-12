@@ -16,6 +16,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import {callProfileUrl} from '../../util/callImageUrl'
 import LogoutIcon from '@mui/icons-material/Logout';
 import "../../App.css";
+import Loader from "../../util/Loader";
 
 function Dashboard() {
   const navigator = useNavigate();
@@ -30,6 +31,7 @@ function Dashboard() {
   const [notificate, setNotification] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
+  const [isPageLoading,setIsPageLoading] = useState(false)
   const openNav = Boolean(anchorEl);
   const handleClose = () => {
     setAnchorEl(null);
@@ -41,6 +43,7 @@ function Dashboard() {
   /// useEffect
 
   useEffect(() => {
+    setIsPageLoading(true)
     fetch("/isLogin")
       .then((res) => res.json())
       .then((data) => {
@@ -51,6 +54,7 @@ function Dashboard() {
       .then( async(data) => {
         data.avatar = await callProfileUrl(data.avatar)
         data.name = data.name.length > 7 ? `${data.name.slice('0','5')}...` : data.name
+        setIsPageLoading(false)
         setUser(data);
       });
   }, []);
@@ -82,6 +86,7 @@ function Dashboard() {
   };
 
   return (
+    isPageLoading ? <Loader /> :
     <div
       style={{
         position: "fixed",

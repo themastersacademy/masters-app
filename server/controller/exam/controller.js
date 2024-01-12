@@ -9,8 +9,7 @@ const examRank = require("../../models/examRank.js");
 const questionBank = require("../../models/questionBank.js");
 const fs = require("fs");
 const {
-  examEndTime,
-  examStartTime,
+
   getExamStartTime,
   getExamExamEndTime,
   getExamValid,
@@ -333,8 +332,7 @@ const isValidExamStart = async function (examInfo) {
   const getTime = indianTime.split(",");
   const getDate = getTime[0].split("/");
 
-  // const Start = await  trailTime(examInfo.examDate,examInfo.examStartTime)
-  //  const End = await goalValid(examInfo.examDate,examInfo.examEndTime)
+
   const Start = await getExamStartTime(
     examInfo.examDate,
     examInfo.examStartTime
@@ -350,8 +348,8 @@ const isValidExamStart = async function (examInfo) {
 
 exports.getExamState = async function (req, res) {
   try {
-    const userID = req.session.userID;
 
+    const userID = req.session.userID;
     const userName = req.session.userName;
     const examId = req.session.examID;
 
@@ -361,7 +359,6 @@ exports.getExamState = async function (req, res) {
       const questionCategoryList = [];
       const questionCollections = [];
       const getQuestionID = [];
-
       getExam.questionCategory.map((task) => {
         questionCategoryList.push({
           title: task.title,
@@ -476,6 +473,7 @@ exports.getExamState = async function (req, res) {
         return res.json({ status: "error", message: "something went wrong" });
       }
     }
+    return res.json({ status: "error", message: "something went wrong" });
   } catch (error) {
     throw error;
   }
@@ -733,7 +731,7 @@ exports.submitExam = async (req, res, next) => {
 
             // delete session ID
             delete req.session.examID;
-            res.json({
+           return res.json({
               status: "success",
               message: "exam submitted successfully",
             });
@@ -897,18 +895,29 @@ exports.submitExam = async (req, res, next) => {
           // delete session
 
           delete req.session.examID;
-          res.json({
+         return res.json({
             status: "success",
             message: "exam submitted successfully",
           });
         }
+        else{
+         return res.json({
+            status: "error",
+            message: "something went wrong",
+          });
+        }
+        
       } else {
-        res.json({
+       return res.json({
           status: "error",
           message: "something went wrong",
         });
       }
-    }
+    } 
+    return  res.json({
+      status: "error",
+      message: "something went wrong",
+    });
   } catch (error) {
     throw error;
   }

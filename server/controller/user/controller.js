@@ -22,6 +22,10 @@ exports.login = async (req, res, next) => {
   const hash = sha256Hasher.update(password).digest("hex");
   const check = await User.findOne({ email: req.body.email,password: hash });
   if (check) {
+    console.log(check);
+    if(check.action == true) {
+      return res.json({ status: "error", message: "Your Account Has Been Blocked" });
+    }
     let get = await sessions.find();
     const getVerify = await isLogin(get, check.email);
     if (getVerify.length == 0) {
@@ -334,7 +338,7 @@ exports.request = async (req, res, next) => {
 exports.getUserData = async (req, res, next) => {
   try {
     const userID = req.body.id;
-    const user = await User.findOne({ _id: req.body.id });
+    const user = await User.findOne({ _id:req.session.userID });
     const getUserGoal = await Goal.find({userId:req.session.userID});
    
     // const course = await Course.find();
@@ -409,7 +413,6 @@ exports.getUserData = async (req, res, next) => {
             topicName: task.type == "group" ? task.title : task.topic[0].title,
             topicID: task.topicID,
             bankID: getID,
-          
           });
           getCheck.push(task.topicID);
         }
@@ -520,7 +523,7 @@ exports.getUserData = async (req, res, next) => {
       }
 
       await getUserGoal[0].save();
-      res.json({
+     return res.json({
         status: "ok",
         message: user,
         goal: getUserGoal,
@@ -530,6 +533,7 @@ exports.getUserData = async (req, res, next) => {
         studentsPerformance: studentsPerformance[0],
       });
     }
+   return res.json({ staus: "error", message: "something wrong" });
   } catch (error) {
     
     res.json({ staus: "error", message: "something wrong" });
@@ -539,9 +543,8 @@ exports.getUserData = async (req, res, next) => {
 exports.getGoal = async (req, res, next) => {
   try {
     const { id } = req.body;
-
     const course = await Course.find();
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: req.session.userID });
     const getGoalID = await Goal.find({userId:req.session.userID});
     if (user) {
       let goalID = [];
@@ -565,12 +568,11 @@ exports.getGoal = async (req, res, next) => {
   for(let i=0;i<getGoal.length;i++){
     if (getGoal[i].status == "publish")
      { 
-      
-      await goalID.push({ label: getGoal[i].title, id:getGoal[i]._id });
+       goalID.push({ label: getGoal[i].title, id:getGoal[i]._id });
     }
   }
      return res.json({ status: "ok", message: goalID });
-    }
+    }  return res.json({ status: "not",});
   } catch (error) {
     throw error
   }

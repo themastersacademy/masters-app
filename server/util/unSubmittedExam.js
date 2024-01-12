@@ -184,13 +184,11 @@ exports.sendDateStudent = async (batch,isCheckStudent,mark,negativeMark,userID,e
     const student = batch.studentList.filter(
       (task) => task.userID.valueOf() == userID.valueOf()
     );
-
     let examMark = mark - negativeMark;
     if (examMark < 0) examMark = 0;
 
     batch.scheduleTest.map((task) => {
       if (task.examID.valueOf() == examID.valueOf()) {
-        console.log(isCheckStudent.includes(student[0].email));
      if(!isCheckStudent.includes(student[0].email))
         task.studentPerformance.push({
           name: student[0].name,

@@ -15,13 +15,17 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import { TabList } from "@mui/lab";
 import { TabPanel } from "@mui/lab";
-
+import {callProfileUrl} from '../../../../util/callImageUrl'
+import Loader from '../../../../util/Loader'
 export default function InstitutePage({ ControlNotification }) {
   const { search } = useLocation();
   const id = search.split("=")[1];
   const [teacher, setTeacher] = useState([]);
   const [institute, setInstitute] = useState([]);
+  const [isLoading,setLoading] = useState([])
+  const [isPageLoading,setPageLoading] = useState(false)
   const getInstitution = () => {
+    setPageLoading(true)
     fetch("/api/admin/getInstitution", {
       method: "POST",
       headers: {
@@ -32,7 +36,19 @@ export default function InstitutePage({ ControlNotification }) {
       .then((res) => res.json())
       .then(async (data) => {
    
-        if (data.status == "success") setInstitute(data.message);
+        if (data.status == "success") {
+          console.log(data);
+          if(data.message.teacherList.length > 0) 
+          {
+           for(let i=0;i<data.message.teacherList.length;i++) {
+             data.message.teacherList[i].avatar = await callProfileUrl(data.message.teacherList[i].avatar)
+           }
+          }
+          for (let index = 0; index < data.message.batch.length; index++) {
+            data.message.batch[index] =data.createBatchList[index];
+          }
+          setPageLoading(false)
+          setInstitute(data.message);}
       });
   };
 
@@ -44,7 +60,7 @@ export default function InstitutePage({ ControlNotification }) {
       });
   };
   const editTeacherAction = (type, data) => {
-    fetch("/api/admin/editTeacherAction", {
+    fetch("/api/admin/editTeacherAction",{
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -61,19 +77,25 @@ export default function InstitutePage({ ControlNotification }) {
           ControlNotification(data.status, data.message);
       });
   };
-  const removeTeacher = (data) => {
+  const removeTeacher = (data1) => {
     fetch("/api/admin/removeTeacher", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ data, id }),
+      body: JSON.stringify({ data:data1, id }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.status == "success") {
+          setLoading((preValue)=>{
+            let getValue = preValue
+            getValue = [...getValue.filter(task => task.valueOf() !== data1.id.valueOf())]
+            return getValue
+          })
           getInstitution();
           getTeacher();
+        
           ControlNotification(data.status, data.message);
         }
         if (data.status == "error")
@@ -95,6 +117,7 @@ export default function InstitutePage({ ControlNotification }) {
     getTeacher();
   }, []);
   return (
+    isPageLoading ? <Loader /> :
     <div>
       <SearchBar />
       <Stack sx={{ marginTop: "20px" }}>
@@ -107,6 +130,8 @@ export default function InstitutePage({ ControlNotification }) {
             id={id}
             ControlNotification={ControlNotification}
             getTeacherAccess={getTeacherAccess}
+            isLoading ={isLoading}
+            setLoading = {setLoading}
           />
         )}
       </Stack>
@@ -120,6 +145,8 @@ const Home = ({
   ControlNotification,
   teacher,
   getTeacherAccess,
+  isLoading,
+  setLoading
 }) => {
   const style = {
     image: {
@@ -188,12 +215,14 @@ const Home = ({
         institute={institute}
         getTeacherAccess={getTeacherAccess}
         ControlNotification={ControlNotification}
+        isLoading={isLoading} 
+        setLoading={setLoading} 
       />
     </Paper>
   );
 };
 
-function ChooseTab({ institute, getTeacherAccess, ControlNotification }) {
+function ChooseTab({ institute, getTeacherAccess, ControlNotification,isLoading, setLoading }) {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -242,6 +271,8 @@ function ChooseTab({ institute, getTeacherAccess, ControlNotification }) {
             institute={institute}
             getTeacheAccess={getTeacherAccess}
             ControlNotification={ControlNotification}
+            isLoading={isLoading} 
+            setLoading={setLoading} 
           />
         </TabPanel>
       </TabContext>
@@ -325,12 +356,14 @@ const Batch = ({ task }) => {
     <Paper
       sx={{
         width: "290px",
-        height: "70px",
+        height: "110px",
         borderRadius: "5px",
         background: "#FFF",
         boxShadow: " 0px 15px 62px 0px rgba(0, 0, 0, 0.10)",
         cursor: "pointer",
         padding: "10px",
+        display:'flex',
+       flexDirection:'column'
       }}
       onClick={RieDirect}
     >
@@ -341,6 +374,18 @@ const Batch = ({ task }) => {
         </Stack>
         <SvgIcon component={ArrowForwardIosIcon} sx={{ color: "#187163" }} />
       </Stack>
+      <Stack display='flex' justifyContent='space-around' alignItems='center' flexDirection='row'>
+        <center >
+         <p style={{fontWeight:'700',color:'#187163'}}>{task.studentList}</p>
+        <p style={{marginTop:'auto',color:'#187163'}}>Students</p>
+        </center>
+      <center>
+        <p style={{fontWeight:'700',color:'#FEA800'}}>{task.teacherList}</p>
+      <p style={{marginTop:'auto',color:'#FEA800'}}>Teachers</p>
+      </center>
+     
+      </Stack>
+     
     </Paper>
   );
 };

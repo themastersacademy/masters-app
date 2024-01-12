@@ -185,14 +185,16 @@ exports.getRequestAccess = async (req, res, next) => {
 
         batch.studentList = get;
         await  batch.save();
-        const getBatchID = user.batchID.filter(
+        if(user.type == 'student')
+     {   
+      const getBatchID = user.batchID.filter(
           (task) => task.valueOf() !== batch._id.valueOf()
         );
         user.batchID = getBatchID;
-        // user.institutionID = ""
         user.institutionID = undefined;
-
         await user.save();
+     }
+       
         res.json({
           status: "success",
           message: "Remaove student successfully",

@@ -97,6 +97,9 @@ const Schema = mongoose.Schema({
       required: true,
     },
   ],
+  action:{
+    type:Boolean
+  }
 });
 
 module.exports = mongoose.model("User", Schema);

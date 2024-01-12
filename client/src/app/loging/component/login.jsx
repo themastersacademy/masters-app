@@ -5,20 +5,20 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import useWindowDimensions from "../../../util/useWindowDimensions";
-
-
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Input from '@mui/material/Input';
 import { SvgIcon } from "@mui/material";
-
+import LoadingButton from "@mui/lab/LoadingButton";
 function Login ({ controlNotification }) {
   const { width } = useWindowDimensions();
   const [getDetails, setDetails] = useState({ email: "", password: "" });
   const navigator = useNavigate();
+  const [isLoading,setLoading] = useState(false)
   const signup = () => {
     if ((getDetails.email !== "", getDetails.password !== "")) {
+      setLoading(true)
       fetch("/api/user/login", {
         method: "POST",
         headers: {
@@ -48,7 +48,8 @@ function Login ({ controlNotification }) {
            return navigator(`/admin/dashboard?=${data.id}`);
           }
           if (data.status == "error")
-            controlNotification(data.status, data.message);
+          {  controlNotification(data.status, data.message);}
+          setLoading(false)
         });
     } else controlNotification("info", "Please enter email and password");
   };
@@ -169,6 +170,15 @@ const handleMouseDownPassword = (event) => {
             </Stack>
 
         </Stack>
+     {  isLoading ? <LoadingButton
+loading
+sx={{
+  width: "100%",
+  height: "36px",
+  backgroundColor: "#187163",
+  "& .MuiCircularProgress-root": { color: "white" },
+}}
+/> :
         <Button
           style={{
             borderRadius: "4px",
@@ -180,7 +190,7 @@ const handleMouseDownPassword = (event) => {
           onClick={signup}
         >
           Login
-        </Button>
+        </Button>}
       </Stack>
     </Paper>
   );

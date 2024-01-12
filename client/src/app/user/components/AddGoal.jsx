@@ -37,9 +37,10 @@ export default function AddGoal({ isChange,id,addGoal }) {
     })
       .then((res) => res.json())
       .then((data) => {
-   
         if(data.status == 'ok')
+      {  
         setList(data.message);
+      }
       });
   };
   const handleChange = (event, value) => {

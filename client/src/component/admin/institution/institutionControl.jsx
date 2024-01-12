@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Paper } from "@mui/material";
 import AddNew from './components/AddNew.jsx'
-function InstitutionControl({changeRoll,isChange}) {
+function InstitutionControl({changeRoll,isChange,searchInstitution}) {
+  const [search,setSearch] = useState('')
   const style = {
     AddBtn: {
       width: " 96px",
@@ -33,6 +34,15 @@ function InstitutionControl({changeRoll,isChange}) {
               borderRadius: "5px",
               border: "1px solid #CACACA",
               padding:'15px'
+            }}
+            onChange={(e)=>{
+              setSearch(e.target.value)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" ) {
+                searchInstitution(search);
+              }
+             
             }}
             placeholder="Search"
           />
