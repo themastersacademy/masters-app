@@ -259,7 +259,12 @@ app.get('/failure',userVerify,(req,res) => {
 
 
 
+//pdf Download
+app.get('/downloadPdf',(req,res) => {
+  res.sendFile(path.join(__dirname, "../client/build","index.html"))
+})
 // Error Page
+
 
 app.get('/error',(req,res) => {
   res.sendFile(path.join(__dirname, "../client/build","index.html"))
@@ -337,6 +342,7 @@ app.get('/checkStudentcreateAccount',async(req,res)=>{
     throw error
   }
 })
+
 
 
 app.get('/checkUserGoal',async(req,res)=>{
