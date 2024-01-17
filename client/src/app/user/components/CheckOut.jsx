@@ -190,7 +190,7 @@ function DTCheckOut({ user, details, width, address ,isChange,setChange }) {
                 <form
                   method="POST"
                   name="customerData"
-                  action="http://localhost:1338/payment/ccavRequestHandler"
+                  action="https://themastersacademy.in/payment/ccavRequestHandler"
                 >
                   <button
                     style={{

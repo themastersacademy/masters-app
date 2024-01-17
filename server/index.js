@@ -32,6 +32,7 @@ app.disable("x-powered-by");
 
 app.use(express.json());
 app.use(express.text());
+
 //MongoBD Connection
 connectDB();
 //Auth Session Management
