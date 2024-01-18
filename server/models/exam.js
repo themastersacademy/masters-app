@@ -74,6 +74,8 @@ const examSchema = new Schema({
     studentsPerformance:[
         {
             _id:false,
+            getShuffleIndex:[],
+            getOriginalIndex:[],
             id:{
                 type: Schema.Types.ObjectId,
                 ref: 'User',

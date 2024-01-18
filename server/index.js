@@ -385,3 +385,43 @@ app.listen(1338, () => {
   console.log(`Server start at port : ${process.env.PORT}`);
 });
 
+
+  
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array
+}
+
+// Function to rearrange the original values based on the shuffled order
+const rearrangeArray = (originalArray,shuffledArray) =>  {
+  const rearrangedArray = [];
+  for (let i = 0; i < shuffledArray.length; i++) {
+      rearrangedArray.push(shuffledArray[shuffledArray.indexOf(originalArray[i])])
+  }
+  return rearrangedArray;
+}
+
+
+  // Example usage
+  const originalArray = [1, 2, 3, 4, 5];
+
+  const getOriginalIndex = []
+  const shuffledArray = []
+  originalArray.map((task,index) => {
+    console.log(index);
+    getOriginalIndex.push(index)
+    shuffledArray.push(index)
+  })
+  console.log(getOriginalIndex);
+ // Create a copy to shuffle
+
+  const getShuffleIndex =  shuffleArray(shuffledArray);
+
+  console.log('Original Array:', getOriginalIndex);
+  console.log('Shuffled Array:', getShuffleIndex);
+
+  const rearrangedArray = rearrangeArray(getOriginalIndex, shuffledArray);
+  console.log('Rearranged Array:', rearrangedArray);

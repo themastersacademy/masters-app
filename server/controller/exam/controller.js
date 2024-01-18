@@ -9,7 +9,10 @@ const examRank = require("../../models/examRank.js");
 const questionBank = require("../../models/questionBank.js");
 const fs = require("fs");
 const {
-
+  shuffleArray,
+  rearrangeArray,
+} = require("../../util/questionShuffleAndReShuffle.js");
+const {
   getExamStartTime,
   getExamExamEndTime,
   getExamValid,
@@ -45,7 +48,7 @@ exports.getExamInfo = async function (req, res) {
     //    minutes:getTime[1],
     //    sec:getTime[2]
     // }
-    
+
     res.status(200).json({
       totalMark: NoOfquestion * examInfo.mark,
       NoOfquestion,
@@ -88,12 +91,17 @@ exports.startExam = async function (req, res) {
 
         if (isValidExam) {
           const studentAnswerList = [];
+          const getOriginalIndex = [];
+          const shuffledArray = [];
           examInfo.questionCategory.forEach((category) => {
             (totalQuestion += category.questionList.length),
-              category.questionList.forEach((question) => {
+              category.questionList.forEach((question, index) => {
                 studentAnswerList.push(null);
+                getOriginalIndex.push(index);
+                shuffledArray.push(index);
               });
           });
+
           const bookmarkedQuestionList = [];
           examInfo.questionCategory.forEach((category) => {
             category.questionList.forEach((question) => {
@@ -101,12 +109,14 @@ exports.startExam = async function (req, res) {
             });
           });
           // const actualAnswerList = [];
-          const getQuestionID = [];
-          examInfo.questionCategory.map((task) =>
-            task.questionList.map(async (task) => {
-              getQuestionID.push(task.id);
-            })
-          );
+
+          // const getQuestionID = [];
+          // examInfo.questionCategory.map((task) =>
+          //   task.questionList.map(async (task) => {
+          //    //getQuestionID.push(task.id);
+          //   })
+          // );
+
           //generate Actual Answer
           // const getQuesAnswer = async (task) => {
           //   const getQues = await questionCollection.findOne({ _id: task });
@@ -125,8 +135,10 @@ exports.startExam = async function (req, res) {
           //   actualAnswerList.push(get);
           // }
 
+          const getShuffleIndex = await shuffleArray(shuffledArray);
+
           examInfo.totalQuestion = totalQuestion;
-          // examInfo.actualAnswerList = actualAnswerList;
+
           examInfo.studentsPerformance.push({
             id: userID,
             name: userName,
@@ -134,6 +146,8 @@ exports.startExam = async function (req, res) {
             studentAnswerList,
             bookmarkedQuestionList,
             score: 0,
+            getShuffleIndex,
+            getOriginalIndex,
             mark: examInfo.mark,
             status: "started",
           });
@@ -332,7 +346,6 @@ const isValidExamStart = async function (examInfo) {
   const getTime = indianTime.split(",");
   const getDate = getTime[0].split("/");
 
-
   const Start = await getExamStartTime(
     examInfo.examDate,
     examInfo.examStartTime
@@ -348,14 +361,18 @@ const isValidExamStart = async function (examInfo) {
 
 exports.getExamState = async function (req, res) {
   try {
-
     const userID = req.session.userID;
     const userName = req.session.userName;
     const examId = req.session.examID;
 
     const getExam = await exam.findOne({ _id: examId });
     const User = await user.findOne({ _id: userID });
+
+  
     if (getExam && User) {
+      const studentPerform = getExam.studentsPerformance.filter(
+        (task) => task.id.valueOf() == User._id.valueOf()
+      );
       const questionCategoryList = [];
       const questionCollections = [];
       const getQuestionID = [];
@@ -386,9 +403,18 @@ exports.getExamState = async function (req, res) {
           options,
         };
       }
-      for (let i = 0; i < getQuestionID.length; i++) {
-        const ques = await getQuestion(getQuestionID[i]);
-        questionCollections.push(ques);
+      if (getExam.type == "schedule") {
+        for (let i = 0; i < getQuestionID.length; i++) {
+          const ques = await getQuestion(
+            getQuestionID[studentPerform[0].getShuffleIndex[i]]
+          );
+          questionCollections.push(ques);
+        }
+      } else {
+        for (let i = 0; i < getQuestionID.length; i++) {
+          const ques = await getQuestion(getQuestionID[i]);
+          questionCollections.push(ques);
+        }
       }
 
       let examDate = getExam.examDate.split("/");
@@ -398,9 +424,9 @@ exports.getExamState = async function (req, res) {
         examDate[2]
       }`;
 
-      const studentPerform = getExam.studentsPerformance.filter(
-        (task) => task.id.valueOf() == User._id.valueOf()
-      );
+      // const studentPerform = getExam.studentsPerformance.filter(
+      //   (task) => task.id.valueOf() == User._id.valueOf()
+      // );
 
       await getExam.save();
 
@@ -452,10 +478,8 @@ exports.getExamState = async function (req, res) {
 
           return res.json(examInfoData);
         } else {
-          if (studentPerform[0].status == "submitted")
-         {  
-          
-           return res.json({
+          if (studentPerform[0].status == "submitted") {
+            return res.json({
               status: "error",
               message: "exam already submitted",
             });
@@ -731,7 +755,7 @@ exports.submitExam = async (req, res, next) => {
 
             // delete session ID
             delete req.session.examID;
-           return res.json({
+            return res.json({
               status: "success",
               message: "exam submitted successfully",
             });
@@ -747,8 +771,8 @@ exports.submitExam = async (req, res, next) => {
           examInfo.questionCategory.map((task) => {
             totalQuestion += task.questionList.length;
           });
-          const studentAnswerList = get[0].studentAnswerList;
-
+          // const studentAnswerList = get[0].studentAnswerList;
+            const studentAnswerList = await rearrangeArray(get[0].getOriginalIndex,get[0].studentAnswerList)
           const actualAnswerList = examInfo.actualAnswerList;
           const mark = examInfo.mark;
           let studentNegativeMark = 0;
@@ -881,7 +905,7 @@ exports.submitExam = async (req, res, next) => {
           // });
 
           // batch.save();
-          
+
           // delate Exam State
           examState
             .deleteOne({ examID, userID })
@@ -895,26 +919,24 @@ exports.submitExam = async (req, res, next) => {
           // delete session
 
           delete req.session.examID;
-         return res.json({
+          return res.json({
             status: "success",
             message: "exam submitted successfully",
           });
-        }
-        else{
-         return res.json({
+        } else {
+          return res.json({
             status: "error",
             message: "something went wrong",
           });
         }
-        
       } else {
-       return res.json({
+        return res.json({
           status: "error",
           message: "something went wrong",
         });
       }
-    } 
-    return  res.json({
+    }
+    return res.json({
       status: "error",
       message: "something went wrong",
     });
@@ -931,20 +953,23 @@ exports.getExamResult = async (req, res, next) => {
     const userID = req.session.userID;
 
     const examInfo = await exam.findOne({ _id: examID });
-    const getExamStudentData = await exam.findOne({
-      "_id": examID                 
-    },{
-     "studentsPerformance":{
-        $elemMatch:{"id": userID }
-     },
-    })
-    
+    const getExamStudentData = await exam.findOne(
+      {
+        _id: examID,
+      },
+      {
+        studentsPerformance: {
+          $elemMatch: { id: userID },
+        },
+      }
+    );
+
     if (examInfo && getExamStudentData) {
       const User = await user.findOne({ _id: userID });
       // const get = examInfo.studentsPerformance.filter(
       //   (task) => task.id.valueOf() == userID.valueOf()
       // );
-      const get = [getExamStudentData.studentsPerformance[0]]
+      const get = [getExamStudentData.studentsPerformance[0]];
       if (get.length !== 0) {
         const examResult = {
           type: examInfo.type,
