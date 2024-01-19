@@ -403,19 +403,19 @@ exports.getExamState = async function (req, res) {
           options,
         };
       }
-      if (getExam.type == "schedule") {
-        for (let i = 0; i < getQuestionID.length; i++) {
-          const ques = await getQuestion(
-            getQuestionID[studentPerform[0].getShuffleIndex[i]]
-          );
-          questionCollections.push(ques);
-        }
-      } else {
+      // if (getExam.type == "schedule") {
+      //   for (let i = 0; i < getQuestionID.length; i++) {
+      //     const ques = await getQuestion(
+      //       getQuestionID[studentPerform[0].getShuffleIndex[i]]
+      //     );
+      //     questionCollections.push(ques);
+      //   }
+      // } else {
         for (let i = 0; i < getQuestionID.length; i++) {
           const ques = await getQuestion(getQuestionID[i]);
           questionCollections.push(ques);
         }
-      }
+     // }
 
       let examDate = getExam.examDate.split("/");
       examDate = `${
@@ -771,8 +771,8 @@ exports.submitExam = async (req, res, next) => {
           examInfo.questionCategory.map((task) => {
             totalQuestion += task.questionList.length;
           });
-          // const studentAnswerList = get[0].studentAnswerList;
-            const studentAnswerList = await rearrangeArray(get[0].getOriginalIndex,get[0].studentAnswerList)
+           const studentAnswerList = get[0].studentAnswerList;
+          //  const studentAnswerList = await rearrangeArray(get[0].getOriginalIndex,get[0].studentAnswerList)
           const actualAnswerList = examInfo.actualAnswerList;
           const mark = examInfo.mark;
           let studentNegativeMark = 0;

@@ -58,14 +58,14 @@ exports.downloadList = async (req, res) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
     const columns = [
-      { header: "Name", key: "name", width: 50 },
       { header: "Roll Number", key: "roll", width: 20 },
+      { header: "Name", key: "name", width: 50 },
       { header: "Department", key: "dept", width: 10 },
+      { header: "Mark", key: "mark", width: 10 },
       { header: "Email", key: "email", width: 50 },
-      { header: "Mark", key: "mark", width: 10 }
     ];
     for(let i=0;i<examInfo.actualAnswerList.length;i++){
-      columns.push({header: i+1, key:i+1, width: 10 })
+      columns.push({header: i+1, key:i+1, width: 10, })
     }
     worksheet.columns = columns
     list[0].studentPerformance.map((task, index) => {
@@ -83,8 +83,20 @@ exports.downloadList = async (req, res) => {
       let row = 2+index
        task.studentAnswerList.map((task,index) => {
         const cell = worksheet.getCell(row,5+index+1); // Add 1 because column indexes start from 1
+        const cellAlign = worksheet.getCell(row,4);
+        cellAlign.alignment = {
+          vertical: 'left',
+          horizontal: 'left'
+      }
         if(task !== null)
-      {  cell.value = ansWer[task]}
+      { 
+         cell.value = ansWer[task] 
+         cell.alignment = {
+          vertical: 'right',
+          horizontal: 'right'
+      }
+      
+      }
       else if(task == null) cell.value = ''
       else {
         cell.value = task
