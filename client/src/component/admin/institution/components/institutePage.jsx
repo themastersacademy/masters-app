@@ -119,7 +119,7 @@ export default function InstitutePage({ ControlNotification }) {
   return (
     isPageLoading ? <Loader /> :
     <div>
-      <SearchBar />
+      {/* <SearchBar /> */}
       <Stack sx={{ marginTop: "20px" }}>
         {institute.length > 0 ? (
           ""

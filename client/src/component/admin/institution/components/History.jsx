@@ -10,11 +10,12 @@ import axios from "axios";
 import download from "js-file-download";
 import "../../../../App.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteExam from "./deleteExam";
 export default function History({ history,Notificate ,setCall,isCall }) {
+console.log(history);
   return (
-    <div className="scrollHide" style={{ overflow: "scroll", height: "65vh" }}>
+    <div  style={{ overflow: "scroll", height: "65vh" }}>
       {history.length > 0 ? (
         <List task={history} Notificate={Notificate}    setCall={setCall} isCall={isCall} />
       ) : (
@@ -187,20 +188,20 @@ function List({ task ,Notificate, setCall,isCall}) {
                 }}
               >
                 <TableCell component="th" align="left" scope="row">
-                  <p style={style.name}>{row.name}</p>
+                  <p style={style.name}>{task[task.length-(1+index)].name}</p>
                 </TableCell>
 
                 <TableCell align="center">
-                  <p style={style.date}>{row.examDate}</p>
+                  <p style={style.date}>{task[task.length-(1+index)].examDate}</p>
                 </TableCell>
                 <TableCell align="center">
-                  {eval(row.examStartTime.split(":")[0] < 12) ? (
-                    <p style={style.time}>{row.examStartTime} am </p>
+                  {eval(task[task.length-(1+index)].examStartTime.split(":")[0] < 12) ? (
+                    <p style={style.time}>{task[task.length-(1+index)].examStartTime} am </p>
                   ) : (
                     <p style={style.time}>
-                      {eval(row.examStartTime.split(":")[0] - 12) +
+                      {eval(task[task.length-(1+index)].examStartTime.split(":")[0] - 12) +
                         ":" +
-                        row.examStartTime.split(":")[1]}{" "}
+                        task[task.length-(1+index)].examStartTime.split(":")[1]}{" "}
                       pm{" "}
                     </p>
                   )}{""}
@@ -213,27 +214,27 @@ function List({ task ,Notificate, setCall,isCall}) {
                   >
                     to
                   </p>{" "}
-                  {eval(row.examEndTime.split(":")[0] < 12) ? (
-                    <p style={style.time}>{row.examEndTime} am </p>
+                  {eval(task[task.length-(1+index)].examEndTime.split(":")[0] < 12) ? (
+                    <p style={style.time}>{task[task.length-(1+index)].examEndTime} am </p>
                   ) : (
                     <p style={style.time}>
-                      {eval(row.examEndTime.split(":")[0] - 12) +
+                      {eval(task[task.length-(1+index)].examEndTime.split(":")[0] - 12) +
                         ":" +
-                        row.examEndTime.split(":")[1]}{" "}
+                        task[task.length-(1+index)].examEndTime.split(":")[1]}{" "}
                       pm{" "}
                     </p>
                   )}
                 </TableCell>
                 <TableCell align="center">
                   <p style={style.status}>
-                    {row.status == "complete" ? "completed" : row.status}
+                    {task[task.length-(1+index)].status == "complete" ? "completed" : task[task.length-(1+index)].status}
                   </p>
                 </TableCell>
                 <TableCell align="center">
-                  {row.status == "complete" ? (
+                  {task[task.length-(1+index)].status == "complete" ? (
                     <Button
                       style={{ background: "#187163", color: "white" }}
-                      onClick={() => handleExamDownload(row.examID)}
+                      onClick={() => handleExamDownload(task[task.length-(1+index)].examID)}
                     >
                       View
                     </Button>
@@ -247,10 +248,10 @@ function List({ task ,Notificate, setCall,isCall}) {
                   )}
                 </TableCell>
                 <TableCell align="center">
-                  {row.status == "complete" ? (
+                  {task[task.length-(1+index)].status == "complete" ? (
                     <Button
                       style={{ background: "#187163", color: "white" }}
-                      onClick={() => handleDownload(row.examID)}
+                      onClick={() => handleDownload(task[task.length-(1+index)].examID)}
                     >
                       Download
                     </Button>
@@ -264,7 +265,7 @@ function List({ task ,Notificate, setCall,isCall}) {
                   )}
                 </TableCell >
                 <TableCell align="center">
-                     <DeleteExam Notificate={Notificate} examID={row.examID} examName={row.name} setCall={setCall} isCall={isCall}  />
+                     <DeleteExam Notificate={Notificate} examID={task[task.length-(1+index)].examID} examName={task[task.length-(1+index)].name} setCall={setCall} isCall={isCall}  />
                 </TableCell>
               </TableRow>
             );

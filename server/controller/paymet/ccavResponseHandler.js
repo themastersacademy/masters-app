@@ -57,11 +57,11 @@ const updatePlan = async (data,orderID) =>{
         payment.validTime = time
         payment.status = 'success'
         await payment.save()
-       // invoiceEmail(user.email,payment)
+        invoiceEmail(user.email,payment)
        goal.plan = 'pro'
        goal.planValidDate = month
        goal.planValidTime = time
-      // goal.save()
+       goal.save()
       }
   } catch (error) {
     throw error
