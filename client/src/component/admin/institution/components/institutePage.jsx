@@ -37,7 +37,7 @@ export default function InstitutePage({ ControlNotification }) {
       .then(async (data) => {
    
         if (data.status == "success") {
-          console.log(data);
+       
           if(data.message.teacherList.length > 0) 
           {
            for(let i=0;i<data.message.teacherList.length;i++) {

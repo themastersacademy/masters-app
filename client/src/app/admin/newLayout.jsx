@@ -54,9 +54,7 @@ const [isloading,setLoading] = useState(false)
     
   }, []);
 
-  useEffect(()=> {
-    console.log(menu);
-  },[menu])
+  
   const getBank = () => {
    
     fetch("/api/admin/getBank")

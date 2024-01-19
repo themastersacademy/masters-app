@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteExam from "./deleteExam";
 export default function History({ history,Notificate ,setCall,isCall }) {
-console.log(history);
+
   return (
     <div  style={{ overflow: "scroll", height: "65vh" }}>
       {history.length > 0 ? (
