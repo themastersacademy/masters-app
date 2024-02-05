@@ -227,8 +227,8 @@ exports.createPracticesExam = async (req, res, next) => {
   let checkCount = false
 
   if(goal.plan == 'free') {
-  
-  if(  goal.practicesCount >= 5){
+ 
+  if(  goal.practicesCount >= process.env.LimitOfPracticesExam){
    
     checkCount = true 
   }
@@ -435,7 +435,7 @@ exports.createPracticesExam = async (req, res, next) => {
     else{
       res.json({
         status: "info",
-        message: "You have reached your limit",
+        message: "You have reached your limit. Upgrade for more Exams",
       });
     }
   } catch (error) {
@@ -455,7 +455,7 @@ exports.createMockExam = async (req, res, next) => {
     let checkCount = false 
     const user = await User.findOne({ _id: userId });
     if(goal.plan == 'free') {
-      if(  goal.mockCount >= 3){
+      if(  goal.mockCount >= process.env.LimitOfMockExam){
         checkCount = true 
       }
       }
@@ -584,7 +584,7 @@ exports.createMockExam = async (req, res, next) => {
     else
     res.json({
       status: "info",
-      message: "You have reached your limit",
+      message: "You have reached your limit. Upgrade for more Exams",
     });
   } catch (error) {
     throw error
