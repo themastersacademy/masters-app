@@ -1,3 +1,6 @@
+Object.keys(require.cache).forEach(function(key) {
+    delete require.cache[key];
+});
 //Imports
 const express = require("express");
 const route = require("./router/route.js");
