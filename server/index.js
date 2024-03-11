@@ -284,6 +284,10 @@ app.get('/policy',(req,res) => {
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 app.use("/", express.static(path.join(__dirname, "../invoice")));
 
+app.get('/checkDate',(req,res) => {
+  res.send('date')
+})
+
 app.use((err, req, res, next) => {
 
   const status = err.status || 500;
@@ -382,6 +386,8 @@ app.get('/checkUserGoal',async(req,res)=>{
 app.use((req, res, next) => {
   res.redirect('/error')
 })
+
+
 
 //Server
 app.listen(1338, () => {
