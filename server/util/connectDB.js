@@ -37,8 +37,8 @@ module.exports = async function () {
       mongoose.connect(process.env.MONGODBURL, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
-       serverSelectionTimeoutMS,
-         connectTimeoutMS: 10000,
+       // serverSelectionTimeoutMS,
+       //   connectTimeoutMS: 10000,
         maxPoolSize: poolsize,
       });
       
