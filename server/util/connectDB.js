@@ -16,7 +16,7 @@
 var mongoose = require('mongoose')
 const serverSelectionTimeoutMS = 10000;
 let connection = null;
-var poolsize = 2;
+var poolsize = 1;
 
 module.exports = async function () {
   if (
