@@ -144,26 +144,22 @@ exports.getExamValid = (date, time) => {
     const examHours = hoursAndMinutesToMilliseconds(getTime[0],getTime[1]);
     const indianHours = hoursAndMinutesToMilliseconds(time1[0],time1[1]);
 
-    // if (
-    //  eval(getDate[1]) <= eval(month[0]) &&
-    //   eval(getDate[2]) <= eval(month[2]) &&
-    //   eval(getDate[0]) <= eval(month[1]) 
-    // ) {
-    //   if (
-    //     eval(getDate[1]) == eval(month[0]) &&
-    //     eval(getDate[2]) == eval(month[2]) &&
-    //     eval(getDate[0]) == eval(month[1]) 
-    //   ) {
-    //     if (examHours <= indianHours) return true;
-    //     else return false;
-    //   } else return true;
-    // } else return false;
+    if (
+     eval(getDate[1]) <= eval(month[0]) &&
+      eval(getDate[2]) <= eval(month[2]) &&
+      eval(getDate[0]) <= eval(month[1]) 
+    ) {
+      if (
+        eval(getDate[1]) == eval(month[0]) &&
+        eval(getDate[2]) == eval(month[2]) &&
+        eval(getDate[0]) == eval(month[1]) 
+      ) {
+        if (examHours <= indianHours) return true;
+        else return false;
+      } else return true;
+    } else return false;
 
-    const getStartTime =  new Date(${getDate[1]}/${getDate[0]}/${getDate[2]} ${time}:00)
-    const getEndTime = new Date(${month[0]}/${month[1]}/${month[2]} ${time1[0]}:${time1[1]}:${time1[2]})
-    return getStartTime < getEndTime
-     // return  new Date(${getDate[1]}/${getDate[0]}/${getDate[2]} ${time}:00) <
-     // new Date(${month[0]}/${month[1]}/${month[2]} ${time1[0]}:${time1[1]}:${time1[2]})
+
   } catch (error) {
     throw error;
   }
