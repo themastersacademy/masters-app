@@ -286,7 +286,8 @@ app.use("/", express.static(path.join(__dirname, "../invoice")));
 
 app.get('/checkDate',(req,res) => {
   var date = new Date("11/21/1987 16:00:00");
-  res.send(date.getTime())
+     var date2 = new Date("11/21/2025 16:00:00");
+  res.send(eval(date) < eval(date2))
 })
 
 app.use((err, req, res, next) => {
