@@ -117,11 +117,10 @@ exports.getExamExamEndTime = (date, time) => {
   }
 };
 
+
+
 exports.getExamValid = (date, time) => {
   try {
-  
-    // var getDate1 = new Date("11/21/1987 16:00:00")
-
     const getDate = date.split("/");
     const getTime = time.split(":");
 
@@ -136,82 +135,35 @@ exports.getExamValid = (date, time) => {
     function hoursAndMinutesToMilliseconds(hours, minutes) {
       var millisecondsInAnHour = 60 * 60 * 1000;
       var millisecondsInAMinute = 60 * 1000;
-
-      var totalMilliseconds =
-        hours * millisecondsInAnHour + minutes * millisecondsInAMinute;
-
+    
+      var totalMilliseconds = hours * millisecondsInAnHour + minutes * millisecondsInAMinute;
+      
       return totalMilliseconds;
     }
+    
+    const examHours = hoursAndMinutesToMilliseconds(getTime[0],getTime[1]);
+    const indianHours = hoursAndMinutesToMilliseconds(time1[0],time1[1]);
 
-    const examHours = hoursAndMinutesToMilliseconds(getTime[0], getTime[1]);
-    const indianHours = hoursAndMinutesToMilliseconds(time1[0], time1[1]);
-
-    // if (
-    //   eval(getDate[1]) <= eval(month[0]) &&
-    //   eval(getDate[2]) <= eval(month[2]) &&
-    //   eval(getDate[0]) <= eval(month[1])
-    // ) {
-    //   if (
-    //     eval(getDate[1]) == eval(month[0]) &&
-    //     eval(getDate[2]) == eval(month[2]) &&
-    //     eval(getDate[0]) == eval(month[1])
-    //   ) {
-    //     if (examHours <= indianHours) return true;
-    //     else return false;
-    //   } else return true;
-    // } else return false;
-    return  new Date(${getDate[1]}/${getDate[0]}/${getDate[2]} ${time}:00) <
-    new Date(${month[0]}/${month[1]}/${month[2]} ${time1[0]}:${time1[1]}:${time1[2]})
+    if (
+     eval(getDate[1]) <= eval(month[0]) &&
+      eval(getDate[2]) <= eval(month[2]) &&
+      eval(getDate[0]) <= eval(month[1]) 
+    ) {
+      if (
+        eval(getDate[1]) == eval(month[0]) &&
+        eval(getDate[2]) == eval(month[2]) &&
+        eval(getDate[0]) == eval(month[1]) 
+      ) {
+        if (examHours <= indianHours) return true;
+        else return false;
+      } else return true;
+    } else return false;
+     // return  new Date(${getDate[1]}/${getDate[0]}/${getDate[2]} ${time}:00) <
+     // new Date(${month[0]}/${month[1]}/${month[2]} ${time1[0]}:${time1[1]}:${time1[2]})
   } catch (error) {
     throw error;
   }
 };
-
-// exports.getExamValid = (date, time) => {
-//   try {
-//     const getDate = date.split("/");
-//     const getTime = time.split(":");
-
-//     const date1 = new Date();
-//     let indianTime = date1.toLocaleString("en-US", {
-//       timeZone: "Asia/Kolkata",
-//       hour12: false,
-//     });
-//     const month = indianTime.split(",")[0].split("/");
-//     const time1 = indianTime.split(",")[1].split(":");
-
-//     function hoursAndMinutesToMilliseconds(hours, minutes) {
-//       var millisecondsInAnHour = 60 * 60 * 1000;
-//       var millisecondsInAMinute = 60 * 1000;
-    
-//       var totalMilliseconds = hours * millisecondsInAnHour + minutes * millisecondsInAMinute;
-      
-//       return totalMilliseconds;
-//     }
-    
-//     const examHours = hoursAndMinutesToMilliseconds(getTime[0],getTime[1]);
-//     const indianHours = hoursAndMinutesToMilliseconds(time1[0],time1[1]);
-
-//     // if (
-//     //  eval(getDate[1]) <= eval(month[0]) &&
-//     //   eval(getDate[2]) <= eval(month[2]) &&
-//     //   eval(getDate[0]) <= eval(month[1]) 
-//     // ) {
-//     //   if (
-//     //     eval(getDate[1]) == eval(month[0]) &&
-//     //     eval(getDate[2]) == eval(month[2]) &&
-//     //     eval(getDate[0]) == eval(month[1]) 
-//     //   ) {
-//     //     if (examHours <= indianHours) return true;
-//     //     else return false;
-//     //   } else return true;
-//     // } else return false;
-//      return  new Date(${getDate[1]}/${getDate[0]}/${getDate[2]} ${time}:00) <
-//      new Date(${month[0]}/${month[1]}/${month[2]} ${time1[0]}:${time1[1]}:${time1[2]})
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 
 exports.analiysticsTime =(year,month,date) =>{
   try {
