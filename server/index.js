@@ -285,7 +285,8 @@ app.use("/", express.static(path.join(__dirname, "../client/build")));
 app.use("/", express.static(path.join(__dirname, "../invoice")));
 
 app.get('/checkDate',(req,res) => {
-  res.send('date')
+  var date = new Date("11/21/1987 16:00:00");
+  res.send(date)
 })
 
 app.use((err, req, res, next) => {
