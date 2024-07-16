@@ -12,12 +12,9 @@
       "dest": "/index.js"
     }
   ],
-  "functions": {
-    "controller/**/*.js": {
-      "maxDuration": 30
-    },
-    "router/**/*.js": {
-      "maxDuration": 30
-    }
-  }
+"functions": {
+    "controller/admin/exam/createExam.js": {
+      "maxDuration": 30
+    }
+}
 }
