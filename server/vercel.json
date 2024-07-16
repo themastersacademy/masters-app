@@ -14,7 +14,7 @@
   ],
 "functions": {
     "controller/admin/exam/createExam.js": {
-      "maxDuration": 30
-    }
+      "maxDuration": 30
+}
 }
 }
