@@ -1,21 +1,20 @@
 {
-   "version": 2,
-    "builds":[
-        {
-            "src":"./index.js",
-            "use":"@vercel/node",
-           "functions": {
-               "controller/**/*":{
-                     "maxDuration": 30
-               }
-            }
-        }
-    ],
-    "routes":[
-        {
-            "src":"/(.*)",
-            "dest":"/index.js"
-        }
-
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "./index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
+    }
+  ],
+  "functions": {
+    "controller/**/*": {
+      "maxDuration": 30
+    }
+  }
 }
