@@ -14,7 +14,7 @@
 
     ],
    "functions": {
-      "/api/admin/createScheduleExam": {
+      "api/admin/createScheduleExam": {
       "maxDuration": 30 // This function can run for a maximum of 30 seconds
     },
    }
