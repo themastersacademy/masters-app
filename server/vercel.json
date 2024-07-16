@@ -15,6 +15,9 @@
   "functions": {
     "controller/**/*.js": {
       "maxDuration": 30
+    },
+    "router/**/*.js": {
+      "maxDuration": 30
     }
   }
 }
