@@ -16,6 +16,9 @@
    "functions": {
       "api/admin/createScheduleExam": {
       "maxDuration": 30
-    }
+    },
+      "controller/admin/exam/createExam.js":{
+         "maxDuration": 30
+      }
    }
 }
