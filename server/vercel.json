@@ -5,7 +5,7 @@
             "src":"./index.js",
             "use":"@vercel/node",
            "functions": {
-               "controller/admin/exam/createExam.js":{
+               "controller/**/*":{
                      "maxDuration": 30
                }
             }
