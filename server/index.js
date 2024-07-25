@@ -69,6 +69,11 @@ app.get("/otpSend", async (req, res) => {
   res.send(`OTP NUM ${req.session.otpNumber}`)
 });
 
+app.get("/testTimeLoad", (req, res) => {
+ setTimeOut(() =>{
+     res.json({status:"success"})
+ },60000)
+});
 
 app.get("/isCheck", (req, res) => {
   if (req.session.isAuth)
