@@ -361,9 +361,10 @@ const isValidExamStart = async function (examInfo) {
 
 exports.getExamState = async function (req, res) {
   try {
-    const userID = "650585e4db20a07a32f85d27";
-    const userName ="Avinash Sethu"
-    const examId = "66a1f19c93d9d90649d87632";
+    const userID = req.session.userID;
+    const userName = req.session.userName
+    const examId = req.session.examID;
+ 
 
     const getExam = await exam.findOne({ _id: examId });
     const User = await user.findOne({ _id: userID });
