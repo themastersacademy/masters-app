@@ -71,7 +71,7 @@ app.get("/otpSend", async (req, res) => {
 
 app.get("/testTimeLoad", (req, res) => {
  setTimeOut(() =>{
-     res.json({status:"success"})
+     return res.json({status:"success"})
  },60000)
 });
 
