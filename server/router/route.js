@@ -19,7 +19,8 @@ router.use('/institution',institutionControl,instituteRoute)
 
 router.use('/user',user)
 
-router.use('/exam',examRouterControl,exam)
+// router.use('/exam',examRouterControl,exam)
+router.use('/exam',exam)
 //GET
 
 
