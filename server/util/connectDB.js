@@ -14,9 +14,9 @@
 // module.exports = connectDB
 
 var mongoose = require('mongoose')
-const serverSelectionTimeoutMS = 10000;
+const serverSelectionTimeoutMS = 60000;
 let connection = null;
-var poolsize = 6;
+var poolsize = 10;
 
 module.exports = async function () {
   if (
@@ -37,8 +37,9 @@ module.exports = async function () {
       mongoose.connect(process.env.MONGODBURL, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
-       // serverSelectionTimeoutMS,
-       //   connectTimeoutMS: 10000,
+       serverSelectionTimeoutMS,
+        connectTimeoutMS: 60000,
+        socketTimeoutMS: 45000,
         maxPoolSize: poolsize,
       });
       
